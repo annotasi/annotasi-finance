@@ -4,13 +4,15 @@
 
 - **Status:** Current project navigation snapshot
 - **Scope:** Annotasi Finance Private Beta MVP
-- **Last completed workflow session:** Session 17
+- **Last completed workflow session:** Session 18
 - **Current stage:** Domain Modeling
-- **Latest completed workflow artifact:** `docs/project/PROJECT_STATE.md` (this document — a workflow-support artifact, not a domain artifact)
-- **Latest completed domain artifact:** `docs/domain/DOMAIN_OBJECT_CANDIDATES.md`
-- **Next recommended task:** Session 18 — Aggregate Candidate Analysis
+- **Latest completed workflow artifact:** `docs/domain/AGGREGATE_CANDIDATES.md`
+- **Latest completed domain artifact:** `docs/domain/AGGREGATE_CANDIDATES.md`
+- **Next recommended task:** Session 19 — Domain Behavior Analysis
 
-Aggregate Candidate Analysis is **not** approved or completed. It is only the next recommended step in the workflow defined by `CLAUDE.md` §5.
+Session 18 Aggregate Candidate Analysis is complete. Session 19 Domain Behavior Analysis has **not** started; it is only the next recommended task in the current Domain Modeling stage.
+
+`docs/project/PROJECT_STATE.md` remains a workflow-support artifact and navigation snapshot, not a domain artifact. It summarizes completed work without replacing the authority of the product and domain source documents.
 
 This document intentionally avoids citing a specific git commit hash as its source of truth. Commit hashes become stale as soon as new commits land; the artifact list in Section 4 is the durable indicator of project state, and should be checked against the actual repository (`git log`, `git status`) rather than against a hash frozen at the time this document was written.
 
@@ -55,7 +57,7 @@ Position as of this document's creation:
 
 - Product identity: complete (`docs/product/PRODUCT_IDENTITY.md`, approved foundation).
 - PRD: complete (`docs/product/ANNOTASI_FINANCE_MVP_PRD.md`, Status: Draft for review — see Section 4 for what "Draft for review" means for this artifact).
-- Domain model: in progress. Ubiquitous Language, Domain Concept Model, and Domain Object Candidates are complete. Aggregate Candidate Analysis has not started.
+- Domain model: in progress. Ubiquitous Language, Domain Concept Model, Domain Object Candidates, and Aggregate Candidate Analysis are complete. Domain Behavior Analysis has not started.
 - Architecture, Milestones, Specifications, Implementation, Review, Testing, Release: not started. No technology, framework, database, or API decision has been made (`CLAUDE.md` §6).
 
 ---
@@ -99,6 +101,12 @@ Listed in workflow order. For each: role, what it establishes, what it deliberat
 - **Role:** Candidate product-level classification of every canonical concept.
 - **Establishes:** for 54 concepts, a candidate classification (Candidate Entity, Candidate Value Object, Derived Value, Classification/Enumeration Candidate, Configuration/Policy Candidate, Lifecycle State Candidate, Relationship Concept Candidate, Not a Domain Object, or Still Open), with reasoning, identity/equality analysis, lifecycle-continuity tests, and stress-test scenarios.
 - **Does not establish:** any Aggregate, Aggregate Root, Domain Service, Repository, Command, Domain Event, Bounded Context, database identifier, key type, persistence mechanism, API contract, or framework choice.
+- **Modifiable silently by later sessions:** No.
+
+### 7. `docs/domain/AGGREGATE_CANDIDATES.md`
+- **Role:** Candidate product-domain consistency-boundary analysis.
+- **Establishes:** provisional Candidate Aggregate boundaries and Candidate Aggregate Roots; local and cross-boundary invariants; coordination requirements; aggregate alternatives; oversized- and undersized-boundary risks; stress-test scenarios; and a recommended hybrid candidate baseline.
+- **Does not establish:** final Aggregate boundaries or roots, persistence transactions, repositories, APIs, commands, domain events, services, Architecture, frameworks, or any implementation decision.
 - **Modifiable silently by later sessions:** No.
 
 The project-local skill artifacts (`.agents/`, `.claude/`, `skills-lock.json`) are tooling configuration, not approved product or domain artifacts, and are not listed above.
@@ -157,6 +165,35 @@ Summarized without reproducing full detail (see `DOMAIN_OBJECT_CANDIDATES.md` §
 
 No candidate above has been converted into a final implementation type by this document.
 
+### Aggregate Candidate Baseline
+
+Session 18 reviewed the following candidate baseline. **Every Aggregate classification and recommendation remains provisional; none is a final domain or implementation decision** (`docs/domain/AGGREGATE_CANDIDATES.md` §§1, 5, 23).
+
+**Strong Candidate Aggregates:**
+- Account
+- Debt Record
+
+**Plausible Candidate Aggregates:**
+- Workspace for ownership plus selected configuration
+- Financial Event
+- Category
+- Dedicated Fund
+
+**Weak independent candidate:**
+- Reporting configuration — more plausibly inside the Workspace candidate boundary, while its final modeling form remains open
+
+**Rejected candidate baseline:**
+- One Workspace Aggregate containing all financial history and configuration
+
+### Candidate Coordination Hotspots
+
+- **Transfer:** one Financial Event plus two Accounts.
+- **Fund Allocation, Fund Release, and Fund-Linked Expense:** one Financial Event plus one Account plus one Dedicated Fund.
+- **Debt Repayment:** one Financial Event plus one Account plus one Debt Record.
+- **Correction and Restoration:** every old and new chronologically affected candidate boundary.
+
+These hotspots state which provisional domain boundaries participate in one logical result. They do not select a persistence transaction, repository, service, command, domain event, message, or any other implementation mechanism (`AGGREGATE_CANDIDATES.md` §§15–16, 23).
+
 ---
 
 ## 6. Non-Negotiable Product and Domain Rules
@@ -212,7 +249,7 @@ This section points to, rather than repeats, `docs/domain/DOMAIN_OBJECT_CANDIDAT
 - **Reporting Period**'s eventual modeling form (value/configuration pair vs. another form) is undecided (`DOMAIN_OBJECT_CANDIDATES.md` §10, §19).
 - **Financial Goal** is classified as Not a Domain Object — it shares Dedicated Fund's identity entirely, not a separate concept (`DOMAIN_OBJECT_CANDIDATES.md` §6, §13).
 - **Income/Expense/Transfer/Fund Allocation/Fund Release/Debt Repayment** each have a dual nature: an Event Type classifier member, and an informal name for a Financial Event instance of that type — no third, independently identified concept exists (`DOMAIN_OBJECT_CANDIDATES.md` §9).
-- No Aggregate, Aggregate Root, Domain Service, Repository, Command, Domain Event, or Bounded Context has been assigned to any concept (`DOMAIN_OBJECT_CANDIDATES.md` §1, §18).
+- `DOMAIN_OBJECT_CANDIDATES.md` itself assigns no Aggregate, Aggregate Root, Domain Service, Repository, Command, Domain Event, or Bounded Context (`DOMAIN_OBJECT_CANDIDATES.md` §1, §18). The later `AGGREGATE_CANDIDATES.md` adds only provisional Aggregate and root candidates; it does not finalize them or introduce the other concepts in this list (`AGGREGATE_CANDIDATES.md` §§1, 21, 23).
 
 For full reasoning, identity/equality analysis, and stress-test scenarios behind any classification, read `docs/domain/DOMAIN_OBJECT_CANDIDATES.md` directly — do not rely on this section alone for a classification decision.
 
@@ -254,6 +291,18 @@ All items below are **Still open**. Do not resolve any of them silently in futur
 - Whether user-controlled exclusion of an Account from totals is allowed. — *`docs/product/ANNOTASI_FINANCE_MVP_PRD.md` §12, §28.*
 - Final Reporting Period modeling form (value/configuration pair vs. another form). — *`docs/domain/DOMAIN_OBJECT_CANDIDATES.md` §10, §19.*
 
+### Aggregate Boundaries and Coordination
+- Whether Workspace is an Aggregate Root or an ownership/scope boundary only. — *`docs/domain/AGGREGATE_CANDIDATES.md` §22.*
+- Whether Financial Event is an Aggregate Root. — *`docs/domain/AGGREGATE_CANDIDATES.md` §22.*
+- Whether Account owns current Account-Backed Fund Allocation state. — *`docs/domain/AGGREGATE_CANDIDATES.md` §22.*
+- Whether Dedicated Fund owns its cross-account allocation breakdown. — *`docs/domain/AGGREGATE_CANDIDATES.md` §22.*
+- Whether Category is an independent Aggregate or Workspace-owned configuration. — *`docs/domain/AGGREGATE_CANDIDATES.md` §22.*
+- Whether Reporting Period configuration belongs inside Workspace's consistency boundary. — *`docs/domain/AGGREGATE_CANDIDATES.md` §22.*
+- How cross-boundary Transfer, Fund Allocation, Fund Release, Fund-Linked Expense, and Debt Repayment preserve one logical result. — *`docs/domain/AGGREGATE_CANDIDATES.md` §§15, 16, 22.*
+- How correction and Restoration preserve one logical result across every old and new chronologically affected candidate boundary. — *`docs/domain/AGGREGATE_CANDIDATES.md` §§13, 15, 16, 22.*
+- Whether full historical recalculation belongs to one boundary or is a cross-boundary domain process. — *`docs/domain/AGGREGATE_CANDIDATES.md` §22.*
+- How Traceability relates to candidate boundaries without creating one giant audit Aggregate. — *`docs/domain/AGGREGATE_CANDIDATES.md` §§12, 22.*
+
 ### UX Terminology
 - Final Bahasa Indonesia labels for the six Financial Event types. — *`docs/product/ANNOTASI_FINANCE_MVP_PRD.md` §22.*
 - Final Account Type labels (Tunai, Rekening Bank, Dompet Digital, Lainnya are candidates). — *`docs/product/ANNOTASI_FINANCE_MVP_PRD.md` §22.*
@@ -287,11 +336,11 @@ Confirmed exclusions, per `docs/product/ANNOTASI_FINANCE_MVP_PRD.md` §8:
 - A routine admin/support interface for browsing raw user financial data.
 - Full offline-first synchronization.
 
+### Candidate Domain Decisions Not Yet Finalized
+The workflow has now analyzed candidate Aggregate boundaries, Candidate Aggregate Roots, and candidate consistency boundaries, but Session 18 explicitly keeps every classification provisional. Final domain approval still requires later detailed behavior analysis and refinement (`AGGREGATE_CANDIDATES.md` §§1, 21–23).
+
 ### Not Yet Decided Because Workflow Has Not Reached It
 The following are **not excluded from the product** — they are simply not yet modeled, because the workflow (`CLAUDE.md` §5) has not reached that stage:
-- aggregate boundaries
-- aggregate roots
-- consistency boundaries
 - bounded contexts
 - commands
 - domain events
@@ -319,6 +368,7 @@ Only read documents directly relevant to the task at hand.
 - **Relationship / domain-map task:** `docs/domain/UBIQUITOUS_LANGUAGE.md`, `docs/domain/DOMAIN_CONCEPT_MODEL.md`
 - **Entity / value-object task:** `docs/domain/UBIQUITOUS_LANGUAGE.md`, `docs/domain/DOMAIN_CONCEPT_MODEL.md`, `docs/domain/DOMAIN_OBJECT_CANDIDATES.md`
 - **Aggregate candidate analysis:** `docs/domain/UBIQUITOUS_LANGUAGE.md`, `docs/domain/DOMAIN_CONCEPT_MODEL.md`, `docs/domain/DOMAIN_OBJECT_CANDIDATES.md`, plus direct verification of PRD §9, §11, §12, §13, §14, §15, §16, §19. Read the full PRD only if those targeted sections reveal an inconsistency, a missing dependency, an affected open question, or an ambiguity that cannot be resolved selectively (see Level 3 below).
+- **Domain Behavior Analysis (Session 19):** `docs/domain/UBIQUITOUS_LANGUAGE.md`, `docs/domain/DOMAIN_CONCEPT_MODEL.md`, `docs/domain/DOMAIN_OBJECT_CANDIDATES.md`, `docs/domain/AGGREGATE_CANDIDATES.md`, plus direct verification of PRD §9, §11, §12, §13, §14, §15, §16, §17, §19. Read the full PRD only if targeted reading reveals an inconsistency, a missing dependency, an affected open question, or an unresolved ambiguity.
 - **Product-scope or requirement question:** the relevant `docs/product/ANNOTASI_FINANCE_MVP_PRD.md` section, plus `docs/product/PRODUCT_IDENTITY.md` when product direction matters
 - **Architecture task (later workflow stage):** all approved domain artifacts, plus only the relevant PRD sections
 
@@ -344,7 +394,8 @@ Read the full PRD or another full source document only when:
 | Product requirement clarification | `CLAUDE.md`, `PROJECT_STATE.md` | Relevant PRD section(s); `PRODUCT_IDENTITY.md` if product direction is in question | No — targeted sections | Escalate to full read if the summary here conflicts with the section |
 | Domain Concept Model update | `CLAUDE.md`, `PROJECT_STATE.md` | `UBIQUITOUS_LANGUAGE.md`, `DOMAIN_CONCEPT_MODEL.md` | No | This artifact is already complete; changes require explicit instruction |
 | Entity/Value Object refinement | `CLAUDE.md`, `PROJECT_STATE.md` | `UBIQUITOUS_LANGUAGE.md`, `DOMAIN_CONCEPT_MODEL.md`, `DOMAIN_OBJECT_CANDIDATES.md` | No | This artifact is already complete; changes require explicit instruction |
-| Aggregate Candidate Analysis | `CLAUDE.md`, `PROJECT_STATE.md` | `UBIQUITOUS_LANGUAGE.md`, `DOMAIN_CONCEPT_MODEL.md`, `DOMAIN_OBJECT_CANDIDATES.md`; targeted verification of PRD §9, §11, §12, §13, §14, §15, §16, §19 | Targeted sections only — full PRD only if those sections reveal an inconsistency, a missing dependency, an affected open question, or an unresolved ambiguity | **Next Domain Modeling task — begin only with explicit Session 18 instruction.** Not started as of this document |
+| Aggregate Candidate Analysis | `CLAUDE.md`, `PROJECT_STATE.md` | `UBIQUITOUS_LANGUAGE.md`, `DOMAIN_CONCEPT_MODEL.md`, `DOMAIN_OBJECT_CANDIDATES.md`; targeted verification of PRD §9, §11, §12, §13, §14, §15, §16, §19 | Targeted sections only — full PRD only if those sections reveal an inconsistency, a missing dependency, an affected open question, or an unresolved ambiguity | Completed in Session 18; its artifact remains provisional and requires explicit instruction to refine |
+| Domain Behavior Analysis | `CLAUDE.md`, `PROJECT_STATE.md` | `UBIQUITOUS_LANGUAGE.md`, `DOMAIN_CONCEPT_MODEL.md`, `DOMAIN_OBJECT_CANDIDATES.md`, `AGGREGATE_CANDIDATES.md`; targeted verification of PRD §9, §11, §12, §13, §14, §15, §16, §17, §19 | Targeted sections only — full PRD only if targeted reading reveals an inconsistency, a missing dependency, an affected open question, or an unresolved ambiguity | **Next Domain Modeling task — begin only through explicit Session 19 instruction.** Analyze product-domain operations, preconditions, effects, failure conditions, affected candidate boundaries, correction behavior, and Traceability. Do not introduce APIs, commands, services, events, repositories, Architecture, or implementation |
 | Lifecycle/correction analysis | `CLAUDE.md`, `PROJECT_STATE.md` | `DOMAIN_CONCEPT_MODEL.md` §13, `DOMAIN_OBJECT_CANDIDATES.md` §11; PRD §16 | Targeted (§16) | Chronological Recalculation and Financial Invariants are high-impact — verify against PRD §16 directly |
 | Reporting/time analysis | `CLAUDE.md`, `PROJECT_STATE.md` | `UBIQUITOUS_LANGUAGE.md` §10, `DOMAIN_CONCEPT_MODEL.md` §12; PRD §17 | Targeted (§17) | Asia/Jakarta fixed-timezone rule is non-negotiable — verify directly |
 | Architecture | `CLAUDE.md`, `PROJECT_STATE.md` | All completed domain artifacts, plus relevant PRD sections | Sections as needed | **Future workflow stage — do not begin yet.** No architecture artifact exists |
@@ -452,12 +503,13 @@ Updates to this document should be small and traceable — reflecting one specif
 
 ## 16. Current Next Step
 
-- Session 17 established `docs/project/PROJECT_STATE.md` (this document) as the current project navigation snapshot — a workflow-support artifact, not a domain artifact.
-- The next recommended task is **Session 18 — Aggregate Candidate Analysis**.
-- Aggregate Candidate Analysis has **not** started.
-- Aggregate Candidate Analysis is part of the current Domain Modeling stage (see Section 3, Section 11) — it does not begin automatically and requires explicit Session 18 instruction to start.
+- Session 18 established `docs/domain/AGGREGATE_CANDIDATES.md` as the latest completed domain artifact, covering provisional aggregate candidates, invariants, coordination hotspots, alternatives, risks, and stress tests.
+- The next recommended task is **Session 19 — Domain Behavior Analysis**.
+- Session 19 has **not** started.
+- Domain Behavior Analysis remains part of the current Domain Modeling stage (see Section 3, Section 11) and begins only through explicit Session 19 instruction.
+- Architecture remains downstream from a sufficiently approved domain model and has not begun.
 
-This document does not define any aggregate, aggregate root, or consistency boundary.
+This document only summarizes candidate conclusions from the domain artifact; it does not turn them into final Aggregate, Aggregate Root, or consistency-boundary decisions.
 
 ---
 
@@ -492,3 +544,8 @@ This document does not define any aggregate, aggregate root, or consistency boun
 - **Authority role:** Candidate product-level classification of every canonical domain concept (Entity/Value Object/Derived Value/etc.), with reasoning and stress-test scenarios.
 - **When to read:** Any entity/value-object question; before Aggregate Candidate Analysis begins.
 - **Must not be replaced by:** This document's classification summary (Section 7), which omits full reasoning.
+
+### `docs/domain/AGGREGATE_CANDIDATES.md`
+- **Authority role:** Candidate domain consistency-boundary analysis covering provisional Aggregates, roots, invariants, coordination hotspots, alternatives, and stress tests.
+- **When to read:** Before Domain Behavior Analysis and before any later aggregate-boundary refinement.
+- **Must not be replaced by:** This document's summaries or generic DDD assumptions.
