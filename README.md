@@ -40,7 +40,9 @@ pnpm build:api
 
 `pnpm run ci` runs the seven post-install validation commands in the same order
 as CI. `pnpm format` is the explicit write-mode formatter; CI uses only
-`format:check`.
+`format:check`. Before TypeScript validation, `pnpm typecheck` generates the
+Next.js route types required by a clean checkout. The generated
+`apps/web/next-env.d.ts` is intentionally not tracked.
 
 ## Development
 

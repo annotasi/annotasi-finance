@@ -38,6 +38,15 @@ baselines. No canary, beta, RC, nightly, or experimental version is used.
 | `@types/react`     | 19.2.18 | [DefinitelyTyped registry metadata](https://www.npmjs.com/package/@types/react); matches React 19.                                                                      | `pnpm --filter @annotasi/web ls @types/react --depth 0`                                              |
 | `@types/react-dom` |  19.2.4 | [DefinitelyTyped registry metadata](https://www.npmjs.com/package/@types/react-dom); matches React DOM 19.                                                              | `pnpm --filter @annotasi/web ls @types/react-dom --depth 0`                                          |
 
+A clean-CI typecheck exposed that a development-generated and tracked
+`next-env.d.ts` referenced `.next/dev/types/routes.d.ts`, which is absent in a
+fresh checkout. The official [Next.js CLI reference](https://nextjs.org/docs/app/api-reference/cli/next#next-typegen-options)
+defines `next typegen` as the CI-safe command for generating route types without
+a full build, and the official [TypeScript configuration reference](https://nextjs.org/docs/app/api-reference/config/typescript#next-envdts)
+identifies `next-env.d.ts` as generated and recommends ignoring it. The web
+typecheck now generates these files before `tsc`; `next-env.d.ts` is ignored and
+not tracked. No dependency or Architecture baseline changed.
+
 ## API Direct Dependencies
 
 | Package                    |     Pin | Official evidence and compatibility                                                                                                                                                                                    | Verification / advisory note                                                                                    |
