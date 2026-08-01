@@ -4,13 +4,13 @@
 
 - **Status:** Current project navigation snapshot
 - **Scope:** Annotasi Finance Private Beta MVP
-- **Last completed workflow session:** Session 18
+- **Last completed workflow session:** Session 19
 - **Current stage:** Domain Modeling
-- **Latest completed workflow artifact:** `docs/domain/AGGREGATE_CANDIDATES.md`
-- **Latest completed domain artifact:** `docs/domain/AGGREGATE_CANDIDATES.md`
-- **Next recommended task:** Session 19 — Domain Behavior Analysis
+- **Latest completed workflow artifact:** `docs/domain/DOMAIN_BEHAVIOR_CATALOG.md`
+- **Latest completed domain artifact:** `docs/domain/DOMAIN_BEHAVIOR_CATALOG.md`
+- **Next recommended task:** Session 20 — Domain Behavior Decision Tables and Boundary Participation Analysis
 
-Session 18 Aggregate Candidate Analysis is complete. Session 19 Domain Behavior Analysis has **not** started; it is only the next recommended task in the current Domain Modeling stage.
+Session 19 Domain Behavior Analysis is complete. Session 20 Domain Behavior Decision Tables and Boundary Participation Analysis has **not** started; it is only the next recommended task in the current Domain Modeling stage.
 
 `docs/project/PROJECT_STATE.md` remains a workflow-support artifact and navigation snapshot, not a domain artifact. It summarizes completed work without replacing the authority of the product and domain source documents.
 
@@ -57,7 +57,7 @@ Position as of this document's creation:
 
 - Product identity: complete (`docs/product/PRODUCT_IDENTITY.md`, approved foundation).
 - PRD: complete (`docs/product/ANNOTASI_FINANCE_MVP_PRD.md`, Status: Draft for review — see Section 4 for what "Draft for review" means for this artifact).
-- Domain model: in progress. Ubiquitous Language, Domain Concept Model, Domain Object Candidates, and Aggregate Candidate Analysis are complete. Domain Behavior Analysis has not started.
+- Domain model: in progress. Ubiquitous Language, Domain Concept Model, Domain Object Candidates, Aggregate Candidate Analysis, and Domain Behavior Analysis are complete. Domain Behavior Decision Tables and Boundary Participation Analysis has not started.
 - Architecture, Milestones, Specifications, Implementation, Review, Testing, Release: not started. No technology, framework, database, or API decision has been made (`CLAUDE.md` §6).
 
 ---
@@ -107,6 +107,12 @@ Listed in workflow order. For each: role, what it establishes, what it deliberat
 - **Role:** Candidate product-domain consistency-boundary analysis.
 - **Establishes:** provisional Candidate Aggregate boundaries and Candidate Aggregate Roots; local and cross-boundary invariants; coordination requirements; aggregate alternatives; oversized- and undersized-boundary risks; stress-test scenarios; and a recommended hybrid candidate baseline.
 - **Does not establish:** final Aggregate boundaries or roots, persistence transactions, repositories, APIs, commands, domain events, services, Architecture, frameworks, or any implementation decision.
+- **Modifiable silently by later sessions:** No.
+
+### 8. `docs/domain/DOMAIN_BEHAVIOR_CATALOG.md`
+- **Role:** Current product-domain behavior baseline.
+- **Establishes:** 55 documented product-domain behaviors; business intent; separated preconditions, accepted effects, and rejection conditions; affected candidate boundaries; local and cross-boundary invariants; recalculation scope; lifecycle and correction interactions; traceability requirements; and protected open questions.
+- **Does not establish:** APIs, commands, handlers, services, domain events, repositories, persistence, database schemas, final Aggregate boundaries, Architecture, frameworks, or implementation decisions.
 - **Modifiable silently by later sessions:** No.
 
 The project-local skill artifacts (`.agents/`, `.claude/`, `skills-lock.json`) are tooling configuration, not approved product or domain artifacts, and are not listed above.
@@ -194,6 +200,23 @@ Session 18 reviewed the following candidate baseline. **Every Aggregate classifi
 
 These hotspots state which provisional domain boundaries participate in one logical result. They do not select a persistence transaction, repository, service, command, domain event, message, or any other implementation mechanism (`AGGREGATE_CANDIDATES.md` §§15–16, 23).
 
+### Reviewed Domain Behavior Baseline
+
+Session 19 established the following reviewed behavior baseline (`docs/domain/DOMAIN_BEHAVIOR_CATALOG.md` §§1, 5, 23–29):
+
+- 55 product-domain behaviors are documented; their documentation identifiers do not imply APIs, commands, methods, services, or implementation structures.
+- The six Financial Event forms remain distinct: Income, Expense, Transfer, Fund Allocation, Fund Release, and Debt Repayment. Fund-Linked Expense remains an Expense form rather than a seventh Event Type.
+- A rejected behavior preserves the previously confirmed state.
+- Effects involving multiple candidate boundaries are accepted all-or-nothing at the product-domain level.
+- Complete effective-date validation is cross-boundary because Event Date belongs to Financial Event while Account or Debt Record provides the applicable effective-date constraint.
+- Correction evaluates both old and proposed histories from the earliest affected point.
+- Existing Financial Events are never silently removed or excluded by opening-state correction or reporting regrouping.
+- Chronological Recalculation validates every later affected point, not only the final result.
+- Reporting regrouping changes membership and derived reporting totals only; it does not change Financial Event facts, Event Dates, Account balances, Fund allocations, Dedicated Fund Balance, or Outstanding Principal.
+- Every important derived value and multi-sided Financial Event effect remains traceable to Supporting Records.
+
+The behavior baseline keeps Dedicated Fund rename, Dedicated Fund restoration, and permanent deletion from Trash as **Still Open**. Complete Debt Record permanent-deletion eligibility remains a **Candidate Behavior** with open detail. None is converted into a confirmed behavior by this summary.
+
 ---
 
 ## 6. Non-Negotiable Product and Domain Rules
@@ -273,23 +296,29 @@ All items below are **Still open**. Do not resolve any of them silently in futur
 - Whether a Target Amount can be changed or removed after allocation history exists. — *`docs/product/ANNOTASI_FINANCE_MVP_PRD.md` §14, §28.*
 - Whether a Financial Goal "completed" state is explicit or purely derived. — *`docs/product/ANNOTASI_FINANCE_MVP_PRD.md` §14, §28.*
 - Final Dedicated Fund UI terminology (ruling out only "Dompet" as a universal term). — *`docs/product/ANNOTASI_FINANCE_MVP_PRD.md` §9, §22.*
+- Whether changing between ordinary and fund-linked Expense form is always a Same-Type Edit or requires Event Replacement in some cases. — *`docs/domain/DOMAIN_BEHAVIOR_CATALOG.md` §27.*
 
 ### Debt
 - Whether debt status (Active/Paid Off) is explicit or purely derived from Outstanding Principal. — *`docs/product/ANNOTASI_FINANCE_MVP_PRD.md` §15, §28.*
 - Whether creditor/lender name is a separate Debt Record field or folded into the debt name. — *`docs/product/ANNOTASI_FINANCE_MVP_PRD.md` §15, §28.*
+- Complete eligibility for permanent Debt Record deletion beyond the confirmed repayment-reference blocker. — *`docs/domain/DOMAIN_BEHAVIOR_CATALOG.md` §§16, 27.*
 
 ### Event Lifecycle
 - Whether a replaced event appears in ordinary history or only in its own detail/audit context. — *`docs/product/ANNOTASI_FINANCE_MVP_PRD.md` §16, §28.*
 - Exact Trash retention period (30 days is the current preference, not final). — *`docs/product/ANNOTASI_FINANCE_MVP_PRD.md` §16, §28.*
 - Whether manual Permanent Deletion from Trash is available in v1. — *`docs/product/ANNOTASI_FINANCE_MVP_PRD.md` §16, §28.*
 - The exact threshold for requiring an Impact Preview confirmation. — *`docs/product/ANNOTASI_FINANCE_MVP_PRD.md` §16, §28.*
+- Whether high-impact correction requires a stated reason, together with the final Impact Preview threshold. — *`docs/product/ANNOTASI_FINANCE_MVP_PRD.md` §16, §28; `docs/domain/DOMAIN_BEHAVIOR_CATALOG.md` §27.*
 - The deterministic same-date ordering mechanism (the requirement itself is confirmed). — *`docs/product/ANNOTASI_FINANCE_MVP_PRD.md` §16; `docs/domain/UBIQUITOUS_LANGUAGE.md` §11.*
 - Whether a Transfer's source and destination Accounts are explicitly required to differ. — *`docs/domain/DOMAIN_CONCEPT_MODEL.md` §8, §18.*
+- The precedence among competing rejection and blocking conditions during correction or restoration. — *`docs/domain/DOMAIN_BEHAVIOR_CATALOG.md` §§24, 27.*
+- Which archived references, if any, remain eligible when restoring a Financial Event. — *`docs/domain/DOMAIN_BEHAVIOR_CATALOG.md` §§19, 27.*
 
 ### Reporting and Totals
 - Whether archived Accounts remain in historical Workspace Total Balance. — *`docs/product/ANNOTASI_FINANCE_MVP_PRD.md` §12, §28.*
 - Whether user-controlled exclusion of an Account from totals is allowed. — *`docs/product/ANNOTASI_FINANCE_MVP_PRD.md` §12, §28.*
 - Final Reporting Period modeling form (value/configuration pair vs. another form). — *`docs/domain/DOMAIN_OBJECT_CANDIDATES.md` §10, §19.*
+- Whether a Reporting Period configuration change applies immediately or at the next session start. — *`docs/product/ANNOTASI_FINANCE_MVP_PRD.md` §17, §28; `docs/domain/DOMAIN_BEHAVIOR_CATALOG.md` §27.*
 
 ### Aggregate Boundaries and Coordination
 - Whether Workspace is an Aggregate Root or an ownership/scope boundary only. — *`docs/domain/AGGREGATE_CANDIDATES.md` §22.*
@@ -302,6 +331,9 @@ All items below are **Still open**. Do not resolve any of them silently in futur
 - How correction and Restoration preserve one logical result across every old and new chronologically affected candidate boundary. — *`docs/domain/AGGREGATE_CANDIDATES.md` §§13, 15, 16, 22.*
 - Whether full historical recalculation belongs to one boundary or is a cross-boundary domain process. — *`docs/domain/AGGREGATE_CANDIDATES.md` §22.*
 - How Traceability relates to candidate boundaries without creating one giant audit Aggregate. — *`docs/domain/AGGREGATE_CANDIDATES.md` §§12, 22.*
+- Exact candidate-root participation for each cross-boundary behavior. — *`docs/domain/DOMAIN_BEHAVIOR_CATALOG.md` §§23, 27.*
+- Whether Account or Dedicated Fund is responsible for current Account-Backed Fund Allocation state and its cross-account breakdown. — *`docs/domain/AGGREGATE_CANDIDATES.md` §22; `docs/domain/DOMAIN_BEHAVIOR_CATALOG.md` §27.*
+- Which candidate boundary carries cross-boundary correction responsibility while preserving one all-or-nothing domain result. — *`docs/domain/DOMAIN_BEHAVIOR_CATALOG.md` §§23, 27.*
 
 ### UX Terminology
 - Final Bahasa Indonesia labels for the six Financial Event types. — *`docs/product/ANNOTASI_FINANCE_MVP_PRD.md` §22.*
@@ -337,7 +369,7 @@ Confirmed exclusions, per `docs/product/ANNOTASI_FINANCE_MVP_PRD.md` §8:
 - Full offline-first synchronization.
 
 ### Candidate Domain Decisions Not Yet Finalized
-The workflow has now analyzed candidate Aggregate boundaries, Candidate Aggregate Roots, and candidate consistency boundaries, but Session 18 explicitly keeps every classification provisional. Final domain approval still requires later detailed behavior analysis and refinement (`AGGREGATE_CANDIDATES.md` §§1, 21–23).
+The workflow has now analyzed candidate Aggregate boundaries, Candidate Aggregate Roots, candidate consistency boundaries, and product-domain behaviors, but Sessions 18 and 19 keep every boundary classification provisional. Final domain approval still requires detailed behavior decision tables and candidate-boundary participation analysis (`AGGREGATE_CANDIDATES.md` §§1, 21–23; `DOMAIN_BEHAVIOR_CATALOG.md` §§23, 27–28).
 
 ### Not Yet Decided Because Workflow Has Not Reached It
 The following are **not excluded from the product** — they are simply not yet modeled, because the workflow (`CLAUDE.md` §5) has not reached that stage:
@@ -369,6 +401,7 @@ Only read documents directly relevant to the task at hand.
 - **Entity / value-object task:** `docs/domain/UBIQUITOUS_LANGUAGE.md`, `docs/domain/DOMAIN_CONCEPT_MODEL.md`, `docs/domain/DOMAIN_OBJECT_CANDIDATES.md`
 - **Aggregate candidate analysis:** `docs/domain/UBIQUITOUS_LANGUAGE.md`, `docs/domain/DOMAIN_CONCEPT_MODEL.md`, `docs/domain/DOMAIN_OBJECT_CANDIDATES.md`, plus direct verification of PRD §9, §11, §12, §13, §14, §15, §16, §19. Read the full PRD only if those targeted sections reveal an inconsistency, a missing dependency, an affected open question, or an ambiguity that cannot be resolved selectively (see Level 3 below).
 - **Domain Behavior Analysis (Session 19):** `docs/domain/UBIQUITOUS_LANGUAGE.md`, `docs/domain/DOMAIN_CONCEPT_MODEL.md`, `docs/domain/DOMAIN_OBJECT_CANDIDATES.md`, `docs/domain/AGGREGATE_CANDIDATES.md`, plus direct verification of PRD §9, §11, §12, §13, §14, §15, §16, §17, §19. Read the full PRD only if targeted reading reveals an inconsistency, a missing dependency, an affected open question, or an unresolved ambiguity.
+- **Domain Behavior Decision Tables and Boundary Participation Analysis (Session 20):** `docs/domain/UBIQUITOUS_LANGUAGE.md`, `docs/domain/DOMAIN_CONCEPT_MODEL.md`, `docs/domain/DOMAIN_OBJECT_CANDIDATES.md`, `docs/domain/AGGREGATE_CANDIDATES.md`, `docs/domain/DOMAIN_BEHAVIOR_CATALOG.md`, plus direct verification of PRD §9, §11, §12, §13, §14, §15, §16, §17, §19, §28. Read the full PRD only if targeted reading exposes an inconsistency, a missing dependency, an affected open question, or an unresolved ambiguity. Session 20 begins only through explicit instruction.
 - **Product-scope or requirement question:** the relevant `docs/product/ANNOTASI_FINANCE_MVP_PRD.md` section, plus `docs/product/PRODUCT_IDENTITY.md` when product direction matters
 - **Architecture task (later workflow stage):** all approved domain artifacts, plus only the relevant PRD sections
 
@@ -395,7 +428,8 @@ Read the full PRD or another full source document only when:
 | Domain Concept Model update | `CLAUDE.md`, `PROJECT_STATE.md` | `UBIQUITOUS_LANGUAGE.md`, `DOMAIN_CONCEPT_MODEL.md` | No | This artifact is already complete; changes require explicit instruction |
 | Entity/Value Object refinement | `CLAUDE.md`, `PROJECT_STATE.md` | `UBIQUITOUS_LANGUAGE.md`, `DOMAIN_CONCEPT_MODEL.md`, `DOMAIN_OBJECT_CANDIDATES.md` | No | This artifact is already complete; changes require explicit instruction |
 | Aggregate Candidate Analysis | `CLAUDE.md`, `PROJECT_STATE.md` | `UBIQUITOUS_LANGUAGE.md`, `DOMAIN_CONCEPT_MODEL.md`, `DOMAIN_OBJECT_CANDIDATES.md`; targeted verification of PRD §9, §11, §12, §13, §14, §15, §16, §19 | Targeted sections only — full PRD only if those sections reveal an inconsistency, a missing dependency, an affected open question, or an unresolved ambiguity | Completed in Session 18; its artifact remains provisional and requires explicit instruction to refine |
-| Domain Behavior Analysis | `CLAUDE.md`, `PROJECT_STATE.md` | `UBIQUITOUS_LANGUAGE.md`, `DOMAIN_CONCEPT_MODEL.md`, `DOMAIN_OBJECT_CANDIDATES.md`, `AGGREGATE_CANDIDATES.md`; targeted verification of PRD §9, §11, §12, §13, §14, §15, §16, §17, §19 | Targeted sections only — full PRD only if targeted reading reveals an inconsistency, a missing dependency, an affected open question, or an unresolved ambiguity | **Next Domain Modeling task — begin only through explicit Session 19 instruction.** Analyze product-domain operations, preconditions, effects, failure conditions, affected candidate boundaries, correction behavior, and Traceability. Do not introduce APIs, commands, services, events, repositories, Architecture, or implementation |
+| Domain Behavior Analysis | `CLAUDE.md`, `PROJECT_STATE.md` | `UBIQUITOUS_LANGUAGE.md`, `DOMAIN_CONCEPT_MODEL.md`, `DOMAIN_OBJECT_CANDIDATES.md`, `AGGREGATE_CANDIDATES.md`; targeted verification of PRD §9, §11, §12, §13, §14, §15, §16, §17, §19 | Targeted sections only — full PRD only if targeted reading reveals an inconsistency, a missing dependency, an affected open question, or an unresolved ambiguity | Completed in Session 19; `DOMAIN_BEHAVIOR_CATALOG.md` is the current behavior baseline and may be refined only through explicit instruction |
+| Domain Behavior Decision Tables and Boundary Participation Analysis | `CLAUDE.md`, `PROJECT_STATE.md` | `UBIQUITOUS_LANGUAGE.md`, `DOMAIN_CONCEPT_MODEL.md`, `DOMAIN_OBJECT_CANDIDATES.md`, `AGGREGATE_CANDIDATES.md`, `DOMAIN_BEHAVIOR_CATALOG.md`; targeted verification of PRD §9, §11, §12, §13, §14, §15, §16, §17, §19, §28 | Targeted sections only — full PRD only if targeted reading exposes an inconsistency, a missing dependency, an affected open question, or an unresolved ambiguity | **Next Domain Modeling task — begin only through explicit Session 20 instruction.** Turn confirmed behavior rules into reviewable domain decision tables covering condition evaluation, blocking outcomes, all-or-nothing effects, candidate-boundary participation, recalculation scope, and Traceability. Do not define APIs, commands, services, repositories, domain events, transactions, persistence, or Architecture |
 | Lifecycle/correction analysis | `CLAUDE.md`, `PROJECT_STATE.md` | `DOMAIN_CONCEPT_MODEL.md` §13, `DOMAIN_OBJECT_CANDIDATES.md` §11; PRD §16 | Targeted (§16) | Chronological Recalculation and Financial Invariants are high-impact — verify against PRD §16 directly |
 | Reporting/time analysis | `CLAUDE.md`, `PROJECT_STATE.md` | `UBIQUITOUS_LANGUAGE.md` §10, `DOMAIN_CONCEPT_MODEL.md` §12; PRD §17 | Targeted (§17) | Asia/Jakarta fixed-timezone rule is non-negotiable — verify directly |
 | Architecture | `CLAUDE.md`, `PROJECT_STATE.md` | All completed domain artifacts, plus relevant PRD sections | Sections as needed | **Future workflow stage — do not begin yet.** No architecture artifact exists |
@@ -503,10 +537,10 @@ Updates to this document should be small and traceable — reflecting one specif
 
 ## 16. Current Next Step
 
-- Session 18 established `docs/domain/AGGREGATE_CANDIDATES.md` as the latest completed domain artifact, covering provisional aggregate candidates, invariants, coordination hotspots, alternatives, risks, and stress tests.
-- The next recommended task is **Session 19 — Domain Behavior Analysis**.
-- Session 19 has **not** started.
-- Domain Behavior Analysis remains part of the current Domain Modeling stage (see Section 3, Section 11) and begins only through explicit Session 19 instruction.
+- Session 19 established `docs/domain/DOMAIN_BEHAVIOR_CATALOG.md` as the latest completed domain artifact, covering product-domain intent, preconditions, accepted effects, rejection, candidate-boundary participation, recalculation, lifecycle, correction, and Traceability.
+- The next recommended task is **Session 20 — Domain Behavior Decision Tables and Boundary Participation Analysis**.
+- Session 20 has **not** started.
+- Session 20 remains part of the current Domain Modeling stage (see Section 3, Section 11) and begins only through explicit Session 20 instruction.
 - Architecture remains downstream from a sufficiently approved domain model and has not begun.
 
 This document only summarizes candidate conclusions from the domain artifact; it does not turn them into final Aggregate, Aggregate Root, or consistency-boundary decisions.
@@ -549,3 +583,8 @@ This document only summarizes candidate conclusions from the domain artifact; it
 - **Authority role:** Candidate domain consistency-boundary analysis covering provisional Aggregates, roots, invariants, coordination hotspots, alternatives, and stress tests.
 - **When to read:** Before Domain Behavior Analysis and before any later aggregate-boundary refinement.
 - **Must not be replaced by:** This document's summaries or generic DDD assumptions.
+
+### `docs/domain/DOMAIN_BEHAVIOR_CATALOG.md`
+- **Authority role:** Current product-domain behavior baseline covering intent, preconditions, effects, rejection, candidate-boundary participation, recalculation, lifecycle, and Traceability.
+- **When to read:** Before behavior decision-table analysis, detailed domain specification, or later correction/lifecycle refinement.
+- **Must not be replaced by:** `PROJECT_STATE.md` summaries, generic finance conventions, or technical use-case assumptions.
