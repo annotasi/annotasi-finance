@@ -4,15 +4,19 @@
 
 - **Status:** Current project navigation snapshot
 - **Scope:** Annotasi Finance Private Beta MVP
-- **Last completed workflow session:** Session 23
-- **Completed workflow stages:** Product Definition, Domain Modeling, Architecture Baseline
-- **Current workflow stage:** Implementation Planning
-- **Latest completed workflow artifact:** `docs/architecture/ARCHITECTURE_BASELINE.md`
+- **Last completed workflow session:** Session 24
+- **Completed workflow stages:** Product Definition, Domain Modeling, Architecture Baseline, Implementation Planning
+- **Current workflow stage:** Implementation
+- **Latest completed workflow artifact:** `docs/implementation/MVP_IMPLEMENTATION_PLAN.md`
 - **Latest completed domain artifact:** `docs/domain/EXECUTABLE_DOMAIN_SPECIFICATION.md`
 - **Latest completed Architecture artifact:** `docs/architecture/ARCHITECTURE_BASELINE.md`
-- **Next recommended task:** Session 24 — MVP Implementation Plan
+- **Latest completed implementation-planning artifact:** `docs/implementation/MVP_IMPLEMENTATION_PLAN.md`
+- **First approved implementation slice:** `SLICE-FOUND-001`
+- **Next recommended task:** Session 25 — Technical Foundation Implementation
 
-Session 23 — Architecture Baseline is complete. `docs/architecture/ARCHITECTURE_BASELINE.md` has been reviewed, committed, and pushed as the reviewed Private Beta v1 technical Architecture baseline. Architecture Baseline is complete for that baseline. The current workflow stage is Implementation Planning, but Session 24 — MVP Implementation Plan has **not** started, implementation planning has **not** started, application implementation has **not** started, and no application source tree has been created. The Architecture baseline may only be reopened through explicit review when a genuine conflict or implementation-blocking defect is discovered; downstream sessions may not silently reinterpret it.
+Session 24 — MVP Implementation Plan is complete. `docs/implementation/MVP_IMPLEMENTATION_PLAN.md` has been reviewed, committed, and pushed as the reviewed Private Beta v1 implementation-planning baseline and final planning artifact before implementation. Product Definition, Domain Modeling, Architecture Baseline, and Implementation Planning are complete. The current workflow stage is Implementation, but Session 25 has **not** started, application implementation has **not** started, and no implementation slice has started. No package manifest, application source tree, migration, schema, or CI workflow has been created.
+
+Implementation may begin only through the reviewed scope of `SLICE-FOUND-001`. Product, domain, Architecture, and implementation planning may only be reopened through explicit review when a genuine conflict or blocking defect is discovered; implementation may not silently reinterpret them.
 
 `docs/project/PROJECT_STATE.md` remains a workflow-support artifact and navigation snapshot, not a domain artifact. It summarizes completed work without replacing the authority of the product and domain source documents.
 
@@ -61,8 +65,11 @@ Position as of this document's creation:
 - PRD: complete (`docs/product/ANNOTASI_FINANCE_MVP_PRD.md`, Status: Draft for review — see Section 4 for what "Draft for review" means for this artifact).
 - Domain model: complete for the Private Beta v1 baseline. Ubiquitous Language, Domain Concept Model, Domain Object Candidates, Aggregate Candidate Analysis, Domain Behavior Analysis, Domain Behavior Decision Tables and Boundary Participation Analysis, Domain Decision Resolution, and Executable Domain Specification are complete. No further broad Domain Modeling artifact is recommended.
 - Architecture: complete for the Private Beta v1 baseline. Session 23 — Architecture Baseline produced `docs/architecture/ARCHITECTURE_BASELINE.md`, reviewed, committed, and pushed as the working Architecture baseline. No further broad Architecture artifact is recommended; Architecture may only be reopened through explicit review when a genuine conflict or implementation-blocking defect is discovered.
-- Implementation Planning: current workflow stage. Session 24 — MVP Implementation Plan has not started and no Implementation-Time Selection has been resolved.
-- Milestones, Specifications, Implementation, Review, Testing, Release: not started. Application implementation remains downstream from a reviewed MVP Implementation Plan.
+- Implementation Planning: complete. Session 24 produced `docs/implementation/MVP_IMPLEMENTATION_PLAN.md`, reviewed, committed, and pushed as the final planning artifact before implementation.
+- Implementation: current workflow stage. Session 25 — Technical Foundation Implementation has not started. `SLICE-FOUND-001` is the approved next slice and has not started. `SLICE-FOUND-002` and all later slices have not started.
+- Review, Testing, Release: not started. No framework initialization, coding, migration, provider setup, deployment, or CI work has started.
+
+Completed workflow artifacts, in order: Product Identity; MVP PRD; Ubiquitous Language; Domain Concept Model; Domain Object Candidates; Aggregate Candidate Analysis; Domain Behavior Analysis; Domain Behavior Decision Tables and Boundary Participation Analysis; Domain Decision Resolution; Executable Domain Specification; Architecture Baseline; MVP Implementation Plan.
 
 ---
 
@@ -143,6 +150,13 @@ Listed in workflow order. For each: role, what it establishes, what it deliberat
 - **Does not establish:** detailed API contracts, table-by-table schemas, migration SQL, package manifests, implementation tickets, estimates, or application code.
 - **Modifiable silently by later sessions:** No.
 
+### 13. `docs/implementation/MVP_IMPLEMENTATION_PLAN.md`
+- **Role:** Reviewed Private Beta v1 implementation plan and final planning artifact before implementation.
+- **Establishes:** bounded Architecture implementation-time selections; technology-version baselines and verification requirements; implementation provider candidates; operational and performance budgets; repository initialization order; dependency and package boundaries; delivery plans for authentication, opaque application sessions, onboarding, Workspace isolation, RLS, exact money, chronology, transactions, idempotency, recalculation, traceability, reporting, security, observability, deployment, backup, and recovery; 14 implementation milestones; 30 review-sized vertical slices; the dependency graph and 25-slice critical path; 9 quality gates; mappings for all 21 Architecture risks; Definition of Ready and Definition of Done; and `SLICE-FOUND-001` as the only first implementation slice.
+- **Readiness result:** Ready with Pre-Implementation Verification.
+- **Does not establish or contain:** application code, framework initialization, package manifests, migrations, table-by-table schemas, detailed endpoint contracts, GitHub issues, or external tickets.
+- **Modifiable silently by later sessions:** No.
+
 The project-local skill artifacts (`.agents/`, `.claude/`, `skills-lock.json`) are tooling configuration, not approved product or domain artifacts, and are not listed above.
 
 ---
@@ -169,7 +183,7 @@ This section summarizes `docs/domain/DOMAIN_OBJECT_CANDIDATES.md` §5–§13. **
 - Target Amount
 - Opening Outstanding Principal
 
-Exact implementation types (e.g., money type, date type) remain undecided.
+`DOMAIN_OBJECT_CANDIDATES.md` itself did not select exact implementation types for money, dates, time, or identifiers. Later Architecture and Implementation Plan artifacts now establish the applicable representation baselines; the original candidate classifications remain unchanged.
 
 ### Derived Values
 - Total Account Balance
@@ -189,7 +203,7 @@ Summarized without reproducing full detail (see `DOMAIN_OBJECT_CANDIDATES.md` §
 - **Event Type** — the closed six-member classification of a Financial Event (Income, Expense, Transfer, Fund Allocation, Fund Release, Debt Repayment).
 - **Account Type** — the fixed four-member classification of an Account (Cash, Bank Account, E-Wallet, Other).
 - **Income/Expense Category kinds** — Income Category and Expense Category are non-overlapping kinds; the actual category names within each kind are user-extensible, not a fixed enumeration.
-- **Reporting Period** — a Workspace-owned configuration choice (Calendar Month or one Custom Monthly Cycle) with exactly one active configuration; technical representation remains for Architecture.
+- **Reporting Period** — a Workspace-owned configuration choice (Calendar Month or one Custom Monthly Cycle) with exactly one active configuration. The candidate artifact deferred technical representation to Architecture; Architecture has since assigned the technical responsibility, while exact schema and code shape remain slice-level implementation details.
 - **Calendar Month** — the fixed default Reporting Period.
 - **Custom Monthly Cycle** — an optional Reporting Period with a single start-day parameter (days 1–28).
 - **Asia/Jakarta Workspace Timezone** — a fixed, non-configurable v1 policy.
@@ -351,13 +365,61 @@ These counts are navigation metadata, not substitutes for reading `docs/architec
 
 **Adopted Technical Baseline (minimum record):** monorepo with `apps/web` and `apps/api`; framework-independent `packages/domain`; `packages/contracts`; strict TypeScript; pnpm workspaces and Turborepo; Next.js and React; NestJS with Fastify; PostgreSQL; Drizzle and reviewed SQL migrations; Zod at transport/configuration boundaries; managed identity category; secure opaque HttpOnly cookie sessions; server-derived Workspace authority; PostgreSQL RLS; PostgreSQL BIGINT-equivalent whole-Rupiah storage; backend `bigint`/exact-integer representation; base-10 integer strings for REST/JSON money; browser exact-integer handling; Event Date plus Workspace monotonic confirmation position; one database transaction per confirmed financial behavior; Workspace write serialization plus entity versions; Workspace-scoped idempotency; targeted chronological recalculation; complete immutable Same-Type Edit versions; current-name historical display; REST/JSON preview-and-confirm interaction; no authoritative browser financial calculation; no general-purpose queue or worker fleet; managed web/API/PostgreSQL single-region deployment category; automated backups/PITR and restore drills. This list is not a reinterpretation or extension of the baseline — see `docs/architecture/ARCHITECTURE_BASELINE.md` directly for full reasoning and the complete decision set.
 
+### Reviewed MVP Implementation Plan Baseline (Session 24)
+
+Session 24 produced `docs/implementation/MVP_IMPLEMENTATION_PLAN.md`, the reviewed Private Beta v1 implementation plan and final planning artifact before implementation. It resolves the bounded Architecture implementation-time selections; defines version baselines and their verification requirements; selects provider candidates; sets operational and performance budgets; orders repository initialization; defines package boundaries; and plans authentication, Annotasi-Finance-owned opaque application sessions, onboarding, Workspace isolation, RLS, exact money, chronology, transactions, idempotency, recalculation, traceability, reporting, security, observability, deployment, backup, and recovery delivery. It contains no application code, framework initialization, package manifest, migration, table-by-table schema, detailed endpoint contract, GitHub issue, or external ticket.
+
+**Implementation Plan navigation metadata:**
+
+| Navigation measure | Count / Result |
+|---|---:|
+| Top-level sections | 45 |
+| Implementation selections | 16 |
+| Selected for Initial Implementation | 9 |
+| Selected with Pre-Implementation Verification | 5 |
+| Conditional Selection | 1 |
+| Deferred Until Pre-Beta | 1 |
+| Not Selected for v1 | 0 |
+| Official research-source rows | 23 |
+| Implementation milestones | 14 |
+| Vertical slices | 30 |
+| Quality gates | 9 |
+| Architecture risks mapped | 21 |
+| Critical-path slices | 25 |
+| First implementation slice | `SLICE-FOUND-001` |
+| Session 25 readiness | Ready with Pre-Implementation Verification |
+
+These counts are navigation metadata only and never replace reading the complete plan.
+
+**Selected implementation baseline:** Node.js 24.x Active LTS category; latest compatible TypeScript 6.x stable patch for initial implementation; pnpm 11.x; Turborepo 2.10.x; Next.js 16.x; React 19.x; NestJS 11.x; `@nestjs/platform-fastify` >=11.1.24; Drizzle ORM and Drizzle Kit; Zod 4.x; PostgreSQL 17 candidate with PostgreSQL 16 fallback; Vitest; fast-check and `@fast-check/vitest`; Testcontainers PostgreSQL; Playwright with axe integration; Clerk for managed identity verification; Annotasi-Finance-owned opaque server-side application sessions; Neon Singapore as the selected managed PostgreSQL candidate with Supabase as fallback; Vercel Singapore for web; Fly.io Singapore as the API-hosting candidate; Sentry for telemetry; GitHub Actions for CI; Singapore as the production-region baseline; a single-use invitation token bound to invited email; auditable manual export for the first beta wave; and an auditable manual owner-account-deletion request for the first beta wave.
+
+All exact versions and provider capabilities require the bounded pre-implementation verification named in the plan. `PROJECT_STATE.md` does not independently guarantee current versions, prices, regions, quotas, or provider capabilities.
+
+**Deferred and conditional selections:**
+
+- the exact owner-account-deletion retention window is Deferred Until Pre-Beta, must be resolved before the first beta invitation, does not block `SLICE-FOUND-001`, and is separate from Financial Event Trash;
+- Financial Event Trash has no expiry or permanent deletion in v1;
+- Clerk email delivery is conditional on observed deliverability;
+- Render is an unverified contingency candidate, not a selected fallback;
+- Session 25 does not select or implement asynchronous owner-account-deletion orchestration, a queue, a worker, or a job mechanism;
+- no queue or worker technology is selected;
+- no self-service export or deletion is selected for the first beta wave.
+
+**First implementation slice — `SLICE-FOUND-001`:** Monorepo, tooling, CI, and framework shells. Included scope is root package metadata; pnpm workspace; Turborepo task graph; strict shared TypeScript configuration; lint and format configuration; Architecture-boundary enforcement; Next.js web shell; NestJS/Fastify API shell; framework-independent domain, contracts, configuration, and test-support package skeletons; non-secret environment examples; and initial non-database GitHub Actions CI.
+
+Explicit exclusions: no PostgreSQL connection, migration, RLS implementation, financial domain behavior, financial route, financial UI, authentication, Clerk integration, provider-account setup, deployment, or `SLICE-FOUND-002` scope.
+
+Required evidence, locally and in CI: (1) install; (2) format check; (3) lint; (4) typecheck; (5) smoke unit tests; (6) Architecture-boundary checks; (7) web build; (8) API build. Implementation must stay within the reviewed slice boundary. The implementing agent must not stage, commit, or push; the user performs all staging, commits, and pushes.
+
+**Foundation Gate sequencing:** `SLICE-FOUND-001` establishes the non-database half. `SLICE-FOUND-002` depends on it and establishes PostgreSQL, migration, Testcontainers, and RLS-skeleton evidence. Both Milestone 1 slices are allowed to establish the gate and are not blocked by its completed state. No slice outside Milestone 1 may begin until the full Foundation Gate passes. `SLICE-IAM-001` and every Milestone 2+ slice require the full gate; persistence-backed `SLICE-IAM-001` cannot begin after `SLICE-FOUND-001` alone.
+
 ---
 
 ## 6. Non-Negotiable Product and Domain Rules
 
 1. Annotasi Finance v1 is multi-user, but each User owns exactly one private Single-Owner Workspace. — *`docs/product/ANNOTASI_FINANCE_MVP_PRD.md` §6; `docs/domain/UBIQUITOUS_LANGUAGE.md` §5.*
 
-2. Shared editing, invitations, household collaboration, and roles are excluded from v1. — *`docs/product/ANNOTASI_FINANCE_MVP_PRD.md` §6, §8; `docs/product/PRODUCT_IDENTITY.md` §3.*
+2. Shared-Workspace invitations, household invitations, shared editing, household collaboration, and Workspace roles are excluded from v1. Private Beta access invitations are permitted as access-entitlement mechanics, not collaboration invitations; they still establish exactly one private Single-Owner Workspace. Their implementation belongs to `SLICE-IAM-002`, not `SLICE-FOUND-001`. — *`docs/product/ANNOTASI_FINANCE_MVP_PRD.md` §6, §8; `docs/product/PRODUCT_IDENTITY.md` §3; `docs/implementation/MVP_IMPLEMENTATION_PLAN.md` §§11, 34.*
 
 3. There are exactly six closed v1 Financial Event types: Income, Expense, Transfer, Fund Allocation, Fund Release, Debt Repayment. — *`docs/product/ANNOTASI_FINANCE_MVP_PRD.md` §11; `docs/domain/UBIQUITOUS_LANGUAGE.md` §6.*
 
@@ -436,7 +498,7 @@ No additional domain decision is introduced by this summary.
 
 ### Current Architecture Constraints (Session 23)
 
-`docs/architecture/ARCHITECTURE_BASELINE.md` establishes these Architecture-level constraints in addition to the domain rules above; Session 24 must preserve them, not resolve or reinterpret them:
+`docs/architecture/ARCHITECTURE_BASELINE.md` establishes these Architecture-level constraints in addition to the domain rules above; implementation must preserve them, not resolve or reinterpret them:
 
 - exactly six Financial Event Types;
 - no partial cross-boundary acceptance;
@@ -457,6 +519,19 @@ No additional domain decision is introduced by this summary.
 - no duplicate User, Workspace, starter Account, or entitlement-consumption result under concurrent onboarding;
 - no owner-account deletion treated as ordinary non-authoritative cleanup.
 
+### Current Implementation Constraints (Session 24)
+
+- exactly six Financial Event Types; `SLICE-FOUND-001` implements no financial behavior;
+- `packages/domain` has no framework dependency; `apps/web` cannot import `packages/domain` or API application modules;
+- `packages/contracts` cannot implement domain formulas, and `packages/test-support` cannot become a production dependency;
+- no floating-point money or native JSON number for authoritative money;
+- no browser-authored Workspace authority and no Clerk token as the ordinary browser-to-API authorization credential;
+- no timestamp-based Financial Event chronology, partial cross-boundary acceptance, last-write-wins financial state, or silent historical-event exclusion;
+- no permanent Financial Event deletion or Trash expiry;
+- no general-purpose queue, microservices, event sourcing, or Kubernetes;
+- no slice may bypass dependency order without explicit review;
+- no implementing agent may stage, commit, or push.
+
 ---
 
 ## 7. Candidate Domain Classifications
@@ -465,7 +540,7 @@ This section points to, rather than repeats, `docs/domain/DOMAIN_OBJECT_CANDIDAT
 
 - **Every classification in the source document is explicitly a candidate**, not a final Entity/Value Object/Aggregate decision (`DOMAIN_OBJECT_CANDIDATES.md` §1, §3).
 - **Account-Backed Fund Allocation** was undecided in the candidate artifact; the executable specification now fixes no independent lot identity and Account–Dedicated Fund pair identity.
-- **Reporting Period** was structurally open in the candidate artifact; the executable specification now fixes Workspace domain responsibility and leaves only technical representation to Architecture.
+- **Reporting Period** was structurally open in the candidate artifact; the executable specification fixes Workspace domain responsibility, Architecture has since assigned technical responsibility, and exact schema/code shape remains slice-level implementation detail.
 - **Financial Goal** is classified as Not a Domain Object — it shares Dedicated Fund's identity entirely, not a separate concept (`DOMAIN_OBJECT_CANDIDATES.md` §6, §13).
 - **Income/Expense/Transfer/Fund Allocation/Fund Release/Debt Repayment** each have a dual nature: an Event Type classifier member, and an informal name for a Financial Event instance of that type — no third, independently identified concept exists (`DOMAIN_OBJECT_CANDIDATES.md` §9).
 - `DOMAIN_OBJECT_CANDIDATES.md` itself assigns no Aggregate, Aggregate Root, Domain Service, Repository, Command, Domain Event, or Bounded Context (`DOMAIN_OBJECT_CANDIDATES.md` §1, §18). The later `AGGREGATE_CANDIDATES.md` adds only provisional Aggregate and root candidates; it does not finalize them or introduce the other concepts in this list (`AGGREGATE_CANDIDATES.md` §§1, 21, 23).
@@ -476,7 +551,9 @@ For full reasoning, identity/equality analysis, and stress-test scenarios behind
 
 ## 8. Active Open Questions
 
-Domain Modeling has no active unresolved question that blocks Architecture. The Identity and Naming, Funds and Goals, Debt, Event Lifecycle, Reporting and Totals, and Aggregate Boundaries lists below are retained only as a historical pre-Session-21 question index; Session 21 resolved/classified them and Session 22 incorporated those resolutions into the executable specification. They must not be reopened or treated as Still Open without an explicit domain review triggered by a genuine conflict or missing product rule. The UX Terminology items remain product/UX questions outside the completed normative domain baseline. The two decisions previously carried forward for Architecture (current-name display; prior Same-Type Edit version-history depth) were resolved by Session 23 as ARCH-TRACE-01 and ARCH-TRACE-02 in `docs/architecture/ARCHITECTURE_BASELINE.md` §26 — see Section 9 below for the newly named Session 24 Implementation-Time Selections that replace them as carried-forward items.
+Product Definition, Domain Modeling, Architecture Baseline, and Implementation Planning have no active unresolved question that blocks `SLICE-FOUND-001`. The Identity and Naming, Funds and Goals, Debt, Event Lifecycle, Reporting and Totals, and Aggregate Boundaries lists below are retained only as a historical pre-Session-21 question index; Session 21 resolved/classified them and Session 22 incorporated those resolutions into the executable specification. They must not be reopened or treated as Still Open without an explicit domain review triggered by a genuine conflict or missing product rule. The UX Terminology items remain product/UX questions outside the completed normative domain baseline. The two Architecture-carried decisions were resolved by Session 23, and Session 24 resolved or bounded every Implementation-Time Selection needed for the first slice.
+
+**Current-question boundary:** only the **UX Terminology** subsection contains currently unresolved questions. Every other subsection in Section 8 is a historical pre-Session-21 question index, superseded by `docs/domain/DOMAIN_DECISION_REGISTER.md` and `docs/domain/EXECUTABLE_DOMAIN_SPECIFICATION.md`, and must not be treated as an active open-question backlog.
 
 ### Identity and Naming
 - Whether Account names must be unique inside one Workspace. — *`docs/domain/DOMAIN_OBJECT_CANDIDATES.md` §15, §19.*
@@ -491,7 +568,6 @@ Domain Modeling has no active unresolved question that blocks Architecture. The 
 - Whether non-zero Dedicated Fund archival is ever blocked outright vs. always allowed with confirmation. — *`docs/product/ANNOTASI_FINANCE_MVP_PRD.md` §14, §28.*
 - Whether a Target Amount can be changed or removed after allocation history exists. — *`docs/product/ANNOTASI_FINANCE_MVP_PRD.md` §14, §28.*
 - Whether a Financial Goal "completed" state is explicit or purely derived. — *`docs/product/ANNOTASI_FINANCE_MVP_PRD.md` §14, §28.*
-- Final Dedicated Fund UI terminology (ruling out only "Dompet" as a universal term). — *`docs/product/ANNOTASI_FINANCE_MVP_PRD.md` §9, §22.*
 - Whether changing between ordinary and fund-linked Expense form is always a Same-Type Edit or requires Event Replacement in some cases. — *`docs/domain/DOMAIN_BEHAVIOR_CATALOG.md` §27.*
 
 ### Debt
@@ -501,7 +577,7 @@ Domain Modeling has no active unresolved question that blocks Architecture. The 
 
 ### Event Lifecycle
 - Whether a replaced event appears in ordinary history or only in its own detail/audit context. — *`docs/product/ANNOTASI_FINANCE_MVP_PRD.md` §16, §28.*
-- Exact Trash retention period (30 days is the current preference, not final). — *`docs/product/ANNOTASI_FINANCE_MVP_PRD.md` §16, §28.*
+- Historical question — superseded by DEC-LIFE-02 and DEC-LIFE-03: Financial Event Trash has no expiry, retention day-count, or permanent deletion in v1.
 - Whether manual Permanent Deletion from Trash is available in v1. — *`docs/product/ANNOTASI_FINANCE_MVP_PRD.md` §16, §28.*
 - The exact threshold for requiring an Impact Preview confirmation. — *`docs/product/ANNOTASI_FINANCE_MVP_PRD.md` §16, §28.*
 - Whether high-impact correction requires a stated reason, together with the final Impact Preview threshold. — *`docs/product/ANNOTASI_FINANCE_MVP_PRD.md` §16, §28; `docs/domain/DOMAIN_BEHAVIOR_CATALOG.md` §27.*
@@ -540,6 +616,7 @@ These items have reviewed resolutions in the Session 21 register and normative i
 ### UX Terminology
 - Final Bahasa Indonesia labels for the six Financial Event types. — *`docs/product/ANNOTASI_FINANCE_MVP_PRD.md` §22.*
 - Final Account Type labels (Tunai, Rekening Bank, Dompet Digital, Lainnya are candidates). — *`docs/product/ANNOTASI_FINANCE_MVP_PRD.md` §22.*
+- Final Dedicated Fund UI terminology (ruling out only "Dompet" as a universal term). — *`docs/product/ANNOTASI_FINANCE_MVP_PRD.md` §9, §22.*
 - Exact starter Category wording, count, and default set. — *`docs/product/ANNOTASI_FINANCE_MVP_PRD.md` §13, §28.*
 - Whether a Refund/Reimbursement default Income Category belongs in the starter set. — *`docs/product/ANNOTASI_FINANCE_MVP_PRD.md` §13, §28.*
 
@@ -570,38 +647,13 @@ Confirmed exclusions, per `docs/product/ANNOTASI_FINANCE_MVP_PRD.md` §8:
 - A routine admin/support interface for browsing raw user financial data.
 - Full offline-first synchronization.
 
-### Session 24 Implementation-Time Selections
+### Session 24 Resolved and Bounded Implementation Selections
 
-Session 23 — Architecture Baseline resolved the two decisions previously carried forward for Architecture (current-name display, ARCH-TRACE-01; prior Same-Type Edit version-history depth, ARCH-TRACE-02 — see `docs/architecture/ARCHITECTURE_BASELINE.md` §26). Architecture is complete for the Private Beta v1 baseline; no Architecture decision remains carried forward as unresolved domain meaning.
+Session 24 resolved the Architecture's implementation-time selection categories within the reviewed constraints. The selected baseline and navigation counts are recorded in Section 5; the implementation plan remains the authority for complete reasoning, evidence, costs, and reconsideration triggers.
 
-`docs/architecture/ARCHITECTURE_BASELINE.md` instead names bounded Implementation-Time Selections that Session 24 must resolve without weakening or reinterpreting any adopted Architecture selection. The six named categories:
+One selection remains **Deferred Until Pre-Beta**: the exact owner-account-deletion retention window. It must be resolved before the first beta invitation, does not block `SLICE-FOUND-001`, and is distinct from Financial Event Trash. Financial Event Trash remains indefinitely recoverable in v1 with no expiry or permanent deletion.
 
-1. Version pins and compatibility.
-2. Vendors.
-3. Production region.
-4. Performance budgets and operational thresholds.
-5. CI/deployment product.
-6. Export and owner-account-deletion delivery.
-
-Bounded choices attached to adopted Architecture:
-
-- Private Beta entitlement representation and issuance;
-- managed identity provider;
-- session-provider integration;
-- hosting and PostgreSQL providers;
-- email and telemetry providers;
-- exact PostgreSQL major version;
-- exact runtime/tool versions;
-- exact RLS transaction-context mechanism;
-- exact Workspace lock/counter realization;
-- exact idempotency transport and retention;
-- export threshold;
-- self-service versus manual/staged export;
-- self-service versus auditable manual owner-account deletion;
-- deletion retention and orchestration;
-- provider-backed RPO/RTO confirmation.
-
-This snapshot does not resolve any of these selections. These are not v1 exclusions; Session 24 must resolve them only within the constraints of `docs/architecture/ARCHITECTURE_BASELINE.md`.
+Conditional or deliberately unselected details: Clerk email delivery remains conditional on observed deliverability; Render remains an unverified contingency candidate rather than a selected fallback; no asynchronous owner-account-deletion orchestration is selected by Session 25; no queue or worker technology is selected; and self-service export/deletion is not selected for the first beta wave.
 
 ---
 
@@ -624,7 +676,8 @@ Only read documents directly relevant to the task at hand.
 - **Domain Decision Resolution (Session 21):** Read `CLAUDE.md`, `docs/project/PROJECT_STATE.md`, `docs/domain/UBIQUITOUS_LANGUAGE.md`, `docs/domain/DOMAIN_CONCEPT_MODEL.md`, `docs/domain/DOMAIN_OBJECT_CANDIDATES.md`, `docs/domain/AGGREGATE_CANDIDATES.md`, `docs/domain/DOMAIN_BEHAVIOR_CATALOG.md`, and `docs/domain/DOMAIN_BEHAVIOR_DECISION_TABLES.md` completely. Directly verify PRD §9, §11, §12, §13, §14, §15, §16, §17, §19, and §28. Read `docs/product/PRODUCT_IDENTITY.md` only when ownership, trust, privacy, simplicity, or MVP product direction affects a recommendation. Read additional PRD sections only when a targeted rule depends on them or a source conflict appears. Session 21 is complete; this entry records its source-loading baseline.
 - **Executable Domain Specification (Session 22):** Read completely: `CLAUDE.md`, `docs/project/PROJECT_STATE.md`, `docs/product/PRODUCT_IDENTITY.md`, `docs/product/ANNOTASI_FINANCE_MVP_PRD.md`, `docs/domain/UBIQUITOUS_LANGUAGE.md`, `docs/domain/DOMAIN_CONCEPT_MODEL.md`, `docs/domain/DOMAIN_OBJECT_CANDIDATES.md`, `docs/domain/AGGREGATE_CANDIDATES.md`, `docs/domain/DOMAIN_BEHAVIOR_CATALOG.md`, `docs/domain/DOMAIN_BEHAVIOR_DECISION_TABLES.md`, and `docs/domain/DOMAIN_DECISION_REGISTER.md`. Session 22 is complete; this entry records its full-read baseline.
 - **Architecture Baseline (Session 23):** Required full reads: `CLAUDE.md`, `docs/project/PROJECT_STATE.md`, `docs/product/PRODUCT_IDENTITY.md`, `docs/product/ANNOTASI_FINANCE_MVP_PRD.md`, `docs/domain/EXECUTABLE_DOMAIN_SPECIFICATION.md`, `docs/domain/DOMAIN_DECISION_REGISTER.md`, and `docs/domain/AGGREGATE_CANDIDATES.md`. Read `docs/domain/UBIQUITOUS_LANGUAGE.md`, `docs/domain/DOMAIN_CONCEPT_MODEL.md`, `docs/domain/DOMAIN_OBJECT_CANDIDATES.md`, `docs/domain/DOMAIN_BEHAVIOR_CATALOG.md`, and `docs/domain/DOMAIN_BEHAVIOR_DECISION_TABLES.md` only when the executable specification points to missing supporting detail or a potential contradiction. Session 23 may inspect repository-root technical files to determine whether a technical baseline already exists. It must not read unrelated files and begins only through explicit Session 23 instruction. Session 23 is complete; this entry records its full-read baseline.
-- **MVP Implementation Plan (Session 24):** Required full reads: `CLAUDE.md`, `docs/project/PROJECT_STATE.md`, `docs/product/PRODUCT_IDENTITY.md`, `docs/product/ANNOTASI_FINANCE_MVP_PRD.md`, `docs/domain/EXECUTABLE_DOMAIN_SPECIFICATION.md`, and `docs/architecture/ARCHITECTURE_BASELINE.md`. Required targeted reads where referenced: `docs/domain/DOMAIN_DECISION_REGISTER.md` and `docs/domain/AGGREGATE_CANDIDATES.md`. Session 24 must inspect the repository technical baseline again rather than assume it is unchanged. Session 24 must use current official primary sources — not remembered version numbers, pricing, or provider capabilities — for runtime and framework versions, package-manager/tool compatibility, provider capabilities, provider regions, provider pricing or plan constraints, backup/PITR, session/authentication behavior, managed PostgreSQL limitations, and deployment and CI capabilities. If current-source verification is unavailable, Session 24 must stop and report the blocked selections rather than guessing. It begins only through explicit Session 24 instruction.
+- **MVP Implementation Plan (Session 24):** Required full reads were `CLAUDE.md`, `docs/project/PROJECT_STATE.md`, `docs/product/PRODUCT_IDENTITY.md`, `docs/product/ANNOTASI_FINANCE_MVP_PRD.md`, `docs/domain/EXECUTABLE_DOMAIN_SPECIFICATION.md`, and `docs/architecture/ARCHITECTURE_BASELINE.md`, with targeted domain-decision and aggregate reads where referenced plus official technical/provider sources. Session 24 is complete; this entry records its source-loading baseline.
+- **Technical Foundation Implementation (Session 25 / `SLICE-FOUND-001`):** Read completely: `CLAUDE.md`, `docs/project/PROJECT_STATE.md`, `docs/implementation/MVP_IMPLEMENTATION_PLAN.md`, and `docs/architecture/ARCHITECTURE_BASELINE.md`. Read targeted portions of `docs/domain/EXECUTABLE_DOMAIN_SPECIFICATION.md` only for Architecture handoff and implementation constraints when needed. Read targeted portions of `docs/product/ANNOTASI_FINANCE_MVP_PRD.md` only when the technical foundation needs product identity, accessibility, responsive, or Private Beta scope context. Inspect the repository technical baseline before modifying anything. Before initialization, verify current official primary sources for Node.js LTS, the current compatible TypeScript 6.x patch, pnpm 11.x, Turborepo 2.x, Next.js 16.x/React 19 compatibility, NestJS 11.x, a security-patched `@nestjs/platform-fastify`, Zod 4.x, Vitest, Architecture-boundary tooling candidates, and GitHub Actions versions. Provider-account creation is not required. If verification is unavailable or compatibility is contradictory, stop before initialization and report the blocked selection rather than guessing. Session 25 begins only through explicit instruction and has not started.
 - **Product-scope or requirement question:** the relevant `docs/product/ANNOTASI_FINANCE_MVP_PRD.md` section, plus `docs/product/PRODUCT_IDENTITY.md` when product direction matters
 - **Other Architecture task:** `docs/domain/EXECUTABLE_DOMAIN_SPECIFICATION.md` plus the sources it identifies for the affected constraint; load no unrelated files
 
@@ -658,9 +711,10 @@ Read the full PRD or another full source document only when:
 | Lifecycle/correction analysis | `CLAUDE.md`, `PROJECT_STATE.md` | `DOMAIN_CONCEPT_MODEL.md` §13, `DOMAIN_OBJECT_CANDIDATES.md` §11; PRD §16 | Targeted (§16) | Chronological Recalculation and Financial Invariants are high-impact — verify against PRD §16 directly |
 | Reporting/time analysis | `CLAUDE.md`, `PROJECT_STATE.md` | `UBIQUITOUS_LANGUAGE.md` §10, `DOMAIN_CONCEPT_MODEL.md` §12; PRD §17 | Targeted (§17) | Asia/Jakarta fixed-timezone rule is non-negotiable — verify directly |
 | Architecture Baseline | `CLAUDE.md`, `PROJECT_STATE.md` | Full reads of `PRODUCT_IDENTITY.md`, `ANNOTASI_FINANCE_MVP_PRD.md`, `EXECUTABLE_DOMAIN_SPECIFICATION.md`, `DOMAIN_DECISION_REGISTER.md`, `AGGREGATE_CANDIDATES.md`; conditional reads of the five earlier domain artifacts only for missing detail or contradiction | Yes — complete PRD | **Completed in Session 23.** Converts approved domain constraints into the smallest reliable v1 technical baseline; resolves the named Architecture decisions; defines technology, modules, persistence, consistency, security, testing, operations, and deployment boundaries. It does not write application code, define detailed endpoint contracts, or produce the implementation ticket plan, and must not weaken or silently reinterpret the executable specification. |
-| MVP Implementation Plan | `CLAUDE.md`, `PROJECT_STATE.md` | Full reads of `PRODUCT_IDENTITY.md`, `ANNOTASI_FINANCE_MVP_PRD.md`, `EXECUTABLE_DOMAIN_SPECIFICATION.md`, `ARCHITECTURE_BASELINE.md`; targeted reads of `DOMAIN_DECISION_REGISTER.md` and `AGGREGATE_CANDIDATES.md` where referenced; current official primary sources for versions, providers, regions, pricing, and provider capabilities | Yes — complete PRD | **First Implementation Planning task; begins only through explicit Session 24 instruction.** Resolves the bounded Implementation-Time Selections; translates the reviewed Architecture into milestones and vertical implementation slices; establishes implementation order, dependencies, acceptance gates, and evidence requirements; identifies the first coding slice; defines review-sized work bundles. It does not write application code, initialize frameworks, create migrations, create detailed endpoint contracts, or create GitHub issues unless a later explicit session requests ticket generation, and must not weaken the PRD, executable domain specification, or Architecture baseline. |
-| Implementation specification | `CLAUDE.md`, `PROJECT_STATE.md` | All completed domain artifacts, relevant PRD sections | Sections as needed | **Future workflow stage — do not begin yet.** Domain modeling and architecture are prerequisites |
-| Coding | `CLAUDE.md`, `PROJECT_STATE.md` | Depends on implementation specification | N/A | **Future workflow stage — do not begin yet.** No framework or architecture has been selected |
+| MVP Implementation Plan | `CLAUDE.md`, `PROJECT_STATE.md` | Full reads of `PRODUCT_IDENTITY.md`, `ANNOTASI_FINANCE_MVP_PRD.md`, `EXECUTABLE_DOMAIN_SPECIFICATION.md`, `ARCHITECTURE_BASELINE.md`; targeted reads of `DOMAIN_DECISION_REGISTER.md` and `AGGREGATE_CANDIDATES.md` where referenced; current official primary sources for versions, providers, regions, pricing, and provider capabilities | Yes — complete PRD | **Completed in Session 24.** Reviewed final planning artifact defining selections, milestones, 30 vertical slices, dependencies, gates, evidence, readiness/done criteria, and `SLICE-FOUND-001` as the first coding slice. It contains no application code, framework initialization, migration, detailed endpoint contract, GitHub issue, or external ticket. |
+| Technical Foundation Implementation — `SLICE-FOUND-001` | `CLAUDE.md`, `PROJECT_STATE.md`, `MVP_IMPLEMENTATION_PLAN.md`, `ARCHITECTURE_BASELINE.md` | Targeted executable-specification Architecture handoff/constraints when needed; targeted PRD product identity/accessibility/responsive/Private Beta context; current official sources for the Section 10 tool list | No — targeted only | **First implementation task; begins only through explicit Session 25 instruction.** Initializes only the Section 40 technical foundation: buildable monorepo and web/API shells, dependency boundaries, and initial CI. Creates no financial feature, database connection/migration, authentication/provider integration, detailed financial API contract, GitHub issue, or `SLICE-FOUND-002` work. It must preserve every source constraint and ends with review evidence, not an agent-created commit. |
+| Implementation specification | `CLAUDE.md`, `PROJECT_STATE.md`, `MVP_IMPLEMENTATION_PLAN.md` | Relevant approved source sections for the selected slice | Sections as needed | Current-stage slice detail may be produced only inside the reviewed slice boundary; it may not reopen source decisions silently. |
+| Coding | `CLAUDE.md`, `PROJECT_STATE.md`, `MVP_IMPLEMENTATION_PLAN.md`, `ARCHITECTURE_BASELINE.md` | Sources required by the selected slice | N/A | **Current workflow stage, not started.** Only `SLICE-FOUND-001` is approved to start, and only through explicit Session 25 instruction after this synchronization is reviewed, committed, and pushed. |
 | Code review | `CLAUDE.md`, `PROJECT_STATE.md` | Relevant specification and domain artifacts | N/A | **Future workflow stage — do not begin yet.** No code exists in this repository |
 | Bug investigation | `CLAUDE.md`, `PROJECT_STATE.md` | Relevant domain artifacts and PRD sections | Targeted | **Future workflow stage — do not begin yet.** No implementation exists to investigate |
 | Release validation | `CLAUDE.md`, `PROJECT_STATE.md` | PRD §24 (Launch Criteria) in full | Yes — §24 | **Future workflow stage — do not begin yet.** No release candidate exists |
@@ -678,7 +732,7 @@ A new Claude Code session working on Annotasi Finance should:
 5. Load only the Level 2 documents relevant to that task (Section 10, Section 11).
 6. Consult specific PRD sections on demand (Level 3, Section 10) when a summary is ambiguous or the task is high-impact.
 7. Report which sources were loaded before proceeding.
-8. Identify any protected open questions (Section 8) that the task touches, and avoid resolving them silently.
+8. Identify only currently unresolved UX Terminology questions in Section 8 that the task touches; do not treat the historical pre-Session-21 index as an active backlog or resolve UX questions silently.
 9. Stop and report if git status shows unrelated changes beyond what the task expects.
 10. Not begin a later workflow stage (Section 3) without explicit instruction, even if this document names it as the "next recommended step."
 
@@ -695,8 +749,8 @@ Read CLAUDE.md and docs/project/PROJECT_STATE.md first.
 Then read only: <TASK-SPECIFIC_SOURCES>
 
 Do not begin a workflow stage beyond the one named above without
-explicit instruction. Do not silently resolve any explicitly unresolved
-item in PROJECT_STATE.md Sections 8–9. Report the sources loaded
+explicit instruction. Do not silently resolve any currently unresolved
+UX Terminology item in Section 8 or deferred/conditional item in Section 9. Report the sources loaded
 before making any change.
 ```
 
@@ -730,7 +784,7 @@ A handoff is not required after every completed session — only when one of the
 
 - Summaries in this document do not override sources.
 - Direct source citation is required for any new domain assertion.
-- Open questions (Section 8) remain open unless explicitly decided in their authoritative source — never resolved by being repeated confidently in a summary.
+- Only the UX Terminology subsection of Section 8 contains currently unresolved questions; those questions remain open unless explicitly decided in their authoritative source. Every other Section 8 subsection is a superseded historical index, not an active backlog.
 - Candidate status (Section 5, Section 7) does not become Confirmed merely because a term is repeated in this or another summary document.
 - If this document becomes stale relative to the repository, update it (Section 15) before relying on it for a new task.
 - High-impact finance rules (Section 6, and any Financial Invariant) must be verified against the PRD or domain source directly before being relied upon for implementation or specification work.
@@ -743,7 +797,7 @@ A handoff is not required after every completed session — only when one of the
 
 ### Must trigger an update
 - a new workflow artifact is reviewed and pushed;
-- an open question (Section 8) is explicitly resolved by its authoritative source;
+- a currently unresolved UX Terminology question in Section 8 is explicitly resolved by its authoritative source;
 - a confirmed rule (Section 6) changes through an approved PRD revision;
 - the current workflow stage (Section 1, Section 3) changes;
 - a new authoritative document is added to the repository;
@@ -763,14 +817,17 @@ Updates to this document should be small and traceable — reflecting one specif
 
 ## 16. Current Next Step
 
-- Session 23 established `docs/architecture/ARCHITECTURE_BASELINE.md` as the latest completed workflow and Architecture artifact.
-- Session 23 is complete: Architecture Baseline is complete for the Private Beta v1 baseline.
-- The next recommended task is **Session 24 — MVP Implementation Plan**.
-- Session 24 has **not** started, and application implementation has **not** started.
-- After Session 24 is reviewed, committed, and pushed, the first approved technical-foundation implementation slice may begin.
-- Coding does not begin before that review.
+- Session 24 established `docs/implementation/MVP_IMPLEMENTATION_PLAN.md` as the latest completed workflow and implementation-planning artifact.
+- Session 24 is complete; Implementation Planning is complete for the Private Beta v1 baseline.
+- Implementation is the current workflow stage.
+- The next recommended task is **Session 25 — Technical Foundation Implementation**.
+- Session 25 has **not** started; application implementation and every implementation slice remain not started.
+- `SLICE-FOUND-001` is the only approved first coding slice.
+- Implementation begins only after this `PROJECT_STATE.md` synchronization is reviewed, committed, and pushed.
+- After `SLICE-FOUND-001` is implemented and reviewed, the user may stage, commit, and push it; the implementing agent must not do so.
+- `SLICE-FOUND-002` begins only through a later explicit session after `SLICE-FOUND-001` passes review.
 
-This document summarizes navigation state only. It neither replaces the executable domain specification or the Architecture baseline, nor resolves any Architecture or implementation decision.
+This document summarizes navigation state only. It replaces neither the product/domain/Architecture baselines nor the implementation plan and independently guarantees no version, provider, price, region, quota, or capability.
 
 ---
 
@@ -835,3 +892,8 @@ This document summarizes navigation state only. It neither replaces the executab
 - **Authority role:** Reviewed Private Beta v1 technical Architecture baseline defining system shape, stack categories, runtime boundaries, modules, persistence, consistency, chronology, recalculation, security, testing, deployment, recovery, and implementation constraints.
 - **When to read:** Before implementation planning, technical initialization, schema design, API design, implementation tickets, testing, and code changes.
 - **Must not be replaced by:** `PROJECT_STATE.md` summaries, framework defaults, remembered vendor capabilities, generic startup Architecture, or implementation convenience.
+
+### `docs/implementation/MVP_IMPLEMENTATION_PLAN.md`
+- **Authority role:** Reviewed Private Beta v1 implementation-planning baseline defining current technical/provider selections, operational budgets, initialization order, milestones, slices, dependencies, gates, evidence, readiness and done criteria, and the approved first coding slice.
+- **When to read:** Before any framework initialization, package selection, repository-structure creation, provider setup, migration, implementation slice, testing, or deployment work.
+- **Must not be replaced by:** `PROJECT_STATE.md` summaries, remembered package versions, copied boilerplate, framework defaults, generic monorepo templates, provider marketing assumptions, or implementation convenience.
