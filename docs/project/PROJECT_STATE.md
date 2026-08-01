@@ -4,14 +4,15 @@
 
 - **Status:** Current project navigation snapshot
 - **Scope:** Annotasi Finance Private Beta MVP
-- **Last completed workflow session:** Session 22
-- **Completed workflow stage:** Domain Modeling
-- **Current workflow stage:** Architecture
-- **Latest completed workflow artifact:** `docs/domain/EXECUTABLE_DOMAIN_SPECIFICATION.md`
+- **Last completed workflow session:** Session 23
+- **Completed workflow stages:** Product Definition, Domain Modeling, Architecture Baseline
+- **Current workflow stage:** Implementation Planning
+- **Latest completed workflow artifact:** `docs/architecture/ARCHITECTURE_BASELINE.md`
 - **Latest completed domain artifact:** `docs/domain/EXECUTABLE_DOMAIN_SPECIFICATION.md`
-- **Next recommended task:** Session 23 — Architecture Baseline
+- **Latest completed Architecture artifact:** `docs/architecture/ARCHITECTURE_BASELINE.md`
+- **Next recommended task:** Session 24 — MVP Implementation Plan
 
-Session 22 — Executable Domain Specification is complete. `docs/domain/EXECUTABLE_DOMAIN_SPECIFICATION.md` has been reviewed, committed, and accepted as the normative Private Beta v1 product-domain baseline. Domain Modeling is complete for that baseline. The current workflow stage is Architecture, but Session 23 — Architecture Baseline has **not** started, Architecture analysis has **not** started, and implementation has **not** started. The domain may be reopened only through explicit review when a genuine conflict or missing product rule is discovered; Architecture may not silently reinterpret it.
+Session 23 — Architecture Baseline is complete. `docs/architecture/ARCHITECTURE_BASELINE.md` has been reviewed, committed, and pushed as the reviewed Private Beta v1 technical Architecture baseline. Architecture Baseline is complete for that baseline. The current workflow stage is Implementation Planning, but Session 24 — MVP Implementation Plan has **not** started, implementation planning has **not** started, application implementation has **not** started, and no application source tree has been created. The Architecture baseline may only be reopened through explicit review when a genuine conflict or implementation-blocking defect is discovered; downstream sessions may not silently reinterpret it.
 
 `docs/project/PROJECT_STATE.md` remains a workflow-support artifact and navigation snapshot, not a domain artifact. It summarizes completed work without replacing the authority of the product and domain source documents.
 
@@ -59,8 +60,9 @@ Position as of this document's creation:
 - Product identity: complete (`docs/product/PRODUCT_IDENTITY.md`, approved foundation).
 - PRD: complete (`docs/product/ANNOTASI_FINANCE_MVP_PRD.md`, Status: Draft for review — see Section 4 for what "Draft for review" means for this artifact).
 - Domain model: complete for the Private Beta v1 baseline. Ubiquitous Language, Domain Concept Model, Domain Object Candidates, Aggregate Candidate Analysis, Domain Behavior Analysis, Domain Behavior Decision Tables and Boundary Participation Analysis, Domain Decision Resolution, and Executable Domain Specification are complete. No further broad Domain Modeling artifact is recommended.
-- Architecture: current workflow stage. Session 23 — Architecture Baseline has not started and no Architecture decision has been made.
-- Milestones, Specifications, Implementation, Review, Testing, Release: not started. Implementation remains downstream from an approved Architecture Baseline and implementation plan.
+- Architecture: complete for the Private Beta v1 baseline. Session 23 — Architecture Baseline produced `docs/architecture/ARCHITECTURE_BASELINE.md`, reviewed, committed, and pushed as the working Architecture baseline. No further broad Architecture artifact is recommended; Architecture may only be reopened through explicit review when a genuine conflict or implementation-blocking defect is discovered.
+- Implementation Planning: current workflow stage. Session 24 — MVP Implementation Plan has not started and no Implementation-Time Selection has been resolved.
+- Milestones, Specifications, Implementation, Review, Testing, Release: not started. Application implementation remains downstream from a reviewed MVP Implementation Plan.
 
 ---
 
@@ -134,6 +136,12 @@ Listed in workflow order. For each: role, what it establishes, what it deliberat
 - **Establishes:** all 41 Session 21 decisions; all 55 documented domain behaviors; exactly six Financial Event types; domain identities and reference semantics; money, date, timezone, and reporting policies; lifecycle states; global and concept-local invariants; deterministic Event Date plus Workspace confirmation-order chronology; correction, replacement, deletion, Trash, and Restoration; formulas and derived values; chronological recalculation; blocking outcomes; numeric acceptance examples; property-oriented test specifications; and constraints future Architecture must preserve.
 - **Does not establish:** technology stack, API contracts, database schemas, repository interfaces, transaction technology, deployment topology, framework modules, or implementation classes.
 - **Modifiable silently by later sessions:** No. A genuine conflict or missing product rule requires an explicit return to domain review.
+
+### 12. `docs/architecture/ARCHITECTURE_BASELINE.md`
+- **Role:** Reviewed Private Beta v1 technical Architecture baseline.
+- **Establishes:** a web application plus separate modular-monolith API in one monorepo; strict TypeScript, Next.js, NestJS/Fastify, PostgreSQL, Drizzle, and Zod technology categories; PostgreSQL as the authoritative store; server-derived Workspace scope plus PostgreSQL RLS; one PostgreSQL transaction for complete cross-boundary financial acceptance; Event Date plus Workspace confirmation-order position for chronology; targeted affected-history recalculation; a hybrid strategy of current projections and calculated reads; current-name display plus complete immutable Same-Type Edit version history; exact whole-Rupiah representation across PostgreSQL, backend, REST/JSON, and browser; atomic and idempotent Private Beta entitlement redemption; a prohibition on browser import of the authoritative domain package; explicit rejection of microservices, event sourcing, eventual consistency, floating-point money, timestamp chronology, last-write-wins, general-purpose queue infrastructure, and Kubernetes for v1; and bounded Implementation-Time Selections for Session 24.
+- **Does not establish:** detailed API contracts, table-by-table schemas, migration SQL, package manifests, implementation tickets, estimates, or application code.
+- **Modifiable silently by later sessions:** No.
 
 The project-local skill artifacts (`.agents/`, `.claude/`, `skills-lock.json`) are tooling configuration, not approved product or domain artifacts, and are not listed above.
 
@@ -321,6 +329,28 @@ Session 22 produced `docs/domain/EXECUTABLE_DOMAIN_SPECIFICATION.md`, the final 
 
 These counts are navigation metadata, not substitutes for reading the executable specification. The artifact does not establish a technology stack, API contracts, database schemas, repository interfaces, transaction technology, deployment topology, framework modules, or implementation classes.
 
+### Reviewed Architecture Baseline (Session 23)
+
+Session 23 produced `docs/architecture/ARCHITECTURE_BASELINE.md`, the reviewed Private Beta v1 technical Architecture baseline, translating the Executable Domain Specification into a concrete, implementation-ready technical shape without weakening or reopening domain meaning. It has been reviewed, committed, and pushed.
+
+**Architecture Baseline navigation metadata:**
+
+| Navigation measure | Count |
+|---|---:|
+| Top-level Architecture sections | 41 |
+| Architecture decisions | 66 |
+| Adopted Candidate Baseline | 35 |
+| Architecture Constraint | 4 |
+| Implementation-Time Selection | 6 |
+| Deferred Post-MVP | 3 |
+| Rejected for v1 | 18 |
+| Explicit rejected-alternative records | 20 |
+| Architecture risk records | 21 |
+
+These counts are navigation metadata, not substitutes for reading `docs/architecture/ARCHITECTURE_BASELINE.md` directly.
+
+**Adopted Technical Baseline (minimum record):** monorepo with `apps/web` and `apps/api`; framework-independent `packages/domain`; `packages/contracts`; strict TypeScript; pnpm workspaces and Turborepo; Next.js and React; NestJS with Fastify; PostgreSQL; Drizzle and reviewed SQL migrations; Zod at transport/configuration boundaries; managed identity category; secure opaque HttpOnly cookie sessions; server-derived Workspace authority; PostgreSQL RLS; PostgreSQL BIGINT-equivalent whole-Rupiah storage; backend `bigint`/exact-integer representation; base-10 integer strings for REST/JSON money; browser exact-integer handling; Event Date plus Workspace monotonic confirmation position; one database transaction per confirmed financial behavior; Workspace write serialization plus entity versions; Workspace-scoped idempotency; targeted chronological recalculation; complete immutable Same-Type Edit versions; current-name historical display; REST/JSON preview-and-confirm interaction; no authoritative browser financial calculation; no general-purpose queue or worker fleet; managed web/API/PostgreSQL single-region deployment category; automated backups/PITR and restore drills. This list is not a reinterpretation or extension of the baseline — see `docs/architecture/ARCHITECTURE_BASELINE.md` directly for full reasoning and the complete decision set.
+
 ---
 
 ## 6. Non-Negotiable Product and Domain Rules
@@ -404,6 +434,29 @@ Additional navigation reminders from the completed specification:
 
 No additional domain decision is introduced by this summary.
 
+### Current Architecture Constraints (Session 23)
+
+`docs/architecture/ARCHITECTURE_BASELINE.md` establishes these Architecture-level constraints in addition to the domain rules above; Session 24 must preserve them, not resolve or reinterpret them:
+
+- exactly six Financial Event Types;
+- no partial cross-boundary acceptance;
+- no floating-point money;
+- no timestamp-based same-date chronology;
+- no browser-authored Workspace authority;
+- no browser execution of the authoritative domain engine;
+- no `apps/web` import of `packages/domain`;
+- no client-authoritative financial result;
+- no last-write-wins financial writes;
+- no silent exclusion of historical events;
+- no permanent Financial Event deletion or Trash expiry;
+- no general-purpose queue dependency for financial correctness;
+- no event sourcing;
+- no microservices;
+- no unscoped authoritative rows;
+- no entitlement consumption outside the atomic onboarding outcome;
+- no duplicate User, Workspace, starter Account, or entitlement-consumption result under concurrent onboarding;
+- no owner-account deletion treated as ordinary non-authoritative cleanup.
+
 ---
 
 ## 7. Candidate Domain Classifications
@@ -423,7 +476,7 @@ For full reasoning, identity/equality analysis, and stress-test scenarios behind
 
 ## 8. Active Open Questions
 
-Domain Modeling has no active unresolved question that blocks Architecture. The Identity and Naming, Funds and Goals, Debt, Event Lifecycle, Reporting and Totals, and Aggregate Boundaries lists below are retained only as a historical pre-Session-21 question index; Session 21 resolved/classified them and Session 22 incorporated those resolutions into the executable specification. They must not be reopened or treated as Still Open without an explicit domain review triggered by a genuine conflict or missing product rule. The UX Terminology items remain product/UX questions outside the completed normative domain baseline. The two carried Architecture decisions are listed in Section 9.
+Domain Modeling has no active unresolved question that blocks Architecture. The Identity and Naming, Funds and Goals, Debt, Event Lifecycle, Reporting and Totals, and Aggregate Boundaries lists below are retained only as a historical pre-Session-21 question index; Session 21 resolved/classified them and Session 22 incorporated those resolutions into the executable specification. They must not be reopened or treated as Still Open without an explicit domain review triggered by a genuine conflict or missing product rule. The UX Terminology items remain product/UX questions outside the completed normative domain baseline. The two decisions previously carried forward for Architecture (current-name display; prior Same-Type Edit version-history depth) were resolved by Session 23 as ARCH-TRACE-01 and ARCH-TRACE-02 in `docs/architecture/ARCHITECTURE_BASELINE.md` §26 — see Section 9 below for the newly named Session 24 Implementation-Time Selections that replace them as carried-forward items.
 
 ### Identity and Naming
 - Whether Account names must be unique inside one Workspace. — *`docs/domain/DOMAIN_OBJECT_CANDIDATES.md` §15, §19.*
@@ -517,16 +570,38 @@ Confirmed exclusions, per `docs/product/ANNOTASI_FINANCE_MVP_PRD.md` §8:
 - A routine admin/support interface for browsing raw user financial data.
 - Full offline-first synchronization.
 
-### Architecture Decisions Carried Forward
+### Session 24 Implementation-Time Selections
 
-Exactly two named Architecture decisions remain unresolved and must be resolved without changing domain meaning:
+Session 23 — Architecture Baseline resolved the two decisions previously carried forward for Architecture (current-name display, ARCH-TRACE-01; prior Same-Type Edit version-history depth, ARCH-TRACE-02 — see `docs/architecture/ARCHITECTURE_BASELINE.md` §26). Architecture is complete for the Private Beta v1 baseline; no Architecture decision remains carried forward as unresolved domain meaning.
 
-1. Current-name-only display versus optional historical-name storage.
-2. Prior Same-Type Edit field-value history depth.
+`docs/architecture/ARCHITECTURE_BASELINE.md` instead names bounded Implementation-Time Selections that Session 24 must resolve without weakening or reinterpreting any adopted Architecture selection. The six named categories:
 
-Other Architecture responsibilities remain intentionally unresolved: application and deployment shape; technology stack; module boundaries; persistence strategy; identifier representation; Workspace confirmation-order representation; cross-boundary transaction and consistency mechanism; recalculation execution strategy; derived-value storage versus recomputation; authentication/session Architecture; Workspace isolation enforcement; API style; frontend Architecture; concurrency control; observability; recovery and backup; and testing strategy.
+1. Version pins and compatibility.
+2. Vendors.
+3. Production region.
+4. Performance budgets and operational thresholds.
+5. CI/deployment product.
+6. Export and owner-account-deletion delivery.
 
-These are not v1 exclusions and are not decisions made by this snapshot. Session 23 must resolve them only within the constraints of `docs/domain/EXECUTABLE_DOMAIN_SPECIFICATION.md`.
+Bounded choices attached to adopted Architecture:
+
+- Private Beta entitlement representation and issuance;
+- managed identity provider;
+- session-provider integration;
+- hosting and PostgreSQL providers;
+- email and telemetry providers;
+- exact PostgreSQL major version;
+- exact runtime/tool versions;
+- exact RLS transaction-context mechanism;
+- exact Workspace lock/counter realization;
+- exact idempotency transport and retention;
+- export threshold;
+- self-service versus manual/staged export;
+- self-service versus auditable manual owner-account deletion;
+- deletion retention and orchestration;
+- provider-backed RPO/RTO confirmation.
+
+This snapshot does not resolve any of these selections. These are not v1 exclusions; Session 24 must resolve them only within the constraints of `docs/architecture/ARCHITECTURE_BASELINE.md`.
 
 ---
 
@@ -548,7 +623,8 @@ Only read documents directly relevant to the task at hand.
 - **Domain Behavior Decision Tables and Boundary Participation Analysis (Session 20):** `docs/domain/UBIQUITOUS_LANGUAGE.md`, `docs/domain/DOMAIN_CONCEPT_MODEL.md`, `docs/domain/DOMAIN_OBJECT_CANDIDATES.md`, `docs/domain/AGGREGATE_CANDIDATES.md`, `docs/domain/DOMAIN_BEHAVIOR_CATALOG.md`, plus direct verification of PRD §9, §11, §12, §13, §14, §15, §16, §17, §19, §28. Read the full PRD only if targeted reading exposes an inconsistency, a missing dependency, an affected open question, or an unresolved ambiguity. Session 20 is complete; this entry records its source-loading baseline.
 - **Domain Decision Resolution (Session 21):** Read `CLAUDE.md`, `docs/project/PROJECT_STATE.md`, `docs/domain/UBIQUITOUS_LANGUAGE.md`, `docs/domain/DOMAIN_CONCEPT_MODEL.md`, `docs/domain/DOMAIN_OBJECT_CANDIDATES.md`, `docs/domain/AGGREGATE_CANDIDATES.md`, `docs/domain/DOMAIN_BEHAVIOR_CATALOG.md`, and `docs/domain/DOMAIN_BEHAVIOR_DECISION_TABLES.md` completely. Directly verify PRD §9, §11, §12, §13, §14, §15, §16, §17, §19, and §28. Read `docs/product/PRODUCT_IDENTITY.md` only when ownership, trust, privacy, simplicity, or MVP product direction affects a recommendation. Read additional PRD sections only when a targeted rule depends on them or a source conflict appears. Session 21 is complete; this entry records its source-loading baseline.
 - **Executable Domain Specification (Session 22):** Read completely: `CLAUDE.md`, `docs/project/PROJECT_STATE.md`, `docs/product/PRODUCT_IDENTITY.md`, `docs/product/ANNOTASI_FINANCE_MVP_PRD.md`, `docs/domain/UBIQUITOUS_LANGUAGE.md`, `docs/domain/DOMAIN_CONCEPT_MODEL.md`, `docs/domain/DOMAIN_OBJECT_CANDIDATES.md`, `docs/domain/AGGREGATE_CANDIDATES.md`, `docs/domain/DOMAIN_BEHAVIOR_CATALOG.md`, `docs/domain/DOMAIN_BEHAVIOR_DECISION_TABLES.md`, and `docs/domain/DOMAIN_DECISION_REGISTER.md`. Session 22 is complete; this entry records its full-read baseline.
-- **Architecture Baseline (Session 23):** Required full reads: `CLAUDE.md`, `docs/project/PROJECT_STATE.md`, `docs/product/PRODUCT_IDENTITY.md`, `docs/product/ANNOTASI_FINANCE_MVP_PRD.md`, `docs/domain/EXECUTABLE_DOMAIN_SPECIFICATION.md`, `docs/domain/DOMAIN_DECISION_REGISTER.md`, and `docs/domain/AGGREGATE_CANDIDATES.md`. Read `docs/domain/UBIQUITOUS_LANGUAGE.md`, `docs/domain/DOMAIN_CONCEPT_MODEL.md`, `docs/domain/DOMAIN_OBJECT_CANDIDATES.md`, `docs/domain/DOMAIN_BEHAVIOR_CATALOG.md`, and `docs/domain/DOMAIN_BEHAVIOR_DECISION_TABLES.md` only when the executable specification points to missing supporting detail or a potential contradiction. Session 23 may inspect repository-root technical files to determine whether a technical baseline already exists. It must not read unrelated files and begins only through explicit Session 23 instruction.
+- **Architecture Baseline (Session 23):** Required full reads: `CLAUDE.md`, `docs/project/PROJECT_STATE.md`, `docs/product/PRODUCT_IDENTITY.md`, `docs/product/ANNOTASI_FINANCE_MVP_PRD.md`, `docs/domain/EXECUTABLE_DOMAIN_SPECIFICATION.md`, `docs/domain/DOMAIN_DECISION_REGISTER.md`, and `docs/domain/AGGREGATE_CANDIDATES.md`. Read `docs/domain/UBIQUITOUS_LANGUAGE.md`, `docs/domain/DOMAIN_CONCEPT_MODEL.md`, `docs/domain/DOMAIN_OBJECT_CANDIDATES.md`, `docs/domain/DOMAIN_BEHAVIOR_CATALOG.md`, and `docs/domain/DOMAIN_BEHAVIOR_DECISION_TABLES.md` only when the executable specification points to missing supporting detail or a potential contradiction. Session 23 may inspect repository-root technical files to determine whether a technical baseline already exists. It must not read unrelated files and begins only through explicit Session 23 instruction. Session 23 is complete; this entry records its full-read baseline.
+- **MVP Implementation Plan (Session 24):** Required full reads: `CLAUDE.md`, `docs/project/PROJECT_STATE.md`, `docs/product/PRODUCT_IDENTITY.md`, `docs/product/ANNOTASI_FINANCE_MVP_PRD.md`, `docs/domain/EXECUTABLE_DOMAIN_SPECIFICATION.md`, and `docs/architecture/ARCHITECTURE_BASELINE.md`. Required targeted reads where referenced: `docs/domain/DOMAIN_DECISION_REGISTER.md` and `docs/domain/AGGREGATE_CANDIDATES.md`. Session 24 must inspect the repository technical baseline again rather than assume it is unchanged. Session 24 must use current official primary sources — not remembered version numbers, pricing, or provider capabilities — for runtime and framework versions, package-manager/tool compatibility, provider capabilities, provider regions, provider pricing or plan constraints, backup/PITR, session/authentication behavior, managed PostgreSQL limitations, and deployment and CI capabilities. If current-source verification is unavailable, Session 24 must stop and report the blocked selections rather than guessing. It begins only through explicit Session 24 instruction.
 - **Product-scope or requirement question:** the relevant `docs/product/ANNOTASI_FINANCE_MVP_PRD.md` section, plus `docs/product/PRODUCT_IDENTITY.md` when product direction matters
 - **Other Architecture task:** `docs/domain/EXECUTABLE_DOMAIN_SPECIFICATION.md` plus the sources it identifies for the affected constraint; load no unrelated files
 
@@ -581,7 +657,8 @@ Read the full PRD or another full source document only when:
 | Executable Domain Specification | `CLAUDE.md`, `PROJECT_STATE.md` | Full reads of `PRODUCT_IDENTITY.md`, `ANNOTASI_FINANCE_MVP_PRD.md`, `UBIQUITOUS_LANGUAGE.md`, `DOMAIN_CONCEPT_MODEL.md`, `DOMAIN_OBJECT_CANDIDATES.md`, `AGGREGATE_CANDIDATES.md`, `DOMAIN_BEHAVIOR_CATALOG.md`, `DOMAIN_BEHAVIOR_DECISION_TABLES.md`, `DOMAIN_DECISION_REGISTER.md` | Yes — the complete PRD, not only targeted sections | **Completed in Session 22.** Final Domain Modeling consolidation defining identities, value rules, lifecycle states, formulas, invariants, behavior acceptance, blocking outcomes, deterministic chronology, correction, recalculation, reporting, and traceability without defining Architecture or implementation. |
 | Lifecycle/correction analysis | `CLAUDE.md`, `PROJECT_STATE.md` | `DOMAIN_CONCEPT_MODEL.md` §13, `DOMAIN_OBJECT_CANDIDATES.md` §11; PRD §16 | Targeted (§16) | Chronological Recalculation and Financial Invariants are high-impact — verify against PRD §16 directly |
 | Reporting/time analysis | `CLAUDE.md`, `PROJECT_STATE.md` | `UBIQUITOUS_LANGUAGE.md` §10, `DOMAIN_CONCEPT_MODEL.md` §12; PRD §17 | Targeted (§17) | Asia/Jakarta fixed-timezone rule is non-negotiable — verify directly |
-| Architecture Baseline | `CLAUDE.md`, `PROJECT_STATE.md` | Full reads of `PRODUCT_IDENTITY.md`, `ANNOTASI_FINANCE_MVP_PRD.md`, `EXECUTABLE_DOMAIN_SPECIFICATION.md`, `DOMAIN_DECISION_REGISTER.md`, `AGGREGATE_CANDIDATES.md`; conditional reads of the five earlier domain artifacts only for missing detail or contradiction | Yes — complete PRD | **First Architecture-stage task; begins only through explicit Session 23 instruction.** Converts approved domain constraints into the smallest reliable v1 technical baseline; resolves the named Architecture decisions; defines technology, modules, persistence, consistency, security, testing, operations, and deployment boundaries. It does not write application code, define detailed endpoint contracts, or produce the implementation ticket plan, and must not weaken or silently reinterpret the executable specification. |
+| Architecture Baseline | `CLAUDE.md`, `PROJECT_STATE.md` | Full reads of `PRODUCT_IDENTITY.md`, `ANNOTASI_FINANCE_MVP_PRD.md`, `EXECUTABLE_DOMAIN_SPECIFICATION.md`, `DOMAIN_DECISION_REGISTER.md`, `AGGREGATE_CANDIDATES.md`; conditional reads of the five earlier domain artifacts only for missing detail or contradiction | Yes — complete PRD | **Completed in Session 23.** Converts approved domain constraints into the smallest reliable v1 technical baseline; resolves the named Architecture decisions; defines technology, modules, persistence, consistency, security, testing, operations, and deployment boundaries. It does not write application code, define detailed endpoint contracts, or produce the implementation ticket plan, and must not weaken or silently reinterpret the executable specification. |
+| MVP Implementation Plan | `CLAUDE.md`, `PROJECT_STATE.md` | Full reads of `PRODUCT_IDENTITY.md`, `ANNOTASI_FINANCE_MVP_PRD.md`, `EXECUTABLE_DOMAIN_SPECIFICATION.md`, `ARCHITECTURE_BASELINE.md`; targeted reads of `DOMAIN_DECISION_REGISTER.md` and `AGGREGATE_CANDIDATES.md` where referenced; current official primary sources for versions, providers, regions, pricing, and provider capabilities | Yes — complete PRD | **First Implementation Planning task; begins only through explicit Session 24 instruction.** Resolves the bounded Implementation-Time Selections; translates the reviewed Architecture into milestones and vertical implementation slices; establishes implementation order, dependencies, acceptance gates, and evidence requirements; identifies the first coding slice; defines review-sized work bundles. It does not write application code, initialize frameworks, create migrations, create detailed endpoint contracts, or create GitHub issues unless a later explicit session requests ticket generation, and must not weaken the PRD, executable domain specification, or Architecture baseline. |
 | Implementation specification | `CLAUDE.md`, `PROJECT_STATE.md` | All completed domain artifacts, relevant PRD sections | Sections as needed | **Future workflow stage — do not begin yet.** Domain modeling and architecture are prerequisites |
 | Coding | `CLAUDE.md`, `PROJECT_STATE.md` | Depends on implementation specification | N/A | **Future workflow stage — do not begin yet.** No framework or architecture has been selected |
 | Code review | `CLAUDE.md`, `PROJECT_STATE.md` | Relevant specification and domain artifacts | N/A | **Future workflow stage — do not begin yet.** No code exists in this repository |
@@ -686,14 +763,14 @@ Updates to this document should be small and traceable — reflecting one specif
 
 ## 16. Current Next Step
 
-- Session 22 established `docs/domain/EXECUTABLE_DOMAIN_SPECIFICATION.md` as the latest completed workflow and domain artifact.
-- Domain Modeling is complete for the Private Beta v1 baseline.
-- The next recommended task is **Session 23 — Architecture Baseline**.
-- Session 23 has **not** started, and Architecture analysis has **not** started.
-- After Session 23 is reviewed and approved, Session 24 will produce the MVP Implementation Plan.
-- Coding begins only after the MVP Implementation Plan is reviewed. Implementation has **not** started.
+- Session 23 established `docs/architecture/ARCHITECTURE_BASELINE.md` as the latest completed workflow and Architecture artifact.
+- Session 23 is complete: Architecture Baseline is complete for the Private Beta v1 baseline.
+- The next recommended task is **Session 24 — MVP Implementation Plan**.
+- Session 24 has **not** started, and application implementation has **not** started.
+- After Session 24 is reviewed, committed, and pushed, the first approved technical-foundation implementation slice may begin.
+- Coding does not begin before that review.
 
-This document summarizes navigation state only. It neither replaces the executable domain specification nor resolves any Architecture decision.
+This document summarizes navigation state only. It neither replaces the executable domain specification or the Architecture baseline, nor resolves any Architecture or implementation decision.
 
 ---
 
@@ -753,3 +830,8 @@ This document summarizes navigation state only. It neither replaces the executab
 - **Authority role:** Normative Private Beta v1 product-domain baseline defining policies, identity, lifecycle, formulas, invariants, chronology, accepted and blocked behavior, recalculation, reporting, and traceability.
 - **When to read:** Before Architecture, implementation planning, testing, and code changes.
 - **Must not be replaced by:** `PROJECT_STATE.md` summaries, generic finance conventions, framework defaults, database convenience, or implementation assumptions.
+
+### `docs/architecture/ARCHITECTURE_BASELINE.md`
+- **Authority role:** Reviewed Private Beta v1 technical Architecture baseline defining system shape, stack categories, runtime boundaries, modules, persistence, consistency, chronology, recalculation, security, testing, deployment, recovery, and implementation constraints.
+- **When to read:** Before implementation planning, technical initialization, schema design, API design, implementation tickets, testing, and code changes.
+- **Must not be replaced by:** `PROJECT_STATE.md` summaries, framework defaults, remembered vendor capabilities, generic startup Architecture, or implementation convenience.
