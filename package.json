@@ -20,7 +20,17 @@
     "build": "turbo run build",
     "build:web": "pnpm --filter @annotasi/web build",
     "build:api": "pnpm --filter @annotasi/api build",
-    "ci": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm boundaries && pnpm build:web && pnpm build:api"
+    "db:up": "docker compose --env-file infra/local/.env -f infra/local/compose.yml up -d --wait",
+    "db:down": "docker compose --env-file infra/local/.env -f infra/local/compose.yml down",
+    "db:logs": "docker compose --env-file infra/local/.env -f infra/local/compose.yml logs -f postgres",
+    "db:reset": "docker compose --env-file infra/local/.env -f infra/local/compose.yml down --volumes --remove-orphans",
+    "db:migrate": "node --env-file=infra/local/.env database/scripts/migrate-local.mjs",
+    "db:verify": "node --env-file=infra/local/.env database/scripts/verify-local.mjs",
+    "db:check": "pnpm --filter @annotasi/database db:check",
+    "db:test": "pnpm --filter @annotasi/database db:test",
+    "ci:foundation": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm boundaries && pnpm build:web && pnpm build:api",
+    "ci:database": "pnpm db:check && pnpm db:test",
+    "ci": "pnpm ci:foundation && pnpm ci:database"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

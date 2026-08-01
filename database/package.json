@@ -1,0 +1,24 @@
+{
+  "name": "@annotasi/database",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Private migration and integration tooling for the database foundation probe.",
+  "scripts": {
+    "generate": "drizzle-kit generate --config drizzle.config.ts --name foundation_probe",
+    "lint": "eslint .",
+    "typecheck": "tsc -p tsconfig.json",
+    "db:check": "vitest run test/migration.integration.test.ts --testTimeout=120000 --hookTimeout=120000",
+    "db:test": "vitest run test/rls-and-bigint.integration.test.ts --testTimeout=120000 --hookTimeout=120000"
+  },
+  "dependencies": {
+    "drizzle-orm": "0.45.2",
+    "pg": "8.22.0"
+  },
+  "devDependencies": {
+    "@testcontainers/postgresql": "12.0.4",
+    "@types/pg": "8.20.3",
+    "drizzle-kit": "0.31.10",
+    "testcontainers": "12.0.4"
+  }
+}
