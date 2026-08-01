@@ -1,0 +1,17 @@
+.agents/
+.claude/
+.git/
+.next/
+.turbo/
+CLAUDE.md
+coverage/
+dist/
+docs/architecture/
+docs/domain/
+docs/implementation/MVP_IMPLEMENTATION_PLAN.md
+docs/product/
+docs/project/
+node_modules/
+playwright-report/
+test-results/
+skills-lock.json
