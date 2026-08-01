@@ -34,7 +34,23 @@ const fixtureExpectations = new Map([
     "no-restricted-imports",
   ],
   [
+    "tests/architecture/fixtures/apps/web/src/imports-database.ts",
+    "no-restricted-imports",
+  ],
+  [
+    "tests/architecture/fixtures/apps/api/src/imports-migration-tooling.ts",
+    "no-restricted-imports",
+  ],
+  [
     "tests/architecture/fixtures/packages/domain/src/imports-framework.ts",
+    "no-restricted-imports",
+  ],
+  [
+    "tests/architecture/fixtures/packages/domain/src/imports-postgres.ts",
+    "no-restricted-imports",
+  ],
+  [
+    "tests/architecture/fixtures/packages/contracts/src/imports-persistence.ts",
     "no-restricted-imports",
   ],
   [
