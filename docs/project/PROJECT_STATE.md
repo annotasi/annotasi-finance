@@ -4,21 +4,23 @@
 
 - **Status:** Current project navigation snapshot
 - **Scope:** Annotasi Finance Private Beta MVP
-- **Last completed workflow session:** Session 25
+- **Last completed workflow session:** Session 26
 - **Completed workflow stages:** Product Definition, Domain Modeling, Architecture Baseline, Implementation Planning
 - **Current workflow stage:** Implementation
-- **Latest completed workflow artifact:** `docs/implementation/FOUNDATION_DEPENDENCY_REGISTER.md`
+- **Latest completed workflow artifact:** `docs/implementation/DATABASE_FOUNDATION_REGISTER.md`
 - **Latest completed domain artifact:** `docs/domain/EXECUTABLE_DOMAIN_SPECIFICATION.md`
 - **Latest completed Architecture artifact:** `docs/architecture/ARCHITECTURE_BASELINE.md`
 - **Latest completed implementation-planning artifact:** `docs/implementation/MVP_IMPLEMENTATION_PLAN.md`
 - **First approved implementation slice:** `SLICE-FOUND-001`
-- **Completed implementation slice:** `SLICE-FOUND-001`
-- **Next approved implementation slice:** `SLICE-FOUND-002`
-- **Next recommended task:** Session 26 — Technical Foundation Implementation
+- **Completed implementation slices:** `SLICE-FOUND-001`, `SLICE-FOUND-002`
+- **Next approved implementation slice:** `SLICE-IAM-001`
+- **Next recommended task:** Session 27 — Identity and Access Implementation
 
-Session 25 — Technical Foundation Implementation is complete. `SLICE-FOUND-001` was implemented, reviewed, passed all eight Foundation Gate non-database checks locally, passed GitHub Actions on its Pull Request, passed GitHub Actions again after merge, and was merged into `dev`. Application implementation has started, and exactly one implementation slice has completed. `main` remains production-only and has not received this implementation.
+Session 25 — Technical Foundation Implementation is complete. `SLICE-FOUND-001` was implemented, reviewed, passed all eight Foundation Gate non-database checks locally, passed GitHub Actions on its Pull Request, passed GitHub Actions again after merge, and was merged into `dev`.
 
-Session 26 — Technical Foundation Implementation is the next implementation session, and `SLICE-FOUND-002` is the next approved slice. It and every later slice remain not started. Product, domain, Architecture, and implementation planning may only be reopened through explicit review when a genuine conflict or blocking defect is discovered; implementation may not silently reinterpret them.
+Session 26 — Technical Foundation Implementation is complete. `SLICE-FOUND-002` was implemented and reviewed; its local validation passed, Pull Request CI was green, it was merged into `dev`, and the post-merge `dev` state is green. Exactly two implementation slices have completed. `main` remains production-only and has received neither implementation slice.
+
+Session 27 — Identity and Access Implementation is next, and `SLICE-IAM-001` is the only next approved implementation slice. `SLICE-IAM-001`, `SLICE-IAM-002`, and every later slice remain not started. Product, domain, Architecture, and implementation planning may only be reopened through explicit review when a genuine conflict or blocking defect is discovered; implementation may not silently reinterpret them.
 
 `docs/project/PROJECT_STATE.md` remains a workflow-support artifact and navigation snapshot, not a domain artifact. It summarizes completed work without replacing the authority of the product and domain source documents.
 
@@ -68,10 +70,10 @@ Position as of this document's creation:
 - Domain model: complete for the Private Beta v1 baseline. Ubiquitous Language, Domain Concept Model, Domain Object Candidates, Aggregate Candidate Analysis, Domain Behavior Analysis, Domain Behavior Decision Tables and Boundary Participation Analysis, Domain Decision Resolution, and Executable Domain Specification are complete. No further broad Domain Modeling artifact is recommended.
 - Architecture: complete for the Private Beta v1 baseline. Session 23 — Architecture Baseline produced `docs/architecture/ARCHITECTURE_BASELINE.md`, reviewed, committed, and pushed as the working Architecture baseline. No further broad Architecture artifact is recommended; Architecture may only be reopened through explicit review when a genuine conflict or implementation-blocking defect is discovered.
 - Implementation Planning: complete. Session 24 produced `docs/implementation/MVP_IMPLEMENTATION_PLAN.md`, reviewed, committed, and pushed as the final planning artifact before implementation.
-- Implementation: current workflow stage. Session 25 and `SLICE-FOUND-001` are complete, reviewed, and merged to `dev`; exactly one implementation slice has completed. Session 26 / `SLICE-FOUND-002` is next and has not started. Every later slice remains not started.
-- Review and Testing: slice-level review and testing are complete for `SLICE-FOUND-001`; the later workflow-wide Review and Testing stages have not started. Release has not started. No migration, provider setup, deployment, authentication, or financial implementation has started.
+- Implementation: current workflow stage. Sessions 25 and 26, covering `SLICE-FOUND-001` and `SLICE-FOUND-002`, are complete, reviewed, and merged to `dev`; exactly two implementation slices have completed. Session 27 / `SLICE-IAM-001` is next and has not started. `SLICE-IAM-002` and every later slice remain not started.
+- Review and Testing: slice-level review and testing are complete for `SLICE-FOUND-001` and `SLICE-FOUND-002`; the later workflow-wide Review and Testing stages have not started. Release has not started. No provider setup, deployment, authentication, application-session persistence, onboarding, product table, or financial implementation has started.
 
-Completed workflow artifacts and implementation outcomes, in order: Product Identity; MVP PRD; Ubiquitous Language; Domain Concept Model; Domain Object Candidates; Aggregate Candidate Analysis; Domain Behavior Analysis; Domain Behavior Decision Tables and Boundary Participation Analysis; Domain Decision Resolution; Executable Domain Specification; Architecture Baseline; MVP Implementation Plan; `SLICE-FOUND-001` technical foundation and its Foundation Dependency Register.
+Completed workflow artifacts and implementation outcomes, in order: Product Identity; MVP PRD; Ubiquitous Language; Domain Concept Model; Domain Object Candidates; Aggregate Candidate Analysis; Domain Behavior Analysis; Domain Behavior Decision Tables and Boundary Participation Analysis; Domain Decision Resolution; Executable Domain Specification; Architecture Baseline; MVP Implementation Plan; `SLICE-FOUND-001` technical foundation and its Foundation Dependency Register; `SLICE-FOUND-002` database foundation and its Database Foundation Register.
 
 ---
 
@@ -164,6 +166,12 @@ Listed in workflow order. For each: role, what it establishes, what it deliberat
 - **Role:** Reviewed dependency, compatibility, security-advisory, CI-action, and clean-type-generation evidence for `SLICE-FOUND-001`.
 - **Establishes:** the exact delivered foundation pins and their verification evidence; narrow transitive security overrides; the selected Architecture-boundary mechanism; GitHub Actions versions; and the clean-CI-safe Next.js route-type generation correction.
 - **Does not establish:** product or domain behavior, a replacement Architecture baseline, database design, authentication/provider integration, deployment, or a guarantee that recorded versions remain current indefinitely.
+- **Modifiable silently by later sessions:** No.
+
+### 15. `docs/implementation/DATABASE_FOUNDATION_REGISTER.md`
+- **Role:** Reviewed evidence register for the PostgreSQL, migration, database-role, RLS, exact-BIGINT, Testcontainers, Compose, and database-CI baseline delivered by Session 26 / `SLICE-FOUND-002`.
+- **Establishes:** the exact delivered database-foundation pins and image; reviewed migration evidence; role and least-privilege evidence; forced-RLS and transaction-local Workspace-context evidence; exact-BIGINT round-trip evidence; Testcontainers and Compose lifecycle evidence; database-specific CI coverage; and reconsideration triggers.
+- **Does not establish:** product or domain behavior, product tables, authentication or session persistence, provider configuration, deployment, or a guarantee that recorded versions and capabilities remain current indefinitely.
 - **Modifiable silently by later sessions:** No.
 
 The project-local skill artifacts (`.agents/`, `.claude/`, `skills-lock.json`) are tooling configuration, not approved product or domain artifacts, and are not listed above.
@@ -416,7 +424,7 @@ All exact versions and provider capabilities require the bounded pre-implementat
 
 ### Completed Technical Foundation Baseline (Session 25 / `SLICE-FOUND-001`)
 
-Session 25 implemented the reviewed `SLICE-FOUND-001` boundary. The slice passed review, all eight local Foundation Gate non-database checks, GitHub Actions on its Pull Request, and GitHub Actions again after merge to `dev`. It is now merged into `dev`; `main` remains production-only and has not received this implementation. Application implementation has started, and exactly one implementation slice has completed.
+Session 25 implemented the reviewed `SLICE-FOUND-001` boundary. The slice passed review, all eight local Foundation Gate non-database checks, GitHub Actions on its Pull Request, and GitHub Actions again after merge to `dev`. It is now merged into `dev`; `main` remains production-only and has not received this implementation.
 
 **Delivered repository structure:**
 
@@ -462,24 +470,76 @@ Session 25 implemented the reviewed `SLICE-FOUND-001` boundary. The slice passed
 
 These versions are navigation metadata derived from the delivered manifests, lockfile, and `docs/implementation/FOUNDATION_DEPENDENCY_REGISTER.md`. `PROJECT_STATE.md` does not independently guarantee that they remain current.
 
-**Foundation Gate status:** the non-database half is complete. Install, format check, lint, typecheck, smoke unit tests, Architecture-boundary checks, web build, and API build are green, and all five deliberate Architecture violations are rejected. The database half is not complete, so the full Foundation Gate remains pending `SLICE-FOUND-002`. No Milestone 2 slice may begin before `SLICE-FOUND-002` passes; `SLICE-IAM-001` remains blocked until the full Foundation Gate passes.
+**Historical Foundation Gate status after Session 25:** the non-database half was complete. Install, format check, lint, typecheck, smoke unit tests, Architecture-boundary checks, web build, and API build were green, and all five deliberate Architecture violations delivered by `SLICE-FOUND-001` were rejected. Session 26 has since completed the database half; the current full-gate status appears below.
 
-### Next Approved Technical Foundation Slice (Session 26 / `SLICE-FOUND-002`)
+### Completed Database Foundation Baseline (Session 26 / `SLICE-FOUND-002`)
 
-`SLICE-FOUND-002` is the next approved slice and remains not started. Its reviewed navigation scope is local PostgreSQL, migration baseline, RLS skeleton, and Testcontainers harness, including:
+Session 26 implemented and reviewed the approved `SLICE-FOUND-002` boundary. Its local validation passed, Pull Request CI was green, it was merged into `dev`, and the post-merge `dev` state is green. `SLICE-FOUND-001` and `SLICE-FOUND-002` are the only completed implementation slices; exactly two have completed. `main` remains production-only and has received neither slice.
 
-- local PostgreSQL development/test runtime;
-- migration structure and runner;
-- minimal Workspace-scoped RLS proof skeleton;
-- separate migration and application database roles;
+**Delivered repository structure:**
+
+- `database/`;
+- `infra/local/`;
+- `docs/implementation/DATABASE_FOUNDATION_REGISTER.md`.
+
+**Delivered technical capabilities:**
+
+- PostgreSQL 17.10 local and integration-test baseline using the exact `postgres:17.10-alpine3.24` image;
+- private `@annotasi/database` workspace;
+- Drizzle ORM with a reviewed SQL migration workflow and Drizzle Kit migration metadata;
+- `pg` / node-postgres as the single database driver;
 - Testcontainers PostgreSQL integration harness;
-- empty-database migration verification;
-- database CI expansion;
-- exact-money database representation foundation only where required by the reviewed plan.
+- explicit container-administrator, migration, and application roles;
+- restricted application role that is a non-owner, non-superuser, and lacks `BYPASSRLS`;
+- minimal technical Workspace-scope RLS probe table, not a product Workspace or financial table;
+- forced RLS with both `USING` and `WITH CHECK`;
+- transaction-local `app.workspace_id` context;
+- empty-database migration and second-fresh-database replay evidence;
+- repeated migration-command tracked no-op proof;
+- Workspace A/B denial and isolation proof, including context cleanup on pooled-connection reuse;
+- exact BIGINT round-trip above JavaScript's safe-integer range;
+- local Compose lifecycle;
+- database-specific GitHub Actions job;
+- nine total negative Architecture-boundary fixtures across the completed foundation.
 
-The following are explicitly not started: Account or domain tables beyond the minimal RLS proof; financial behavior; authentication; Clerk; opaque application sessions; beta entitlement; provider setup; Neon production configuration; deployment; shadcn/ui or frontend design-system implementation; `SLICE-IAM-001`; and every later slice.
+**Exact delivered database dependency metadata:**
 
-**Future frontend and engineering-tool navigation:** shadcn/ui has been proposed as a future frontend component baseline, but it is not part of `SLICE-FOUND-002` and requires explicit review before the first product-UI slice. Selective project-local engineering skills may be evaluated separately. This synchronization approves no full ECC installation, hook, MCP, or agent configuration.
+| Component | Delivered version |
+|---|---:|
+| PostgreSQL | 17.10 |
+| PostgreSQL image | `postgres:17.10-alpine3.24` |
+| `drizzle-orm` | 0.45.2 |
+| `drizzle-kit` | 0.31.10 |
+| `pg` | 8.22.0 |
+| `testcontainers` | 12.0.4 |
+| `@testcontainers/postgresql` | 12.0.4 |
+
+These versions are navigation metadata derived from the delivered repository and `docs/implementation/DATABASE_FOUNDATION_REGISTER.md`. `PROJECT_STATE.md` does not independently guarantee that they remain current.
+
+**Current Foundation Gate status:** the non-database Foundation Gate delivered by `SLICE-FOUND-001` is complete, the database Foundation Gate delivered by `SLICE-FOUND-002` is complete, and the full Foundation Gate is complete. All eight non-database checks are green; PostgreSQL migration, Testcontainers, forced-RLS isolation, and exact-BIGINT checks are green; and all nine deliberate Architecture-boundary violations are rejected. Milestone 2 is unblocked. `SLICE-IAM-001` is the only next approved slice. `SLICE-IAM-002` and Milestone 3+ work remain blocked by their own dependency and gate requirements. The Isolation Gate is not complete; it belongs to `SLICE-IAM-002`, which has not started.
+
+### Next Approved Identity and Access Slice (Session 27 / `SLICE-IAM-001`)
+
+`SLICE-IAM-001` is the only next approved implementation slice and remains not started. Its navigation scope is:
+
+- managed identity signup, email verification, and login;
+- Clerk used only for managed identity verification;
+- provider-session-to-Annotasi-Finance-session transition;
+- persisted opaque Annotasi Finance application sessions;
+- server-side session lookup and validation;
+- expiry, single-session revocation, all-session revocation, and password-recovery-triggered revocation;
+- application-session audit metadata;
+- rejection of forged and expired sessions;
+- session validity across an API-process restart;
+- signup, login, and verification frontend screens;
+- password/account recovery flow;
+- the exact recovery frontend surface remains an implementation detail that must follow reviewed requirements and the officially verified provider flow.
+
+`SLICE-IAM-001` may persist only the application-session record and its directly required technical metadata. A Clerk token or Clerk session is never the ordinary browser-to-API authorization credential.
+
+The following remain explicitly not started and outside `SLICE-IAM-001`: local User mapping; Workspace creation; starter Account; Private Beta entitlement redemption; onboarding; Workspace RLS product tables; Account, Category, Dedicated Fund, Debt Record, or Financial Event product persistence; financial behavior; `SLICE-IAM-002`; every Milestone 3+ slice; production deployment; Neon provider configuration; and billing or subscription configuration.
+
+**Frontend-tool navigation:** shadcn/ui is the approved component baseline beginning with the first product-UI slice, `SLICE-IAM-001`, but initialization and exact component selection have not started. Components must be added selectively, and Annotasi Finance owns and reviews the resulting component source. UI UX Pro Max remains optional and is not installed by this synchronization. 21st.dev remains an optional manual reference/component source; no 21st.dev subscription, MCP, API key, or automatic installation is approved. None of these tools may change product, domain, Architecture, identity, authorization, or session rules.
 
 ---
 
@@ -589,7 +649,7 @@ No additional domain decision is introduced by this summary.
 
 ### Current Implementation Constraints (Session 24)
 
-- exactly six Financial Event Types; `SLICE-FOUND-001` implements no financial behavior;
+- exactly six Financial Event Types; the completed foundation slices implement no financial behavior, and `SLICE-IAM-001` is not authorized to introduce financial behavior;
 - `packages/domain` has no framework dependency; `apps/web` cannot import `packages/domain` or API application modules;
 - `packages/contracts` cannot implement domain formulas, and `packages/test-support` cannot become a production dependency;
 - no floating-point money or native JSON number for authoritative money;
@@ -619,7 +679,7 @@ For full reasoning, identity/equality analysis, and stress-test scenarios behind
 
 ## 8. Active Open Questions
 
-Product Definition, Domain Modeling, Architecture Baseline, and Implementation Planning have no active unresolved question that blocks `SLICE-FOUND-001`. The Identity and Naming, Funds and Goals, Debt, Event Lifecycle, Reporting and Totals, and Aggregate Boundaries lists below are retained only as a historical pre-Session-21 question index; Session 21 resolved/classified them and Session 22 incorporated those resolutions into the executable specification. They must not be reopened or treated as Still Open without an explicit domain review triggered by a genuine conflict or missing product rule. The UX Terminology items remain product/UX questions outside the completed normative domain baseline. The two Architecture-carried decisions were resolved by Session 23, and Session 24 resolved or bounded every Implementation-Time Selection needed for the first slice.
+No active unresolved product or domain question is currently identified as blocking `SLICE-IAM-001`. Provider compatibility, privacy, email-deliverability, and security verification are bounded pre-implementation technical verification, not silently resolved product-domain decisions. The Identity and Naming, Funds and Goals, Debt, Event Lifecycle, Reporting and Totals, and Aggregate Boundaries lists below are retained only as a historical pre-Session-21 question index; Session 21 resolved/classified them and Session 22 incorporated those resolutions into the executable specification. They must not be reopened or treated as Still Open without an explicit domain review triggered by a genuine conflict or missing product rule. The UX Terminology items remain product/UX questions outside the completed normative domain baseline. The two Architecture-carried decisions were resolved by Session 23, and Session 24 resolved or bounded every Implementation-Time Selection needed for the first slice.
 
 **Current-question boundary:** only the **UX Terminology** subsection contains currently unresolved questions. Every other subsection in Section 8 is a historical pre-Session-21 question index, superseded by `docs/domain/DOMAIN_DECISION_REGISTER.md` and `docs/domain/EXECUTABLE_DOMAIN_SPECIFICATION.md`, and must not be treated as an active open-question backlog.
 
@@ -746,7 +806,8 @@ Only read documents directly relevant to the task at hand.
 - **Architecture Baseline (Session 23):** Required full reads: `CLAUDE.md`, `docs/project/PROJECT_STATE.md`, `docs/product/PRODUCT_IDENTITY.md`, `docs/product/ANNOTASI_FINANCE_MVP_PRD.md`, `docs/domain/EXECUTABLE_DOMAIN_SPECIFICATION.md`, `docs/domain/DOMAIN_DECISION_REGISTER.md`, and `docs/domain/AGGREGATE_CANDIDATES.md`. Read `docs/domain/UBIQUITOUS_LANGUAGE.md`, `docs/domain/DOMAIN_CONCEPT_MODEL.md`, `docs/domain/DOMAIN_OBJECT_CANDIDATES.md`, `docs/domain/DOMAIN_BEHAVIOR_CATALOG.md`, and `docs/domain/DOMAIN_BEHAVIOR_DECISION_TABLES.md` only when the executable specification points to missing supporting detail or a potential contradiction. Session 23 may inspect repository-root technical files to determine whether a technical baseline already exists. It must not read unrelated files and begins only through explicit Session 23 instruction. Session 23 is complete; this entry records its full-read baseline.
 - **MVP Implementation Plan (Session 24):** Required full reads were `CLAUDE.md`, `docs/project/PROJECT_STATE.md`, `docs/product/PRODUCT_IDENTITY.md`, `docs/product/ANNOTASI_FINANCE_MVP_PRD.md`, `docs/domain/EXECUTABLE_DOMAIN_SPECIFICATION.md`, and `docs/architecture/ARCHITECTURE_BASELINE.md`, with targeted domain-decision and aggregate reads where referenced plus official technical/provider sources. Session 24 is complete; this entry records its source-loading baseline.
 - **Technical Foundation Implementation (Session 25 / `SLICE-FOUND-001`):** Session 25 is complete. Its required full reads were `CLAUDE.md`, `docs/project/PROJECT_STATE.md`, `docs/implementation/MVP_IMPLEMENTATION_PLAN.md`, and `docs/architecture/ARCHITECTURE_BASELINE.md`, supplemented by targeted product/domain constraints and current official technical sources where required. The delivered evidence is recorded in `docs/implementation/FOUNDATION_DEPENDENCY_REGISTER.md`, the repository manifests, and the Foundation CI workflow. This entry preserves the completed session's source-loading baseline; it does not guarantee that external versions or capabilities remain current.
-- **Technical Foundation Implementation (Session 26 / `SLICE-FOUND-002`):** Read completely: `CLAUDE.md`, `docs/project/PROJECT_STATE.md`, `docs/implementation/MVP_IMPLEMENTATION_PLAN.md`, `docs/implementation/FOUNDATION_DEPENDENCY_REGISTER.md`, and `docs/architecture/ARCHITECTURE_BASELINE.md`. Inspect the delivered `SLICE-FOUND-001` manifests, workspace configuration, and CI workflow as repository evidence. Read targeted executable-specification or PRD sections only when a named persistence, exact-money, Workspace-isolation, or Private Beta constraint requires direct verification. Verify current official primary sources for the selected PostgreSQL, Drizzle, Testcontainers, and CI/runtime baselines before implementation. Session 26 and `SLICE-FOUND-002` begin only through explicit instruction and remain not started.
+- **Technical Foundation Implementation (Session 26 / `SLICE-FOUND-002`):** Session 26 is complete. Its required full reads were `CLAUDE.md`, `docs/project/PROJECT_STATE.md`, `docs/implementation/MVP_IMPLEMENTATION_PLAN.md`, `docs/implementation/FOUNDATION_DEPENDENCY_REGISTER.md`, and `docs/architecture/ARCHITECTURE_BASELINE.md`, supplemented by targeted executable-specification/PRD constraints and current official PostgreSQL, Drizzle, Testcontainers, image, advisory, and CI/runtime sources. The delivered evidence is recorded in `docs/implementation/DATABASE_FOUNDATION_REGISTER.md`, the database/Compose files, repository manifests, and the Foundation CI workflow. This entry preserves the completed session's source-loading baseline; it does not guarantee that external versions or capabilities remain current.
+- **Identity and Access Implementation (Session 27 / `SLICE-IAM-001`):** Read completely: `CLAUDE.md`, `docs/project/PROJECT_STATE.md`, `docs/implementation/MVP_IMPLEMENTATION_PLAN.md`, `docs/architecture/ARCHITECTURE_BASELINE.md`, `docs/implementation/FOUNDATION_DEPENDENCY_REGISTER.md`, and `docs/implementation/DATABASE_FOUNDATION_REGISTER.md`. Read the PRD and Executable Domain Specification only in targeted sections covering identity verification, privacy, the Single-Owner Workspace boundary, the prohibition on Workspace creation before onboarding, and managed identity versus local application-session authority. Before implementation, verify current official provider sources for Clerk SDK versions; Next.js and backend integration; verification and recovery flows; user-identifier portability; webhook or verification-event semantics if used; provider-side session revocation; Indonesia/APAC privacy and data-handling terms; email delivery and domain configuration; and security advisories. Do not record those changeable external facts in this navigation snapshot. Session 27 and `SLICE-IAM-001` begin only through explicit instruction and remain not started.
 - **Product-scope or requirement question:** the relevant `docs/product/ANNOTASI_FINANCE_MVP_PRD.md` section, plus `docs/product/PRODUCT_IDENTITY.md` when product direction matters
 - **Other Architecture task:** `docs/domain/EXECUTABLE_DOMAIN_SPECIFICATION.md` plus the sources it identifies for the affected constraint; load no unrelated files
 
@@ -782,10 +843,11 @@ Read the full PRD or another full source document only when:
 | Architecture Baseline | `CLAUDE.md`, `PROJECT_STATE.md` | Full reads of `PRODUCT_IDENTITY.md`, `ANNOTASI_FINANCE_MVP_PRD.md`, `EXECUTABLE_DOMAIN_SPECIFICATION.md`, `DOMAIN_DECISION_REGISTER.md`, `AGGREGATE_CANDIDATES.md`; conditional reads of the five earlier domain artifacts only for missing detail or contradiction | Yes — complete PRD | **Completed in Session 23.** Converts approved domain constraints into the smallest reliable v1 technical baseline; resolves the named Architecture decisions; defines technology, modules, persistence, consistency, security, testing, operations, and deployment boundaries. It does not write application code, define detailed endpoint contracts, or produce the implementation ticket plan, and must not weaken or silently reinterpret the executable specification. |
 | MVP Implementation Plan | `CLAUDE.md`, `PROJECT_STATE.md` | Full reads of `PRODUCT_IDENTITY.md`, `ANNOTASI_FINANCE_MVP_PRD.md`, `EXECUTABLE_DOMAIN_SPECIFICATION.md`, `ARCHITECTURE_BASELINE.md`; targeted reads of `DOMAIN_DECISION_REGISTER.md` and `AGGREGATE_CANDIDATES.md` where referenced; current official primary sources for versions, providers, regions, pricing, and provider capabilities | Yes — complete PRD | **Completed in Session 24.** Reviewed final planning artifact defining selections, milestones, 30 vertical slices, dependencies, gates, evidence, readiness/done criteria, and `SLICE-FOUND-001` as the first coding slice. It contains no application code, framework initialization, migration, detailed endpoint contract, GitHub issue, or external ticket. |
 | Technical Foundation Implementation — `SLICE-FOUND-001` | `CLAUDE.md`, `PROJECT_STATE.md`, `MVP_IMPLEMENTATION_PLAN.md`, `ARCHITECTURE_BASELINE.md` | Targeted executable-specification and PRD constraints as needed; current official technical sources; delivered manifests, CI workflow, and `FOUNDATION_DEPENDENCY_REGISTER.md` as evidence | No — targeted only | **Completed in Session 25.** Established the reviewed non-database technical foundation only; passed review, all eight local checks, Pull Request CI, and post-merge CI; and was merged into `dev`. This is historical implementation evidence, not authority to expand the slice. |
-| Technical Foundation Implementation — `SLICE-FOUND-002` | `CLAUDE.md`, `PROJECT_STATE.md`, `MVP_IMPLEMENTATION_PLAN.md`, `FOUNDATION_DEPENDENCY_REGISTER.md`, `ARCHITECTURE_BASELINE.md` | Delivered `SLICE-FOUND-001` manifests/workflow as evidence; targeted executable-specification and PRD constraints; current official PostgreSQL, Drizzle, Testcontainers, and CI/runtime sources | No — targeted only | **Next approved slice; not started.** Establishes only the reviewed local PostgreSQL, migration, RLS-proof, Testcontainers, and database-CI half of the Foundation Gate. It requires explicit Session 26 instruction and does not authorize authentication, financial features, provider setup, deployment, frontend design-system work, or any later slice. |
+| Technical Foundation Implementation — `SLICE-FOUND-002` | `CLAUDE.md`, `PROJECT_STATE.md`, `MVP_IMPLEMENTATION_PLAN.md`, `FOUNDATION_DEPENDENCY_REGISTER.md`, `ARCHITECTURE_BASELINE.md` | Delivered `SLICE-FOUND-001` manifests/workflow as evidence; targeted executable-specification and PRD constraints; current official PostgreSQL, Drizzle, Testcontainers, image, advisory, and CI/runtime sources | No — targeted only | **Completed in Session 26.** Established the reviewed local PostgreSQL, migration, role/RLS-proof, exact-BIGINT, Testcontainers, Compose, boundary, and database-CI half of the Foundation Gate; passed local validation, Pull Request CI, and post-merge CI; and was merged into `dev`. `DATABASE_FOUNDATION_REGISTER.md` is the reviewed evidence source. |
+| Identity and Access Implementation — `SLICE-IAM-001` | `CLAUDE.md`, `PROJECT_STATE.md`, `MVP_IMPLEMENTATION_PLAN.md`, `ARCHITECTURE_BASELINE.md`, `FOUNDATION_DEPENDENCY_REGISTER.md`, `DATABASE_FOUNDATION_REGISTER.md` | Targeted PRD and Executable Domain Specification sections for identity verification, privacy, Single-Owner Workspace boundaries, no Workspace creation before onboarding, and managed identity versus local application-session authority; current official provider sources named in Section 10 | No — targeted only | **Next approved slice; not started.** Establishes managed identity verification plus persisted opaque Annotasi Finance application sessions, signup/login/verification frontend screens, and a password/account recovery flow. The exact recovery frontend surface remains an implementation detail that must follow reviewed requirements and the officially verified provider flow. It may persist the application-session record and directly required technical metadata, but no local User, Workspace, onboarding, entitlement, product table, or financial behavior. |
 | Implementation specification | `CLAUDE.md`, `PROJECT_STATE.md`, `MVP_IMPLEMENTATION_PLAN.md` | Relevant approved source sections for the selected slice | Sections as needed | Current-stage slice detail may be produced only inside the reviewed slice boundary; it may not reopen source decisions silently. |
-| Coding | `CLAUDE.md`, `PROJECT_STATE.md`, `MVP_IMPLEMENTATION_PLAN.md`, `ARCHITECTURE_BASELINE.md` | Sources required by the selected slice | N/A | **Current workflow stage.** Exactly one slice, `SLICE-FOUND-001`, is complete. `SLICE-FOUND-002` is next and remains not started; no later slice is authorized. |
-| Code review | `CLAUDE.md`, `PROJECT_STATE.md` | Relevant specification, plan, Architecture, and implementation evidence | N/A | Slice-level implementation review is complete for `SLICE-FOUND-001`; later reviews occur only for explicitly started slices. |
+| Coding | `CLAUDE.md`, `PROJECT_STATE.md`, `MVP_IMPLEMENTATION_PLAN.md`, `ARCHITECTURE_BASELINE.md` | Sources required by the selected slice | N/A | **Current workflow stage.** Exactly two slices, `SLICE-FOUND-001` and `SLICE-FOUND-002`, are complete. `SLICE-IAM-001` is the only next approved slice and remains not started; no later slice is authorized. |
+| Code review | `CLAUDE.md`, `PROJECT_STATE.md` | Relevant specification, plan, Architecture, and implementation evidence | N/A | Slice-level implementation review is complete for `SLICE-FOUND-001` and `SLICE-FOUND-002`; later reviews occur only for explicitly started slices. |
 | Bug investigation | `CLAUDE.md`, `PROJECT_STATE.md` | Relevant implementation evidence plus authoritative sources for the affected behavior | Targeted | Available only for an explicitly reported implementation defect; it is not the current next task. |
 | Release validation | `CLAUDE.md`, `PROJECT_STATE.md` | PRD §24 (Launch Criteria) in full | Yes — §24 | **Future workflow stage — do not begin yet.** No release candidate exists |
 
@@ -887,15 +949,15 @@ Updates to this document should be small and traceable — reflecting one specif
 
 ## 16. Current Next Step
 
-- Session 25 is the last completed workflow session; `SLICE-FOUND-001` is reviewed, complete, and merged into `dev`.
-- Implementation is the current workflow stage, application implementation has started, and exactly one implementation slice has completed.
-- `main` remains production-only and has not received the `SLICE-FOUND-001` implementation.
-- The next recommended task is **Session 26 — Technical Foundation Implementation**.
-- `SLICE-FOUND-002` is the next approved slice and remains not started; every later slice also remains not started.
-- `SLICE-FOUND-002` is limited to the reviewed local PostgreSQL, migration, RLS-proof, Testcontainers, and database-CI scope described in Section 5.
-- The non-database half of the Foundation Gate is complete, but the full gate remains pending `SLICE-FOUND-002`.
-- No Milestone 2 slice may begin before the full Foundation Gate passes; `SLICE-IAM-001` remains blocked.
-- Session 26 begins only through explicit instruction. This synchronization does not begin it or any implementation work.
+- Session 26 is the last completed workflow session; `SLICE-FOUND-001` and `SLICE-FOUND-002` are reviewed, complete, and merged into `dev`.
+- Implementation is the current workflow stage, and exactly two implementation slices have completed.
+- The full Foundation Gate is complete: all eight non-database checks and the PostgreSQL migration, Testcontainers, RLS, exact-BIGINT, and nine negative Architecture-boundary checks are green.
+- `main` remains production-only and has received neither implementation slice.
+- The next recommended task is **Session 27 — Identity and Access Implementation**.
+- `SLICE-IAM-001` is the only next approved slice and remains not started.
+- `SLICE-IAM-002` and every later slice remain not started and remain subject to their own dependencies and gates.
+- The Isolation Gate is not complete; it belongs to `SLICE-IAM-002`, which has not started.
+- Session 27 begins only through explicit instruction. This synchronization does not begin it or any implementation work.
 
 This document summarizes navigation state only. It replaces neither the product/domain/Architecture baselines nor the implementation plan and independently guarantees no version, provider, price, region, quota, or capability.
 
@@ -972,3 +1034,8 @@ This document summarizes navigation state only. It replaces neither the product/
 - **Authority role:** Reviewed evidence register for the dependency selections, compatibility verification, advisories, and delivered technical baseline of Session 25 / `SLICE-FOUND-001`.
 - **When to read:** Before a subsequent technical-foundation slice, dependency upgrade, or claim about the versions and advisories delivered by `SLICE-FOUND-001`.
 - **Must not be replaced by:** `PROJECT_STATE.md` navigation metadata, remembered versions, package-manager output taken out of context, or an assumption that the recorded versions remain current.
+
+### `docs/implementation/DATABASE_FOUNDATION_REGISTER.md`
+- **Authority role:** Reviewed evidence register for the PostgreSQL, migration, database-role, RLS, exact-BIGINT, Testcontainers, Compose, and database-CI baseline delivered by Session 26 / `SLICE-FOUND-002`.
+- **When to read:** Before authentication or application-session persistence; before product table migrations; before RLS implementation; before database dependency upgrades; and before claims about the versions or behavior delivered by `SLICE-FOUND-002`.
+- **Must not be replaced by:** `PROJECT_STATE.md` navigation metadata, remembered versions, package-manager or database output taken out of context, or an assumption that the recorded versions and behavior remain current indefinitely.
