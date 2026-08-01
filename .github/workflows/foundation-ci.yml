@@ -1,0 +1,63 @@
+name: Foundation CI
+
+on:
+  pull_request:
+    branches:
+      - dev
+      - main
+  push:
+    branches:
+      - dev
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: foundation-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  foundation:
+    name: Eight foundation checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Install pinned pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Set up Node.js 24
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24.18.0
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: 1. Deterministic install
+        run: pnpm install --frozen-lockfile
+
+      - name: 2. Format check
+        run: pnpm format:check
+
+      - name: 3. Lint
+        run: pnpm lint
+
+      - name: 4. Typecheck
+        run: pnpm typecheck
+
+      - name: 5. Smoke unit tests
+        run: pnpm test
+
+      - name: 6. Architecture-boundary checks
+        run: pnpm boundaries
+
+      - name: 7. Web build
+        run: pnpm build:web
+
+      - name: 8. API build
+        run: pnpm build:api
