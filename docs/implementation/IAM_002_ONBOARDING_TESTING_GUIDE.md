@@ -195,12 +195,12 @@ actually or operationally resides.
 
 Examples:
 
-| Real situation | Suggested name |
-|---|---|
-| Cash carried daily | `Uang Tunai` |
-| Main payroll bank account | `BCA Gaji` |
-| Daily spending bank account | `Jago Harian` |
-| GoPay balance | `GoPay` |
+| Real situation                 | Suggested name         |
+| ------------------------------ | ---------------------- |
+| Cash carried daily             | `Uang Tunai`           |
+| Main payroll bank account      | `BCA Gaji`             |
+| Daily spending bank account    | `Jago Harian`          |
+| GoPay balance                  | `GoPay`                |
 | Other asset-like money holding | `Saldo Kartu Prabayar` |
 
 The name is a label, not the Account identity. Duplicate Account names are
@@ -212,12 +212,12 @@ it must preserve Account identity and financial history.
 **Purpose:** describes where the money resides. Account Type is descriptive
 only and does not change financial semantics.
 
-| UI choice | Use when | Real example | Do not use for |
-|---|---|---|---|
-| **Tunai** (`cash`) | Physical cash is held directly | Cash in wallet, cash box | Bank or e-wallet balance |
-| **Rekening Bank** (`bank_account`) | Money is held in a bank account | BCA, Mandiri, BRI, Jago | Credit-card debt |
-| **Dompet Digital** (`e_wallet`) | Money is held in an e-wallet | GoPay, OVO, DANA, ShopeePay | A Dedicated Fund or savings purpose |
-| **Lainnya** (`other`) | Another asset-like, money-holding balance that is not one of the three above | Prepaid balance or uncategorized cash-equivalent holding | Debt, credit-card liability, investment account |
+| UI choice                          | Use when                                                                     | Real example                                             | Do not use for                                  |
+| ---------------------------------- | ---------------------------------------------------------------------------- | -------------------------------------------------------- | ----------------------------------------------- |
+| **Tunai** (`cash`)                 | Physical cash is held directly                                               | Cash in wallet, cash box                                 | Bank or e-wallet balance                        |
+| **Rekening Bank** (`bank_account`) | Money is held in a bank account                                              | BCA, Mandiri, BRI, Jago                                  | Credit-card debt                                |
+| **Dompet Digital** (`e_wallet`)    | Money is held in an e-wallet                                                 | GoPay, OVO, DANA, ShopeePay                              | A Dedicated Fund or savings purpose             |
+| **Lainnya** (`other`)              | Another asset-like, money-holding balance that is not one of the three above | Prepaid balance or uncategorized cash-equivalent holding | Debt, credit-card liability, investment account |
 
 The v1 list is fixed to these four values. IAM-002 does not provide Account
 editing. The approved Account-management plan does not currently define an
@@ -241,12 +241,12 @@ Rules:
 
 Examples:
 
-| Situation | Value |
-|---|---:|
-| Start tracking an empty cash account today | `0` |
-| Physical cash currently held is Rp350.000 | `350000` |
-| Bank statement balance is Rp4.275.500 | `4275500` |
-| GoPay balance is Rp82.750 | `82750` |
+| Situation                                  |     Value |
+| ------------------------------------------ | --------: |
+| Start tracking an empty cash account today |       `0` |
+| Physical cash currently held is Rp350.000  |  `350000` |
+| Bank statement balance is Rp4.275.500      | `4275500` |
+| GoPay balance is Rp82.750                  |   `82750` |
 
 Do not enter separators such as `4.275.500`, currency text, or decimals. Enter
 `4275500`.
@@ -268,11 +268,11 @@ business date in the fixed Workspace timezone `Asia/Jakarta`, not a timestamp.
 
 Examples:
 
-| Situation | Date to use |
-|---|---|
-| The value entered is the balance observed today | Today's Jakarta date |
+| Situation                                                                         | Date to use                 |
+| --------------------------------------------------------------------------------- | --------------------------- |
+| The value entered is the balance observed today                                   | Today's Jakarta date        |
 | Starting records from the beginning of the month using the balance as of that day | The first day of that month |
-| Starting from zero on the day a new account was opened | The account-opening date |
+| Starting from zero on the day a new account was opened                            | The account-opening date    |
 
 Later Financial Events must not precede the relevant Account effective date.
 Choose the date carefully; it is part of the Account's historical starting
@@ -439,17 +439,17 @@ Expected:
 
 ## 11. What can be changed later?
 
-| Item | Current IAM-002 behavior | Planned or approved later behavior |
-|---|---|---|
-| Invitation token | Single-use; permanently consumed | Not editable or reusable |
-| Local User mapping | Keyed by Clerk subject | Not user-selectable |
-| Workspace | Exactly one private Workspace per User; IDR and Asia/Jakarta fixed | No second/shared Workspace in v1 |
-| Starter Account name | Fixed during IAM-002 after creation | Rename is planned in `SLICE-ACC-001` |
-| Account Type | Selected at creation from four fixed values | No approved Account-Type edit behavior currently exists |
-| Opening Balance | Fixed during IAM-002 | Correctable through `SLICE-ACC-002`; history-aware correction through `SLICE-ACC-003` |
-| Opening-Balance Effective Date | Fixed during IAM-002 | Correctable through `SLICE-ACC-002`; history-aware correction through `SLICE-ACC-003` |
-| Account active/archive state | Starter Account begins active | Archive/restore and deletion eligibility are planned in `SLICE-ACC-001` |
-| Additional Accounts | Not created by onboarding | Account creation is planned in `SLICE-ACC-001` |
+| Item                           | Current IAM-002 behavior                                           | Planned or approved later behavior                                                    |
+| ------------------------------ | ------------------------------------------------------------------ | ------------------------------------------------------------------------------------- |
+| Invitation token               | Single-use; permanently consumed                                   | Not editable or reusable                                                              |
+| Local User mapping             | Keyed by Clerk subject                                             | Not user-selectable                                                                   |
+| Workspace                      | Exactly one private Workspace per User; IDR and Asia/Jakarta fixed | No second/shared Workspace in v1                                                      |
+| Starter Account name           | Fixed during IAM-002 after creation                                | Rename is planned in `SLICE-ACC-001`                                                  |
+| Account Type                   | Selected at creation from four fixed values                        | No approved Account-Type edit behavior currently exists                               |
+| Opening Balance                | Fixed during IAM-002                                               | Correctable through `SLICE-ACC-002`; history-aware correction through `SLICE-ACC-003` |
+| Opening-Balance Effective Date | Fixed during IAM-002                                               | Correctable through `SLICE-ACC-002`; history-aware correction through `SLICE-ACC-003` |
+| Account active/archive state   | Starter Account begins active                                      | Archive/restore and deletion eligibility are planned in `SLICE-ACC-001`               |
+| Additional Accounts            | Not created by onboarding                                          | Account creation is planned in `SLICE-ACC-001`                                        |
 
 The fact that a later behavior is planned does not mean it is already available
 in the current UI or API.
