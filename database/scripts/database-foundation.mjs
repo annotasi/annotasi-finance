@@ -10,6 +10,7 @@ const { Client, Pool } = pg;
 export const POSTGRES_IMAGE = "postgres:17.10-alpine3.24";
 export const MIGRATION_ROLE = "annotasi_migration";
 export const APPLICATION_ROLE = "annotasi_application";
+export const OPERATOR_ROLE = "annotasi_operator";
 export const PROBE_TABLE = "foundation_workspace_scope_probe";
 
 const MIGRATIONS_FOLDER = fileURLToPath(
@@ -52,9 +53,11 @@ export async function bootstrapRoles({
   adminUrl,
   migrationPassword,
   applicationPassword,
+  operatorPassword,
 }) {
   assertSafePassword(migrationPassword, "Migration role password");
   assertSafePassword(applicationPassword, "Application role password");
+  assertSafePassword(operatorPassword, "Operator role password");
 
   const admin = new Client({ connectionString: adminUrl });
   await admin.connect();
@@ -78,6 +81,9 @@ export async function bootstrapRoles({
         IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '${APPLICATION_ROLE}') THEN
           CREATE ROLE ${quoteIdentifier(APPLICATION_ROLE)};
         END IF;
+        IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '${OPERATOR_ROLE}') THEN
+          CREATE ROLE ${quoteIdentifier(OPERATOR_ROLE)};
+        END IF;
       END
       $foundation_roles$;
     `);
@@ -91,6 +97,11 @@ export async function bootstrapRoles({
         LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT NOREPLICATION NOBYPASSRLS
         PASSWORD '${applicationPassword}'
     `);
+    await admin.query(`
+      ALTER ROLE ${quoteIdentifier(OPERATOR_ROLE)} WITH
+        LOGIN NOSUPERUSER NOCREATEDB NOCREATEROLE NOINHERIT NOREPLICATION NOBYPASSRLS
+        PASSWORD '${operatorPassword}'
+    `);
     await admin.query(
       `REVOKE CONNECT, TEMPORARY ON DATABASE ${databaseIdentifier} FROM PUBLIC`,
     );
@@ -100,12 +111,18 @@ export async function bootstrapRoles({
     await admin.query(
       `GRANT CONNECT ON DATABASE ${databaseIdentifier} TO ${quoteIdentifier(APPLICATION_ROLE)}`,
     );
+    await admin.query(
+      `GRANT CONNECT ON DATABASE ${databaseIdentifier} TO ${quoteIdentifier(OPERATOR_ROLE)}`,
+    );
     await admin.query("REVOKE CREATE ON SCHEMA public FROM PUBLIC");
     await admin.query(
       `GRANT USAGE, CREATE ON SCHEMA public TO ${quoteIdentifier(MIGRATION_ROLE)}`,
     );
     await admin.query(
       `GRANT USAGE ON SCHEMA public TO ${quoteIdentifier(APPLICATION_ROLE)}`,
+    );
+    await admin.query(
+      `GRANT USAGE ON SCHEMA public TO ${quoteIdentifier(OPERATOR_ROLE)}`,
     );
 
     return { databaseName };

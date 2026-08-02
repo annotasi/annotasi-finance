@@ -15,6 +15,13 @@
       "when": 1785604413055,
       "tag": "0001_application_sessions",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1785640000000,
+      "tag": "0002_onboarding_isolation",
+      "breakpoints": true
     }
   ]
 }

@@ -153,7 +153,7 @@ export default function ForgotPasswordPage() {
       }
 
       await completeRecovery(providerToken);
-      router.push("/session");
+      router.push("/onboarding");
     } catch {
       // Covers a thrown verifyCode/submitPassword/finalize/getToken/recovery
       // failure. The "finishing" state must never remain stuck, so always

@@ -4,6 +4,7 @@ import type { StartedPostgreSqlContainer } from "@testcontainers/postgresql";
 import {
   APPLICATION_ROLE,
   MIGRATION_ROLE,
+  OPERATOR_ROLE,
   POSTGRES_IMAGE,
   bootstrapRoles,
   connectionUrlForRole,
@@ -16,8 +17,10 @@ export interface FoundationEnvironment {
   adminUrl: string;
   migrationUrl: string;
   applicationUrl: string;
+  operatorUrl: string;
   migrationPassword: string;
   applicationPassword: string;
+  operatorPassword: string;
   firstMigration: { before: number; after: number; applied: number };
 }
 
@@ -25,6 +28,7 @@ export async function startFoundationEnvironment(): Promise<FoundationEnvironmen
   const adminPassword = createFoundationPassword("admin");
   const migrationPassword = createFoundationPassword("migration");
   const applicationPassword = createFoundationPassword("application");
+  const operatorPassword = createFoundationPassword("operator");
   const container = await new PostgreSqlContainer(POSTGRES_IMAGE)
     .withDatabase("annotasi_foundation")
     .withUsername("foundation_admin")
@@ -37,6 +41,7 @@ export async function startFoundationEnvironment(): Promise<FoundationEnvironmen
     adminUrl,
     migrationPassword,
     applicationPassword,
+    operatorPassword,
   });
 
   const migrationUrl = connectionUrlForRole(
@@ -49,6 +54,11 @@ export async function startFoundationEnvironment(): Promise<FoundationEnvironmen
     APPLICATION_ROLE,
     applicationPassword,
   );
+  const operatorUrl = connectionUrlForRole(
+    adminUrl,
+    OPERATOR_ROLE,
+    operatorPassword,
+  );
   const firstMigration = await runMigrations(migrationUrl);
 
   return {
@@ -56,8 +66,10 @@ export async function startFoundationEnvironment(): Promise<FoundationEnvironmen
     adminUrl,
     migrationUrl,
     applicationUrl,
+    operatorUrl,
     migrationPassword,
     applicationPassword,
+    operatorPassword,
     firstMigration,
   };
 }

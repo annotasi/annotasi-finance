@@ -1,0 +1,840 @@
+{
+  "id": "1d7324f3-a2d2-49b3-9bbf-7e607effd629",
+  "prevId": "f3ba761c-a16d-4056-b749-fbaa2beacd7f",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.foundation_workspace_scope_probe": {
+      "name": "foundation_workspace_scope_probe",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "workspace_id": {
+          "name": "workspace_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "marker": {
+          "name": "marker",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "exact_integer_value": {
+          "name": "exact_integer_value",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "foundation_workspace_scope_probe_workspace_idx": {
+          "name": "foundation_workspace_scope_probe_workspace_idx",
+          "columns": [
+            {
+              "expression": "workspace_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.application_sessions": {
+      "name": "application_sessions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "token_hash": {
+          "name": "token_hash",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "external_subject": {
+          "name": "external_subject",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "provider_session_id": {
+          "name": "provider_session_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "last_used_at": {
+          "name": "last_used_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "expires_at": {
+          "name": "expires_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "revoked_at": {
+          "name": "revoked_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "revoked_reason": {
+          "name": "revoked_reason",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "application_sessions_token_hash_key": {
+          "name": "application_sessions_token_hash_key",
+          "columns": [
+            {
+              "expression": "token_hash",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "application_sessions_subject_idx": {
+          "name": "application_sessions_subject_idx",
+          "columns": [
+            {
+              "expression": "external_subject",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "application_sessions_expires_at_idx": {
+          "name": "application_sessions_expires_at_idx",
+          "columns": [
+            {
+              "expression": "expires_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "application_sessions_provider_session_idx": {
+          "name": "application_sessions_provider_session_idx",
+          "columns": [
+            {
+              "expression": "provider_session_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "application_sessions_revocation_state": {
+          "name": "application_sessions_revocation_state",
+          "value": "(\"application_sessions\".\"revoked_at\" IS NULL AND \"application_sessions\".\"revoked_reason\" IS NULL) OR (\"application_sessions\".\"revoked_at\" IS NOT NULL AND \"application_sessions\".\"revoked_reason\" IS NOT NULL)"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.accounts": {
+      "name": "accounts",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "workspace_id": {
+          "name": "workspace_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "opening_balance": {
+          "name": "opening_balance",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "opening_balance_effective_date": {
+          "name": "opening_balance_effective_date",
+          "type": "date",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "total_balance": {
+          "name": "total_balance",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "unallocated_balance": {
+          "name": "unallocated_balance",
+          "type": "bigint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "lifecycle_status": {
+          "name": "lifecycle_status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'active'"
+        },
+        "is_starter": {
+          "name": "is_starter",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "accounts_workspace_id_idx": {
+          "name": "accounts_workspace_id_idx",
+          "columns": [
+            {
+              "expression": "workspace_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "accounts_one_starter_per_workspace": {
+          "name": "accounts_one_starter_per_workspace",
+          "columns": [
+            {
+              "expression": "workspace_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "where": "\"accounts\".\"is_starter\"",
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "accounts_workspace_id_workspaces_id_fk": {
+          "name": "accounts_workspace_id_workspaces_id_fk",
+          "tableFrom": "accounts",
+          "tableTo": "workspaces",
+          "columnsFrom": ["workspace_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "accounts_name_length": {
+          "name": "accounts_name_length",
+          "value": "char_length(btrim(\"accounts\".\"name\")) BETWEEN 1 AND 100"
+        },
+        "accounts_type": {
+          "name": "accounts_type",
+          "value": "\"accounts\".\"type\" IN ('cash', 'bank_account', 'e_wallet', 'other')"
+        },
+        "accounts_nonnegative_opening": {
+          "name": "accounts_nonnegative_opening",
+          "value": "\"accounts\".\"opening_balance\" >= 0"
+        },
+        "accounts_opening_initializes_total": {
+          "name": "accounts_opening_initializes_total",
+          "value": "\"accounts\".\"total_balance\" = \"accounts\".\"opening_balance\""
+        },
+        "accounts_opening_initializes_unallocated": {
+          "name": "accounts_opening_initializes_unallocated",
+          "value": "\"accounts\".\"unallocated_balance\" = \"accounts\".\"opening_balance\""
+        },
+        "accounts_lifecycle": {
+          "name": "accounts_lifecycle",
+          "value": "\"accounts\".\"lifecycle_status\" = 'active'"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.onboarding_audit_events": {
+      "name": "onboarding_audit_events",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "event": {
+          "name": "event",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "reason": {
+          "name": "reason",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "onboarding_audit_event": {
+          "name": "onboarding_audit_event",
+          "value": "\"onboarding_audit_events\".\"event\" IN ('invitation_issued', 'invitation_revoked', 'redemption_succeeded', 'redemption_rejected')"
+        },
+        "onboarding_audit_reason": {
+          "name": "onboarding_audit_reason",
+          "value": "char_length(\"onboarding_audit_events\".\"reason\") BETWEEN 1 AND 64 AND \"onboarding_audit_events\".\"reason\" ~ '^[a-z0-9_]+$'"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.onboarding_idempotency": {
+      "name": "onboarding_idempotency",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "idempotency_key": {
+          "name": "idempotency_key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "request_fingerprint": {
+          "name": "request_fingerprint",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "workspace_id": {
+          "name": "workspace_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "account_id": {
+          "name": "account_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "onboarding_idempotency_user_key": {
+          "name": "onboarding_idempotency_user_key",
+          "columns": [
+            {
+              "expression": "user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "idempotency_key",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "onboarding_idempotency_user_id_users_id_fk": {
+          "name": "onboarding_idempotency_user_id_users_id_fk",
+          "tableFrom": "onboarding_idempotency",
+          "tableTo": "users",
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "onboarding_idempotency_workspace_id_workspaces_id_fk": {
+          "name": "onboarding_idempotency_workspace_id_workspaces_id_fk",
+          "tableFrom": "onboarding_idempotency",
+          "tableTo": "workspaces",
+          "columnsFrom": ["workspace_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "onboarding_idempotency_account_id_accounts_id_fk": {
+          "name": "onboarding_idempotency_account_id_accounts_id_fk",
+          "tableFrom": "onboarding_idempotency",
+          "tableTo": "accounts",
+          "columnsFrom": ["account_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "onboarding_idempotency_key_length": {
+          "name": "onboarding_idempotency_key_length",
+          "value": "char_length(\"onboarding_idempotency\".\"idempotency_key\") BETWEEN 16 AND 128"
+        },
+        "onboarding_idempotency_fingerprint_format": {
+          "name": "onboarding_idempotency_fingerprint_format",
+          "value": "\"onboarding_idempotency\".\"request_fingerprint\" ~ '^[0-9a-f]{64}$'"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.private_beta_invitations": {
+      "name": "private_beta_invitations",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "invited_email_normalized": {
+          "name": "invited_email_normalized",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "token_hash": {
+          "name": "token_hash",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "issued_at": {
+          "name": "issued_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "expires_at": {
+          "name": "expires_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "revoked_at": {
+          "name": "revoked_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "revoked_reason": {
+          "name": "revoked_reason",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "consumed_at": {
+          "name": "consumed_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "consumed_by_user_id": {
+          "name": "consumed_by_user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "consumed_workspace_id": {
+          "name": "consumed_workspace_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "consumed_account_id": {
+          "name": "consumed_account_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "private_beta_invitations_token_hash_key": {
+          "name": "private_beta_invitations_token_hash_key",
+          "columns": [
+            {
+              "expression": "token_hash",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "private_beta_invitations_email_idx": {
+          "name": "private_beta_invitations_email_idx",
+          "columns": [
+            {
+              "expression": "invited_email_normalized",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "private_beta_invitations_consumed_by_user_id_users_id_fk": {
+          "name": "private_beta_invitations_consumed_by_user_id_users_id_fk",
+          "tableFrom": "private_beta_invitations",
+          "tableTo": "users",
+          "columnsFrom": ["consumed_by_user_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "private_beta_invitations_consumed_workspace_id_workspaces_id_fk": {
+          "name": "private_beta_invitations_consumed_workspace_id_workspaces_id_fk",
+          "tableFrom": "private_beta_invitations",
+          "tableTo": "workspaces",
+          "columnsFrom": ["consumed_workspace_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "private_beta_invitations_consumed_account_id_accounts_id_fk": {
+          "name": "private_beta_invitations_consumed_account_id_accounts_id_fk",
+          "tableFrom": "private_beta_invitations",
+          "tableTo": "accounts",
+          "columnsFrom": ["consumed_account_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "private_beta_invitations_token_hash_format": {
+          "name": "private_beta_invitations_token_hash_format",
+          "value": "\"private_beta_invitations\".\"token_hash\" ~ '^[0-9a-f]{64}$'"
+        },
+        "private_beta_invitations_email_length": {
+          "name": "private_beta_invitations_email_length",
+          "value": "char_length(\"private_beta_invitations\".\"invited_email_normalized\") BETWEEN 3 AND 254"
+        },
+        "private_beta_invitations_expiry_after_issue": {
+          "name": "private_beta_invitations_expiry_after_issue",
+          "value": "\"private_beta_invitations\".\"expires_at\" IS NULL OR \"private_beta_invitations\".\"expires_at\" > \"private_beta_invitations\".\"issued_at\""
+        },
+        "private_beta_invitations_revocation_state": {
+          "name": "private_beta_invitations_revocation_state",
+          "value": "(\"private_beta_invitations\".\"revoked_at\" IS NULL AND \"private_beta_invitations\".\"revoked_reason\" IS NULL) OR (\"private_beta_invitations\".\"revoked_at\" IS NOT NULL AND \"private_beta_invitations\".\"revoked_reason\" IS NOT NULL)"
+        },
+        "private_beta_invitations_consumption_state": {
+          "name": "private_beta_invitations_consumption_state",
+          "value": "(\"private_beta_invitations\".\"consumed_at\" IS NULL AND \"private_beta_invitations\".\"consumed_by_user_id\" IS NULL AND \"private_beta_invitations\".\"consumed_workspace_id\" IS NULL AND \"private_beta_invitations\".\"consumed_account_id\" IS NULL) OR (\"private_beta_invitations\".\"consumed_at\" IS NOT NULL AND \"private_beta_invitations\".\"consumed_by_user_id\" IS NOT NULL AND \"private_beta_invitations\".\"consumed_workspace_id\" IS NOT NULL AND \"private_beta_invitations\".\"consumed_account_id\" IS NOT NULL)"
+        },
+        "private_beta_invitations_not_revoked_and_consumed": {
+          "name": "private_beta_invitations_not_revoked_and_consumed",
+          "value": "\"private_beta_invitations\".\"revoked_at\" IS NULL OR \"private_beta_invitations\".\"consumed_at\" IS NULL"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.users": {
+      "name": "users",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "external_subject": {
+          "name": "external_subject",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "verified_email_normalized": {
+          "name": "verified_email_normalized",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "users_external_subject_key": {
+          "name": "users_external_subject_key",
+          "columns": [
+            {
+              "expression": "external_subject",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "users_external_subject_length": {
+          "name": "users_external_subject_length",
+          "value": "char_length(\"users\".\"external_subject\") BETWEEN 1 AND 255"
+        },
+        "users_verified_email_length": {
+          "name": "users_verified_email_length",
+          "value": "char_length(\"users\".\"verified_email_normalized\") BETWEEN 3 AND 254"
+        }
+      },
+      "isRLSEnabled": false
+    },
+    "public.workspaces": {
+      "name": "workspaces",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "owner_user_id": {
+          "name": "owner_user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "currency": {
+          "name": "currency",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'IDR'"
+        },
+        "timezone": {
+          "name": "timezone",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'Asia/Jakarta'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "workspaces_owner_user_id_key": {
+          "name": "workspaces_owner_user_id_key",
+          "columns": [
+            {
+              "expression": "owner_user_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "workspaces_owner_user_id_users_id_fk": {
+          "name": "workspaces_owner_user_id_users_id_fk",
+          "tableFrom": "workspaces",
+          "tableTo": "users",
+          "columnsFrom": ["owner_user_id"],
+          "columnsTo": ["id"],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "workspaces_currency_idr": {
+          "name": "workspaces_currency_idr",
+          "value": "\"workspaces\".\"currency\" = 'IDR'"
+        },
+        "workspaces_timezone_jakarta": {
+          "name": "workspaces_timezone_jakarta",
+          "value": "\"workspaces\".\"timezone\" = 'Asia/Jakarta'"
+        }
+      },
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

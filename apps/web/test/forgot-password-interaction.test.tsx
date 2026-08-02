@@ -196,7 +196,7 @@ describe("forgot-password screen interaction", () => {
     await waitFor(() => {
       expect(completeRecoveryMock).toHaveBeenCalledWith("provider-token");
     });
-    expect(pushMock).toHaveBeenCalledWith("/session");
+    expect(pushMock).toHaveBeenCalledWith("/onboarding");
   });
 
   async function fillAndSubmitReset(user: ReturnType<typeof userEvent.setup>) {

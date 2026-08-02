@@ -108,7 +108,7 @@ export default function SignUpPage() {
       }
 
       await exchangeProviderToken(providerToken);
-      router.push("/session");
+      router.push("/onboarding");
     } catch {
       // Covers a thrown verifyEmailCode/finalize/getToken/exchange failure —
       // the "finishing" state must never remain stuck, so always fall back
