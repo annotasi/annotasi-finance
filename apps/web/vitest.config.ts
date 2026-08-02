@@ -1,3 +1,5 @@
+import { fileURLToPath } from "node:url";
+
 import { defineConfig } from "vitest/config";
 
 export default defineConfig({
@@ -7,7 +9,13 @@ export default defineConfig({
       importSource: "react",
     },
   },
+  resolve: {
+    alias: {
+      "@": fileURLToPath(new URL(".", import.meta.url)),
+    },
+  },
   test: {
-    environment: "node",
+    environment: "jsdom",
+    setupFiles: ["./test/setup.ts"],
   },
 });

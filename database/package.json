@@ -3,13 +3,21 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "Private migration and integration tooling for the database foundation probe.",
+  "description": "Private migration and integration tooling for the database foundation probe, plus a runtime-safe session-store entry point for apps/api.",
+  "exports": {
+    "./runtime": {
+      "types": "./dist/src/runtime/index.d.ts",
+      "default": "./dist/src/runtime/index.js"
+    }
+  },
   "scripts": {
     "generate": "drizzle-kit generate --config drizzle.config.ts --name foundation_probe",
+    "build": "tsc -p tsconfig.build.json",
     "lint": "eslint .",
     "typecheck": "tsc -p tsconfig.json",
     "db:check": "vitest run test/migration.integration.test.ts --testTimeout=120000 --hookTimeout=120000",
-    "db:test": "vitest run test/rls-and-bigint.integration.test.ts --testTimeout=120000 --hookTimeout=120000"
+    "db:test": "vitest run test/rls-and-bigint.integration.test.ts test/session-store.integration.test.ts --testTimeout=120000 --hookTimeout=120000",
+    "db:test:sessions": "vitest run test/session-store.integration.test.ts --testTimeout=120000 --hookTimeout=120000"
   },
   "dependencies": {
     "drizzle-orm": "0.45.2",

@@ -80,13 +80,15 @@ export default tseslint.config(
                 "@annotasi/test-support/*",
                 "@annotasi/database",
                 "@annotasi/database/*",
+                "@clerk/backend",
+                "@clerk/backend/*",
                 "**/packages/domain/**",
                 "**/packages/test-support/**",
                 "**/apps/api/**",
                 "**/database/**",
               ],
               message:
-                "The web application may not import the authoritative domain package, API internals, or test support.",
+                "The web application may not import the authoritative domain package, API internals, test support, or server-only Clerk backend code.",
             },
           ],
         },
@@ -104,14 +106,20 @@ export default tseslint.config(
               group: [
                 "@annotasi/test-support",
                 "@annotasi/test-support/*",
-                "@annotasi/database",
-                "@annotasi/database/*",
                 "**/packages/test-support/**",
+              ],
+              message:
+                "Production application code may not depend on test-support.",
+            },
+            {
+              group: [
+                "@annotasi/database/scripts",
+                "@annotasi/database/scripts/*",
                 "**/database/scripts/**",
                 "**/database/migrations/**",
               ],
               message:
-                "Production application code may not depend on test-support.",
+                "The API may only import the reviewed runtime-safe database entry point (@annotasi/database/runtime), never migration scripts, bootstrap scripts, or migration/admin credentials.",
             },
           ],
         },

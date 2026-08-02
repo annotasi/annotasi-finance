@@ -29,19 +29,20 @@ describe("database foundation migration history", () => {
   it("applies the complete reviewed history to an empty PostgreSQL 17.10 database", async () => {
     expect(environment.firstMigration).toEqual({
       before: 0,
-      after: 1,
-      applied: 1,
+      after: 2,
+      applied: 2,
     });
 
     const client = new Client({ connectionString: environment.migrationUrl });
     await client.connect();
     try {
       const result = await client.query(
-        "SELECT current_setting('server_version') AS version, to_regclass('public.foundation_workspace_scope_probe') AS probe",
+        "SELECT current_setting('server_version') AS version, to_regclass('public.foundation_workspace_scope_probe') AS probe, to_regclass('public.application_sessions') AS sessions",
       );
       expect(result.rows[0]).toMatchObject({
         version: expect.stringMatching(/^17\.10(?:\s|$)/u),
         probe: "foundation_workspace_scope_probe",
+        sessions: "application_sessions",
       });
     } finally {
       await client.end();
@@ -50,8 +51,8 @@ describe("database foundation migration history", () => {
 
   it("makes a repeated migration command a tracked no-op", async () => {
     await expect(runMigrations(environment.migrationUrl)).resolves.toEqual({
-      before: 1,
-      after: 1,
+      before: 2,
+      after: 2,
       applied: 0,
     });
   });
@@ -74,8 +75,8 @@ describe("database foundation migration history", () => {
 
     await expect(runMigrations(secondMigrationUrl)).resolves.toEqual({
       before: 0,
-      after: 1,
-      applied: 1,
+      after: 2,
+      applied: 2,
     });
   });
 });

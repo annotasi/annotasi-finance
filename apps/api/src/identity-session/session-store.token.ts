@@ -1,0 +1,2 @@
+export const SESSION_STORE = Symbol("SESSION_STORE");
+export const SESSION_STORE_CONNECTION = Symbol("SESSION_STORE_CONNECTION");

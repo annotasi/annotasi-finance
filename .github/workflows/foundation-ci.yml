@@ -86,3 +86,29 @@ jobs:
 
       - name: Migration, RLS, and exact BIGINT evidence
         run: pnpm ci:database
+
+  identity-session:
+    name: Identity and session checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: [foundation, database-foundation]
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Install pinned pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Set up Node.js 24
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24.18.0
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Deterministic install
+        run: pnpm install --frozen-lockfile
+
+      - name: IAM unit, property, PostgreSQL integration, API/security, and frontend evidence
+        run: pnpm ci:iam
