@@ -23,6 +23,15 @@ export class ClerkIdentityProvider implements IdentityProvider {
     this.clerkClient = createClerkClient({ secretKey });
   }
 
+  public async getVerifiedEmailAddresses(
+    externalSubject: string,
+  ): Promise<readonly string[]> {
+    const user = await this.clerkClient.users.getUser(externalSubject);
+    return user.emailAddresses
+      .filter((email) => email.verification?.status === "verified")
+      .map((email) => email.emailAddress);
+  }
+
   public async verifyProviderToken(
     providerToken: string,
   ): Promise<VerifiedIdentity> {

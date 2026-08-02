@@ -18,6 +18,7 @@ export class FakeIdentityProvider implements IdentityProvider {
     options: RevokeAllProviderSessionsOptions | undefined;
   }[] = [];
   private readonly activeSessionsBySubject = new Map<string, string[]>();
+  private readonly verifiedEmailsBySubject = new Map<string, string[]>();
   /** When true, revocation calls reject — used to prove best-effort handling. */
   public failRevocation = false;
 
@@ -26,6 +27,21 @@ export class FakeIdentityProvider implements IdentityProvider {
     providerSessionIds: readonly string[],
   ): void {
     this.activeSessionsBySubject.set(externalSubject, [...providerSessionIds]);
+  }
+
+  public setVerifiedEmails(
+    externalSubject: string,
+    emails: readonly string[],
+  ): void {
+    this.verifiedEmailsBySubject.set(externalSubject, [...emails]);
+  }
+
+  public getVerifiedEmailAddresses(
+    externalSubject: string,
+  ): Promise<readonly string[]> {
+    return Promise.resolve(
+      this.verifiedEmailsBySubject.get(externalSubject) ?? [],
+    );
   }
 
   public verifyProviderToken(providerToken: string): Promise<VerifiedIdentity> {

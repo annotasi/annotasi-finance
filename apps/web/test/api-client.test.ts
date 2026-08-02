@@ -3,9 +3,11 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
   completeRecovery,
   exchangeProviderToken,
+  fetchOnboardingStatus,
   fetchSessionStatus,
   logoutAllSessions,
   logoutCurrentSession,
+  redeemOnboarding,
 } from "../lib/api-client";
 
 function mockFetchOnce(body: unknown, ok = true) {
@@ -101,5 +103,37 @@ describe("api-client request shapes", () => {
       "csrf-token",
     );
     expect(init.body).toBe("{}");
+  });
+
+  it("checks onboarding status with the application cookie and no provider token", async () => {
+    const fetchMock = mockFetchOnce({
+      status: "invitation_required",
+      csrfToken: "csrf-token",
+    });
+    await fetchOnboardingStatus();
+    const [url, init] = fetchMock.mock.calls[0] as [string, RequestInit];
+    expect(url).toContain("/onboarding/status");
+    expect(init.method).toBe("GET");
+    expect(init.credentials).toBe("include");
+    expect(init.headers).not.toHaveProperty("Authorization");
+  });
+
+  it("redeems with JSON, CSRF, and an explicit idempotency key", async () => {
+    const fetchMock = mockFetchOnce({ status: "workspace_ready" });
+    const body = {
+      invitationToken: `afbeta_${"a".repeat(43)}`,
+      accountName: "Tunai",
+      accountType: "cash" as const,
+      openingBalance: "0",
+      openingBalanceEffectiveDate: "2026-08-02",
+    };
+    await redeemOnboarding(body, "csrf-token", "idempotency-key");
+    const [, init] = fetchMock.mock.calls[0] as [string, RequestInit];
+    expect(init.headers).toMatchObject({
+      "Content-Type": "application/json",
+      "x-csrf-token": "csrf-token",
+      "Idempotency-Key": "idempotency-key",
+    });
+    expect(JSON.parse(String(init.body))).toEqual(body);
   });
 });

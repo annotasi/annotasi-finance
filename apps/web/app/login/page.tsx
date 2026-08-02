@@ -73,7 +73,7 @@ export default function LoginPage() {
       }
 
       await exchangeProviderToken(providerToken);
-      router.push("/session");
+      router.push("/onboarding");
     } catch {
       // Covers a thrown password/finalize/getToken/exchange failure. No
       // navigation occurs; the form remains retryable.

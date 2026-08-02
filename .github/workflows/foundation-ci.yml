@@ -112,3 +112,29 @@ jobs:
 
       - name: IAM unit, property, PostgreSQL integration, API/security, and frontend evidence
         run: pnpm ci:iam
+
+  onboarding-isolation:
+    name: Onboarding and isolation checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: [foundation, database-foundation, identity-session]
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Install pinned pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Set up Node.js 24
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24.18.0
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Deterministic install
+        run: pnpm install --frozen-lockfile
+
+      - name: IAM-002 unit, PostgreSQL concurrency/RLS, real HTTP security, and browser evidence
+        run: pnpm ci:iam2

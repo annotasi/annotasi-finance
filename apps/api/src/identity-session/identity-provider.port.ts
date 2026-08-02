@@ -21,6 +21,11 @@ export interface RevokeAllProviderSessionsOptions {
  * deterministic fake so CI never calls a live provider.
  */
 export interface IdentityProvider {
+  /** Returns only provider-confirmed verified email addresses for a subject. */
+  getVerifiedEmailAddresses(
+    externalSubject: string,
+  ): Promise<readonly string[]>;
+
   /**
    * Verifies a short-lived provider token and returns the verified
    * external identity. Throws UnverifiedIdentityError for any invalid,

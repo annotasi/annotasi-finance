@@ -28,6 +28,8 @@
     "db:verify": "node --env-file=infra/local/.env database/scripts/verify-local.mjs",
     "db:check": "pnpm --filter @annotasi/database db:check",
     "db:test": "pnpm --filter @annotasi/database db:test",
+    "invite:issue": "pnpm --filter @annotasi/database invite:issue",
+    "invite:revoke": "pnpm --filter @annotasi/database invite:revoke",
     "ci:foundation": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm boundaries && pnpm build:web && pnpm build:api",
     "ci:database": "pnpm db:check && pnpm db:test",
     "iam:prepare": "pnpm --filter \"@annotasi/api...\" build",
@@ -36,7 +38,12 @@
     "iam:test:security": "pnpm --filter @annotasi/api exec vitest run test/identity-session.integration.test.ts",
     "iam:test:web": "pnpm --filter @annotasi/web test",
     "ci:iam": "pnpm iam:prepare && pnpm iam:test && pnpm iam:test:integration && pnpm iam:test:security && pnpm iam:test:web",
-    "ci": "pnpm ci:foundation && pnpm ci:database && pnpm ci:iam"
+    "iam2:test": "pnpm --filter @annotasi/api exec vitest run test/onboarding.service.test.ts",
+    "iam2:test:integration": "pnpm --filter @annotasi/database db:test:onboarding",
+    "iam2:test:http": "pnpm --filter @annotasi/api exec vitest run test/onboarding.integration.test.ts --testTimeout=120000 --hookTimeout=120000",
+    "iam2:test:web": "pnpm --filter @annotasi/web exec vitest run test/onboarding-interaction.test.tsx test/api-client.test.ts",
+    "ci:iam2": "pnpm iam:prepare && pnpm iam2:test && pnpm iam2:test:integration && pnpm iam2:test:http && pnpm iam2:test:web",
+    "ci": "pnpm ci:foundation && pnpm ci:database && pnpm ci:iam && pnpm ci:iam2"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

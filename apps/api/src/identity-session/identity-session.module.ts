@@ -60,7 +60,15 @@ import { SessionService } from "./session.service.js";
     SessionGuard,
     OriginCsrfGuard,
   ],
-  exports: [SessionCookiePolicy, IDENTITY_SESSION_CONFIG],
+  exports: [
+    SessionCookiePolicy,
+    SessionService,
+    SessionGuard,
+    OriginCsrfGuard,
+    IDENTITY_PROVIDER,
+    SESSION_STORE_CONNECTION,
+    IDENTITY_SESSION_CONFIG,
+  ],
 })
 export class IdentitySessionModule implements OnModuleDestroy {
   public constructor(

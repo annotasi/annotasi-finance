@@ -1,6 +1,0 @@
-# Non-secret local foundation setting.
-APP_ENV=development
-
-# Clerk publishable key is safe for the browser by design (not a secret).
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_test_replace_with_your_clerk_publishable_key
-NEXT_PUBLIC_API_ORIGIN=http://localhost:3001

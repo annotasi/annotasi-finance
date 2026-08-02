@@ -117,7 +117,7 @@ describe("login screen interaction", () => {
     await waitFor(() => {
       expect(exchangeProviderTokenMock).toHaveBeenCalledWith("provider-token");
     });
-    expect(pushMock).toHaveBeenCalledWith("/session");
+    expect(pushMock).toHaveBeenCalledWith("/onboarding");
   });
 
   it("produces a safe accessible message on failure", async () => {

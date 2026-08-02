@@ -29,20 +29,21 @@ describe("database foundation migration history", () => {
   it("applies the complete reviewed history to an empty PostgreSQL 17.10 database", async () => {
     expect(environment.firstMigration).toEqual({
       before: 0,
-      after: 2,
-      applied: 2,
+      after: 3,
+      applied: 3,
     });
 
     const client = new Client({ connectionString: environment.migrationUrl });
     await client.connect();
     try {
       const result = await client.query(
-        "SELECT current_setting('server_version') AS version, to_regclass('public.foundation_workspace_scope_probe') AS probe, to_regclass('public.application_sessions') AS sessions",
+        "SELECT current_setting('server_version') AS version, to_regclass('public.foundation_workspace_scope_probe') AS probe, to_regclass('public.application_sessions') AS sessions, to_regclass('public.workspaces') AS workspaces",
       );
       expect(result.rows[0]).toMatchObject({
         version: expect.stringMatching(/^17\.10(?:\s|$)/u),
         probe: "foundation_workspace_scope_probe",
         sessions: "application_sessions",
+        workspaces: "workspaces",
       });
     } finally {
       await client.end();
@@ -51,8 +52,8 @@ describe("database foundation migration history", () => {
 
   it("makes a repeated migration command a tracked no-op", async () => {
     await expect(runMigrations(environment.migrationUrl)).resolves.toEqual({
-      before: 2,
-      after: 2,
+      before: 3,
+      after: 3,
       applied: 0,
     });
   });
@@ -66,6 +67,7 @@ describe("database foundation migration history", () => {
       adminUrl: secondAdminUrl,
       migrationPassword: environment.migrationPassword,
       applicationPassword: environment.applicationPassword,
+      operatorPassword: environment.operatorPassword,
     });
     const secondMigrationUrl = connectionUrlForRole(
       secondAdminUrl,
@@ -75,8 +77,8 @@ describe("database foundation migration history", () => {
 
     await expect(runMigrations(secondMigrationUrl)).resolves.toEqual({
       before: 0,
-      after: 2,
-      applied: 2,
+      after: 3,
+      applied: 3,
     });
   });
 });

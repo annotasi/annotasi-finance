@@ -1,17 +1,19 @@
 # Annotasi Finance
 
 This repository contains the SLICE-FOUND-001 non-database technical foundation,
-the SLICE-FOUND-002 local database foundation, and the SLICE-IAM-001 managed
-identity and persisted application-session slice: a pnpm/Turborepo workspace,
+the SLICE-FOUND-002 local database foundation, the SLICE-IAM-001 managed
+identity/application-session slice, and the SLICE-IAM-002 private-beta
+onboarding/isolation slice: a pnpm/Turborepo workspace,
 strict TypeScript, framework shells, automated Architecture-boundary checks,
 PostgreSQL migration/RLS evidence, Clerk-based managed identity with an
-Annotasi Finance-owned opaque application session, smoke tests, and Foundation
-Gate CI.
+Annotasi Finance-owned opaque application session, operator-issued invitation
+entitlements, one private Workspace and starter Account per verified identity,
+forced RLS, smoke tests, and Foundation Gate CI.
 
-No local User, Workspace, Account, entitlement, onboarding, financial feature,
-product table, or deployment is implemented in these slices. See
-`docs/implementation/IDENTITY_SESSION_REGISTER.md` for the full SLICE-IAM-001
-evidence register.
+IAM-002 intentionally stops after the starter Account: it creates no category,
+financial event, reporting workflow, collaboration feature, import, or
+deployment. See `docs/implementation/ONBOARDING_ISOLATION_REGISTER.md` for its
+evidence and `docs/implementation/IDENTITY_SESSION_REGISTER.md` for IAM-001.
 
 ## Prerequisites
 
@@ -28,7 +30,7 @@ evidence register.
 ```text
 apps/
   web/           Next.js shell: technical status page + Clerk-backed signup,
-                 login, forgot-password, and post-authenticated session screens
+                 login, recovery, onboarding, and session screens
   api/           NestJS/Fastify shell: readiness probe + the identity-session
                  module (provider-token exchange, application-session
                  issuance/validation/revocation, recovery completion)
@@ -37,8 +39,8 @@ packages/
   contracts/     transport-shape skeleton
   config/        validated non-secret foundation and identity-session configuration
   test-support/  test-only utilities
-database/        private migration tooling, real-PostgreSQL integration tests,
-                 and the runtime-safe @annotasi/database/runtime session store
+database/        migration/operator tooling, real-PostgreSQL integration tests,
+                 and runtime-safe session/onboarding persistence
 infra/local/     local-only PostgreSQL Compose configuration
 ```
 
@@ -59,6 +61,11 @@ pnpm iam:test
 pnpm iam:test:integration
 pnpm iam:test:security
 pnpm iam:test:web
+pnpm iam2:test
+pnpm iam2:test:integration
+pnpm iam2:test:http
+pnpm iam2:test:web
+pnpm ci:iam2
 pnpm run ci
 ```
 
@@ -74,8 +81,10 @@ runs the NestJS/Fastify HTTP-level exchange/session/CSRF/origin/revocation
 evidence against a deterministic fake identity provider — no live Clerk
 credential is ever used. `pnpm iam:test:web` runs the frontend validation,
 provider-error-mapping, and auth-screen tests. `pnpm ci:iam` runs all four in
-sequence and is what the `identity-session` CI job runs. `pnpm run ci` runs
-the complete local Foundation Gate plus the database and IAM gates.
+sequence and is what the `identity-session` CI job runs. `pnpm ci:iam2` runs
+the IAM-002 service/property, PostgreSQL atomicity/concurrency/RLS, real
+NestJS/Fastify HTTP security, and browser evidence used by the onboarding CI
+job. `pnpm run ci` runs the complete local Foundation Gate plus both IAM gates.
 `pnpm format` is the explicit write-mode formatter; CI uses only
 `format:check`. Use `pnpm run ci` for the aggregate package script because
 pnpm reserves the shorter `pnpm ci` form as an install alias. Before TypeScript
@@ -118,14 +127,70 @@ The container administrator is bootstrap-only. The separate
 connects as the application role. Migrations are explicit commands; application
 startup never synchronizes or migrates the schema.
 
-The database now contains two tables:
+`annotasi_operator` is a third non-owner/non-superuser role limited to private-
+beta invitation operations. It cannot read User, Workspace, Account, or
+application-session rows.
 
-- `foundation_workspace_scope_probe` — a temporary technical probe for
-  transaction-local Workspace RLS and exact BIGINT behavior.
-- `application_sessions` — the SLICE-IAM-001 opaque application-session
-  table (see "Identity and sessions" below).
+In addition to the technical foundation probe and IAM-001 session table,
+IAM-002 adds:
 
-Neither is the product Workspace model, a User table, or a financial table.
+- `users` — the Clerk-subject mapping and current normalized verified email.
+- `private_beta_invitations` — the hashed single-use beta entitlement.
+- `workspaces` — one private IDR/Asia-Jakarta Workspace per User.
+- `accounts` — the starter Account and exact whole-Rupiah opening balances.
+- `onboarding_idempotency` and `onboarding_audit_events` — replay and safe
+  operational evidence.
+
+Workspace-scoped product rows use forced RLS with transaction-local scope
+derived from the validated application session, never request payload fields.
+Missing, empty, and malformed context values safely expose no rows without a
+UUID-cast error. Application and operator invitation mutations use explicit
+column grants: runtime can write consumption fields only, while the operator
+can write revocation fields only. PostgreSQL `now()` evaluates redemption
+expiry while the invitation row is locked, and a database check requires every
+expiry to be later than issuance.
+
+## Private-beta invitation and onboarding
+
+After migration, an operator-only process can issue or revoke invitations.
+Issuance prints the raw token once; only its SHA-256 hash is persisted.
+
+```bash
+pnpm invite:issue -- --email invited@example.com
+pnpm invite:issue -- --email invited@example.com --expires-at 2026-08-31T17:00:00Z
+
+# zsh: silent prompt; the raw token is sent on stdin, never as a process argument.
+read -rs "INVITATION_TOKEN?Invitation token: "
+printf '\n'
+print -r -- "$INVITATION_TOKEN" | pnpm invite:revoke
+unset INVITATION_TOKEN
+```
+
+The commands require `DATABASE_OPERATOR_URL`, documented in
+`infra/local/.env.example`. Reissuing creates a new record and never overwrites
+an older invitation. Do not place raw tokens in URLs, shared shell history,
+logs, source files, analytics, or screenshots. An explicit `--expires-at` must
+be a valid future ISO-8601 instant. Revocation never prints the raw token.
+
+The database suite injects deterministic failures after User mapping,
+Workspace insert, starter Account insert, idempotency insert, invitation
+consumption, and immediately before commit. Each stage proves complete rollback
+and successful retry. Its bounded concurrency matrix covers one token with the
+same and different keys, two subjects with one token, one subject with two
+tokens, replay/conflict, and retry. The Isolation Gate additionally checks role
+attributes and ownership, forced RLS, malformed context, A/B raw-SQL and store
+isolation, guessed identifiers, forbidden writes, and transaction-local context
+reset. `pnpm iam2:test:http` covers real PostgreSQL application sessions and the
+real session/Origin/CSRF guards with a deterministic fake Clerk provider.
+
+The browser path is `/signup` or `/login` → application-session exchange →
+`/onboarding`. The form collects the invitation token and exactly the starter
+Account name, type, non-negative whole-Rupiah opening balance, and date-only
+effective date. Already-onboarded identities receive a minimal ready state.
+
+A step-by-step live testing guide, field explanations, realistic examples, and
+future-editability boundaries are documented in
+`docs/implementation/IAM_002_ONBOARDING_TESTING_GUIDE.md`.
 
 ## Identity and sessions
 
@@ -203,7 +268,7 @@ when `APP_ENV=production`).
 ### Migration and startup
 
 ```bash
-pnpm db:migrate   # applies both the FOUND-002 and IAM-001 migrations
+pnpm db:migrate   # applies FOUND-002, IAM-001, and IAM-002 migrations
 pnpm --filter @annotasi/web dev
 pnpm --filter @annotasi/api dev
 ```
@@ -216,24 +281,26 @@ With a real Clerk development-instance tenant configured:
    completes verification.
 2. Confirm the browser receives only the opaque `af_session` cookie — no
    Clerk token appears in `localStorage`/`sessionStorage`.
-3. Call the protected probe (`GET /identity/session`) and confirm it succeeds
-   using only the cookie.
-4. Restart the API process; confirm the same cookie is still accepted (proves
+3. Issue a private-beta invitation for the same verified email, redeem it at
+   `/onboarding`, and confirm exactly one User, Workspace, and starter Account
+   exist with no category or financial event.
+4. Retry the same redemption and confirm it returns the same Workspace/Account.
+5. Call the protected probes (`GET /identity/session` and
+   `GET /onboarding/workspace`) and confirm they succeed using only the cookie.
+6. Restart the API process; confirm the same cookie is still accepted (proves
    persisted, not in-memory, validation).
-5. Sign out (`POST /identity/session/logout`); confirm the cookie is cleared
+7. Sign out (`POST /identity/session/logout`); confirm the cookie is cleared
    and rejected afterward.
-6. Sign in from two browser sessions, then use "sign out of all devices"
+8. Sign in from two browser sessions, then use "sign out of all devices"
    (`POST /identity/session/logout-all`) from one; confirm both are rejected.
-7. Run the forgot-password flow end to end; confirm the old session cookie is
+9. Run the forgot-password flow end to end; confirm the old session cookie is
    rejected once the new password takes effect.
-8. Confirm no User, Workspace, Account, entitlement, or financial row is ever
-   created — SLICE-IAM-001 persists only `application_sessions`.
 
 Automated tests never perform this flow against a live Clerk tenant; they use
 a deterministic fake `IdentityProvider` (`apps/api/test/support`). This manual
-flow is the only way to validate real Clerk deliverability, verification
-copy, and sandbox behavior, and is a pending validation step until run against
-a real tenant.
+flow is the only way to validate real Clerk deliverability, verified-email
+metadata, token delivery, and end-to-end sandbox behavior, and remains pending
+until run against a real tenant.
 
 ### Sandbox limitations
 

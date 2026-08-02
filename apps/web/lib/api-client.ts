@@ -20,7 +20,7 @@ interface RequestOptions {
   readonly method: "GET" | "POST";
   readonly headers?: Record<string, string>;
   /** Only present for requests that actually send a JSON body. */
-  readonly body?: Record<string, never>;
+  readonly body?: unknown;
 }
 
 /**
@@ -99,5 +99,46 @@ export function logoutAllSessions(
     method: "POST",
     headers: { "x-csrf-token": csrfToken },
     body: {},
+  });
+}
+
+export type OnboardingStatus =
+  | { status: "invitation_required"; csrfToken: string }
+  | {
+      status: "workspace_ready";
+      workspaceId: string;
+      accountId: string;
+      csrfToken: string;
+    };
+
+export function fetchOnboardingStatus(): Promise<OnboardingStatus> {
+  return request("/onboarding/status", { method: "GET" });
+}
+
+export interface RedeemOnboardingBody {
+  invitationToken: string;
+  accountName: string;
+  accountType: "cash" | "bank_account" | "e_wallet" | "other";
+  openingBalance: string;
+  openingBalanceEffectiveDate: string;
+}
+
+export function redeemOnboarding(
+  body: RedeemOnboardingBody,
+  csrfToken: string,
+  idempotencyKey: string,
+): Promise<{
+  status: "workspace_ready";
+  workspaceId: string;
+  accountId: string;
+  replayed: boolean;
+}> {
+  return request("/onboarding/redeem", {
+    method: "POST",
+    headers: {
+      "x-csrf-token": csrfToken,
+      "Idempotency-Key": idempotencyKey,
+    },
+    body,
   });
 }

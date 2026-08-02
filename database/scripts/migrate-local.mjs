@@ -5,6 +5,7 @@ const required = [
   "DATABASE_MIGRATION_URL",
   "DATABASE_MIGRATION_PASSWORD",
   "DATABASE_APPLICATION_PASSWORD",
+  "DATABASE_OPERATOR_PASSWORD",
 ];
 
 for (const name of required) {
@@ -17,6 +18,7 @@ await bootstrapRoles({
   adminUrl: process.env.DATABASE_ADMIN_URL,
   migrationPassword: process.env.DATABASE_MIGRATION_PASSWORD,
   applicationPassword: process.env.DATABASE_APPLICATION_PASSWORD,
+  operatorPassword: process.env.DATABASE_OPERATOR_PASSWORD,
 });
 const result = await runMigrations(process.env.DATABASE_MIGRATION_URL);
 
