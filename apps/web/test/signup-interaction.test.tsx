@@ -3,8 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 type MockClerkError =
-  | { code: string }
-  | { errors: Array<{ code: string; message?: string }> };
+  { code: string } | { errors: Array<{ code: string; message?: string }> };
 
 const pushMock = vi.fn();
 const getTokenMock = vi.fn(async () => "provider-token");
@@ -219,8 +218,7 @@ describe("signup screen interaction", () => {
         errors: [
           {
             code: "form_password_pwned",
-            message:
-              "Password has been found in an online data breach.",
+            message: "Password has been found in an online data breach.",
           },
         ],
       },

@@ -18,10 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { completeRecovery } from "@/lib/api-client";
-import {
-  clerkErrorCode,
-  safeClerkErrorMessage,
-} from "@/lib/clerk-errors";
+import { clerkErrorCode, safeClerkErrorMessage } from "@/lib/clerk-errors";
 import {
   forgotPasswordRequestSchema,
   forgotPasswordResetSchema,
