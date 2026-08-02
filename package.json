@@ -30,7 +30,12 @@
     "db:test": "pnpm --filter @annotasi/database db:test",
     "ci:foundation": "pnpm format:check && pnpm lint && pnpm typecheck && pnpm test && pnpm boundaries && pnpm build:web && pnpm build:api",
     "ci:database": "pnpm db:check && pnpm db:test",
-    "ci": "pnpm ci:foundation && pnpm ci:database"
+    "iam:test": "pnpm --filter @annotasi/api exec vitest run test/token.test.ts test/cookie.test.ts test/session.service.test.ts test/guards.test.ts test/pagination.test.ts && pnpm --filter @annotasi/config exec vitest run test/identity-session-config.test.ts",
+    "iam:test:integration": "pnpm --filter @annotasi/database db:test:sessions",
+    "iam:test:security": "pnpm --filter @annotasi/api exec vitest run test/identity-session.integration.test.ts",
+    "iam:test:web": "pnpm --filter @annotasi/web test",
+    "ci:iam": "pnpm iam:test && pnpm iam:test:integration && pnpm iam:test:security && pnpm iam:test:web",
+    "ci": "pnpm ci:foundation && pnpm ci:database && pnpm ci:iam"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

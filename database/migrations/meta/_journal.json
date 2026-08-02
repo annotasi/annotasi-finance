@@ -8,6 +8,13 @@
       "when": 1785594312082,
       "tag": "0000_foundation_probe",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1785604413055,
+      "tag": "0001_application_sessions",
+      "breakpoints": true
     }
   ]
 }

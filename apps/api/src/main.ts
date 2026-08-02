@@ -1,4 +1,10 @@
-import { parseFoundationConfig } from "@annotasi/config";
+import {
+  parseFoundationConfig,
+  parseIdentitySessionConfig,
+} from "@annotasi/config";
+import fastifyCookie from "@fastify/cookie";
+import fastifyCors from "@fastify/cors";
+import fastifyCsrfProtection from "@fastify/csrf-protection";
 import { NestFactory } from "@nestjs/core";
 import {
   FastifyAdapter,
@@ -9,10 +15,21 @@ import { AppModule } from "./app.module.js";
 
 async function bootstrap(): Promise<void> {
   const config = parseFoundationConfig(process.env);
+  const identityConfig = parseIdentitySessionConfig(process.env);
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
     new FastifyAdapter(),
   );
+
+  await app.register(fastifyCookie);
+  await app.register(fastifyCsrfProtection, {
+    sessionPlugin: "@fastify/cookie",
+    csrfOpts: { hmacKey: identityConfig.CSRF_SECRET, userInfo: false },
+  });
+  await app.register(fastifyCors, {
+    origin: [identityConfig.WEB_ORIGIN],
+    credentials: true,
+  });
 
   await app.listen(config.PORT, "0.0.0.0");
 }

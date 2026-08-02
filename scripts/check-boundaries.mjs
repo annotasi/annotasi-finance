@@ -38,6 +38,10 @@ const fixtureExpectations = new Map([
     "no-restricted-imports",
   ],
   [
+    "tests/architecture/fixtures/apps/web/src/imports-clerk-backend.ts",
+    "no-restricted-imports",
+  ],
+  [
     "tests/architecture/fixtures/apps/api/src/imports-migration-tooling.ts",
     "no-restricted-imports",
   ],
