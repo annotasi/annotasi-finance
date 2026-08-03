@@ -4,25 +4,27 @@
 
 - **Status:** Current project navigation snapshot
 - **Scope:** Annotasi Finance Private Beta MVP
-- **Last completed workflow session:** Session 27
+- **Last completed workflow session:** Session 28
 - **Completed workflow stages:** Product Definition, Domain Modeling, Architecture Baseline, Implementation Planning
 - **Current workflow stage:** Implementation
-- **Latest completed workflow artifact:** `docs/implementation/IDENTITY_SESSION_REGISTER.md`
+- **Latest completed workflow artifact:** `docs/implementation/ONBOARDING_ISOLATION_REGISTER.md`
 - **Latest completed domain artifact:** `docs/domain/EXECUTABLE_DOMAIN_SPECIFICATION.md`
 - **Latest completed Architecture artifact:** `docs/architecture/ARCHITECTURE_BASELINE.md`
 - **Latest completed implementation-planning artifact:** `docs/implementation/MVP_IMPLEMENTATION_PLAN.md`
 - **First approved implementation slice:** `SLICE-FOUND-001`
-- **Completed implementation slices:** `SLICE-FOUND-001`, `SLICE-FOUND-002`, `SLICE-IAM-001`
-- **Next approved implementation slice:** `SLICE-IAM-002`
-- **Next recommended task:** Session 28 — Identity, Onboarding, and Workspace Isolation
+- **Completed implementation slices:** `SLICE-FOUND-001`, `SLICE-FOUND-002`, `SLICE-IAM-001`, `SLICE-IAM-002`
+- **Next approved implementation slice:** `SLICE-ACC-001`
+- **Next recommended task:** Session 29 — Account Management Baseline
 
 Session 25 — Technical Foundation Implementation is complete. `SLICE-FOUND-001` was implemented, reviewed, passed all eight Foundation Gate non-database checks locally, passed GitHub Actions on its Pull Request, passed GitHub Actions again after merge, and was merged into `dev`.
 
 Session 26 — Technical Foundation Implementation is complete. `SLICE-FOUND-002` was implemented and reviewed; its local validation passed, Pull Request CI was green, it was merged into `dev`, and the post-merge `dev` state is green.
 
-Session 27 — Identity and Access Implementation is complete. `SLICE-IAM-001` was implemented, reviewed, committed, pushed, and merged into `dev`. Pull Request CI and post-merge GitHub Actions are green. Exactly three implementation slices have completed. `main` remains production-only and has not received these implementation slices.
+Session 27 — Identity and Access Implementation is complete. `SLICE-IAM-001` was implemented, reviewed, committed, pushed, and merged into `dev`. Pull Request CI and post-merge GitHub Actions are green.
 
-Session 28 — Identity, Onboarding, and Workspace Isolation is next, and `SLICE-IAM-002` is the only next approved implementation slice. `SLICE-IAM-002` and every later slice remain not started. Product, domain, Architecture, and implementation planning may only be reopened through explicit review when a genuine conflict or blocking defect is discovered; implementation may not silently reinterpret them.
+Session 28 — Identity, Onboarding, and Workspace Isolation is complete. `SLICE-IAM-002` was implemented, reviewed, committed, pushed, and merged into `dev`. Pull Request CI and post-merge GitHub Actions are green. Exactly four implementation slices have completed. `main` remains production-only and has not received these implementation slices.
+
+Session 29 — Account Management Baseline is next, and `SLICE-ACC-001` is the only next approved implementation slice. `SLICE-ACC-001` and every later slice remain not started. Product, domain, Architecture, and implementation planning may only be reopened through explicit review when a genuine conflict or blocking defect is discovered; implementation may not silently reinterpret them.
 
 `docs/project/PROJECT_STATE.md` remains a workflow-support artifact and navigation snapshot, not a domain artifact. It summarizes completed work without replacing the authority of the product and domain source documents.
 
@@ -72,10 +74,10 @@ Position as of this document's creation:
 - Domain model: complete for the Private Beta v1 baseline. Ubiquitous Language, Domain Concept Model, Domain Object Candidates, Aggregate Candidate Analysis, Domain Behavior Analysis, Domain Behavior Decision Tables and Boundary Participation Analysis, Domain Decision Resolution, and Executable Domain Specification are complete. No further broad Domain Modeling artifact is recommended.
 - Architecture: complete for the Private Beta v1 baseline. Session 23 — Architecture Baseline produced `docs/architecture/ARCHITECTURE_BASELINE.md`, reviewed, committed, and pushed as the working Architecture baseline. No further broad Architecture artifact is recommended; Architecture may only be reopened through explicit review when a genuine conflict or implementation-blocking defect is discovered.
 - Implementation Planning: complete. Session 24 produced `docs/implementation/MVP_IMPLEMENTATION_PLAN.md`, reviewed, committed, and pushed as the final planning artifact before implementation.
-- Implementation: current workflow stage. Sessions 25, 26, and 27, covering `SLICE-FOUND-001`, `SLICE-FOUND-002`, and `SLICE-IAM-001`, are complete, reviewed, and merged to `dev`; exactly three implementation slices have completed. Session 28 / `SLICE-IAM-002` is next and has not started. Every later slice remains not started.
-- Review and Testing: slice-level review and testing are complete for `SLICE-FOUND-001`, `SLICE-FOUND-002`, and `SLICE-IAM-001`; the later workflow-wide Review and Testing stages have not started. Release has not started. Managed identity verification and application-session persistence now exist, but onboarding, local User/Workspace/Account/entitlement product persistence, financial implementation, and deployment have not started.
+- Implementation: current workflow stage. Sessions 25–28, covering `SLICE-FOUND-001`, `SLICE-FOUND-002`, `SLICE-IAM-001`, and `SLICE-IAM-002`, are complete, reviewed, and merged to `dev`; exactly four implementation slices have completed. Session 29 / `SLICE-ACC-001` is next and has not started. Every later slice remains not started.
+- Review and Testing: slice-level review and testing are complete for `SLICE-FOUND-001`, `SLICE-FOUND-002`, `SLICE-IAM-001`, and `SLICE-IAM-002`; the later workflow-wide Review and Testing stages have not started. Release has not started. Managed identity, application-session persistence, Private Beta entitlement redemption, atomic onboarding, one private Workspace and starter Account per User, and the Isolation Gate now exist; broader Account management, financial behavior, and deployment have not started.
 
-Completed workflow artifacts and implementation outcomes, in order: Product Identity; MVP PRD; Ubiquitous Language; Domain Concept Model; Domain Object Candidates; Aggregate Candidate Analysis; Domain Behavior Analysis; Domain Behavior Decision Tables and Boundary Participation Analysis; Domain Decision Resolution; Executable Domain Specification; Architecture Baseline; MVP Implementation Plan; `SLICE-FOUND-001` technical foundation and its Foundation Dependency Register; `SLICE-FOUND-002` database foundation and its Database Foundation Register; `SLICE-IAM-001` managed identity and persisted application-session implementation and its Identity and Session Evidence Register.
+Completed workflow artifacts and implementation outcomes, in order: Product Identity; MVP PRD; Ubiquitous Language; Domain Concept Model; Domain Object Candidates; Aggregate Candidate Analysis; Domain Behavior Analysis; Domain Behavior Decision Tables and Boundary Participation Analysis; Domain Decision Resolution; Executable Domain Specification; Architecture Baseline; MVP Implementation Plan; `SLICE-FOUND-001` technical foundation and its Foundation Dependency Register; `SLICE-FOUND-002` database foundation and its Database Foundation Register; `SLICE-IAM-001` managed identity and persisted application-session implementation and its Identity and Session Evidence Register; `SLICE-IAM-002` Private Beta onboarding and Workspace-isolation implementation, its Onboarding and Isolation Register, and its IAM-002 Onboarding Testing Guide.
 
 ---
 
@@ -180,6 +182,18 @@ Listed in workflow order. For each: role, what it establishes, what it deliberat
 - **Role:** Reviewed evidence register for the managed Clerk identity and persisted opaque application-session baseline delivered by Session 27 / `SLICE-IAM-001`.
 - **Establishes:** the exact delivered identity/session pins; Clerk Core 3 signup, email-code verification, login, recovery, and live development-instance smoke evidence; provider-token exchange boundaries; PostgreSQL-backed opaque application-session issuance, lookup, expiry, revocation, recovery consequences, and restart survival; recovery preservation of the fresh provider session; cookie, Origin/CORS/CSRF/content-type controls; safe Indonesian authentication errors; safe structured API lifecycle logging; frontend flows; selective shadcn/ui baseline; IAM-specific CI and test evidence; and reconsideration triggers.
 - **Does not establish:** a local User mapping, Workspace, starter Account, Private Beta entitlement or consumption, onboarding, Workspace-scoped product RLS, financial behavior, production provider configuration, deployment, or a guarantee that recorded versions and provider capabilities remain current indefinitely.
+- **Modifiable silently by later sessions:** No.
+
+### 17. `docs/implementation/ONBOARDING_ISOLATION_REGISTER.md`
+- **Role:** Reviewed evidence register for the Private Beta onboarding, local User mapping, private Workspace, starter Account, entitlement, atomicity, idempotency, and Workspace-isolation baseline delivered by Session 28 / `SLICE-IAM-002`.
+- **Establishes:** the delivered invitation lifecycle and least-privilege role model; verified-email resolution; one-transaction User–Workspace–starter-Account onboarding; deterministic concurrency and replay behavior; transactional rollback evidence; server-derived User/Workspace scope; forced-RLS evidence; complete automated Isolation Gate; live Clerk development-instance onboarding validation; Indonesian onboarding UI; operator invitation CLI; IAM-002 CI; and reconsideration triggers.
+- **Does not establish:** shared Workspace membership, collaboration invitations, Workspace roles, broader Account management, Account opening-state correction, Category, Dedicated Fund, Debt Record, Financial Event, financial behavior, reporting, production deployment, or a later implementation slice.
+- **Modifiable silently by later sessions:** No.
+
+### 18. `docs/implementation/IAM_002_ONBOARDING_TESTING_GUIDE.md`
+- **Role:** Reviewed operational guide for repeatable IAM-002 live validation and the delivered starter Account field semantics.
+- **Establishes:** safe local onboarding steps; operator invitation issue/revocation usage; field explanations; live postcondition checks; restart and persistence checks; and the boundary between current IAM-002 behavior and later Account slices.
+- **Does not establish:** product/domain authority, new Account behavior, a replacement implementation plan, production operations, or implementation beyond `SLICE-IAM-002`.
 - **Modifiable silently by later sessions:** No.
 
 The project-local skill artifacts (`.agents/`, `.claude/`, `skills-lock.json`) are tooling configuration, not approved product or domain artifacts, and are not listed above.
@@ -482,7 +496,7 @@ These versions are navigation metadata derived from the delivered manifests, loc
 
 ### Completed Database Foundation Baseline (Session 26 / `SLICE-FOUND-002`)
 
-Session 26 implemented and reviewed the approved `SLICE-FOUND-002` boundary. Its local validation passed, Pull Request CI was green, it was merged into `dev`, and the post-merge `dev` state is green. Those two foundation slices were the completed implementation set at the end of Session 26; Session 27 has since completed `SLICE-IAM-001`, bringing the current total to three. `main` remains production-only and has received none of the three slices.
+Session 26 implemented and reviewed the approved `SLICE-FOUND-002` boundary. Its local validation passed, Pull Request CI was green, it was merged into `dev`, and the post-merge `dev` state is green. Those two foundation slices were the completed implementation set at the end of Session 26; Sessions 27 and 28 have since completed `SLICE-IAM-001` and `SLICE-IAM-002`, bringing the current total to four. `main` remains production-only and has received none of the four slices.
 
 **Delivered repository structure:**
 
@@ -524,7 +538,7 @@ Session 26 implemented and reviewed the approved `SLICE-FOUND-002` boundary. Its
 
 These versions are navigation metadata derived from the delivered repository and `docs/implementation/DATABASE_FOUNDATION_REGISTER.md`. `PROJECT_STATE.md` does not independently guarantee that they remain current.
 
-**Current Foundation Gate status:** the non-database Foundation Gate delivered by `SLICE-FOUND-001` is complete, the database Foundation Gate delivered by `SLICE-FOUND-002` is complete, and the full Foundation Gate is complete. All eight non-database checks are green; PostgreSQL migration, Testcontainers, forced-RLS isolation, and exact-BIGINT checks are green; and all nine deliberate Architecture-boundary violations are rejected. Milestone 2 is unblocked. `SLICE-IAM-001` is complete. `SLICE-IAM-002` is the only next approved slice and has not started. The Isolation Gate remains incomplete until `SLICE-IAM-002` is reviewed and merged; the First Financial Write Gate and every later gate remain not started.
+**Current gate status:** the full Foundation Gate is complete; the `SLICE-IAM-001` identity/session baseline and acceptance evidence are complete; and the Isolation Gate is complete. The First Financial Write Gate, Cross-Boundary Consistency Gate, Correction/Recalculation Gate, Reporting Consistency Gate, Pre-Beta Security Gate, Recovery Gate, and Private Beta Acceptance Gate remain not started. Milestone 3 Account and Category work is dependency-unblocked, but only `SLICE-ACC-001` is selected as the next slice. Financial-write readiness is not complete.
 
 ### Completed Identity and Application-Session Baseline (Session 27 / `SLICE-IAM-001`)
 
@@ -547,25 +561,53 @@ The delivered baseline includes:
 
 This slice persists only the technical application-session record and directly required metadata. It does **not** establish a local product User, Workspace, Account, entitlement, onboarding result, or financial product table.
 
-### Next Approved Identity, Onboarding, and Workspace-Isolation Slice (Session 28 / `SLICE-IAM-002`)
+### Completed Identity, Onboarding, and Workspace-Isolation Baseline (Session 28 / `SLICE-IAM-002`)
 
-`SLICE-IAM-002` is the only next approved implementation slice and has not started. Its dependencies are satisfied by the merged `SLICE-IAM-001` and `SLICE-FOUND-002` baselines and the green full Foundation Gate.
+`SLICE-IAM-002` was implemented, reviewed, committed, pushed, and merged into `dev`. All four Pull Request CI jobs passed, and the post-merge `dev` GitHub Actions run is green. The reviewed evidence and repeatable live-validation guidance are recorded in `docs/implementation/ONBOARDING_ISOLATION_REGISTER.md` and `docs/implementation/IAM_002_ONBOARDING_TESTING_GUIDE.md`.
+
+The delivered baseline includes:
+
+- backend Clerk verified-email resolution;
+- deterministic local User mapping keyed by managed-identity subject;
+- operator-issued Private Beta invitations with cryptographically random invitation tokens and only token hashes stored;
+- invitation expiry, revocation, verified-email binding, and single-use consumption;
+- safe stdin-based invitation revocation and an operator invitation CLI;
+- atomic User → private Workspace → starter Account onboarding;
+- persistent onboarding idempotency and deterministic concurrency handling;
+- rollback guarantees proven through transactional failpoints;
+- exactly one private Single-Owner Workspace per User, fixed to IDR and Asia/Jakarta;
+- server-derived Workspace authority;
+- restricted application and operator database roles;
+- forced PostgreSQL RLS with transaction-local `app.user_id` and `app.workspace_id` context;
+- malformed, absent, and cross-Workspace context denial;
+- the complete automated Isolation Gate;
+- live Clerk development-instance onboarding validation;
+- an Indonesian onboarding UI and a minimal already-onboarded Workspace-ready state; and
+- a dedicated IAM-002 CI job.
+
+A Private Beta invitation grants product access; it is not a Workspace collaboration invitation. No shared Workspace, member role, or multi-owner behavior exists. Opening Balance is Account starting state, not Income or a Financial Event. `SLICE-IAM-002` created no Category, Dedicated Fund, Debt Record, or Financial Event.
+
+### Next Approved Account Management Slice (Session 29 / `SLICE-ACC-001`)
+
+`SLICE-ACC-001` is the only next approved implementation slice and remains not started. Its entry conditions are satisfied: `SLICE-IAM-002` is merged and the Isolation Gate is green.
 
 Its bounded navigation scope is:
 
-- deterministic local User mapping from the verified managed identity;
-- Private Beta entitlement validation and single-use redemption, explicitly as product-access entitlement rather than a collaboration invitation;
-- creation of exactly one private Single-Owner Workspace per User;
-- creation of the required starter Account as part of onboarding, with no broader Account-management feature set;
-- one atomic, idempotent, concurrency-safe onboarding transaction covering entitlement redemption, User mapping, Workspace creation, and starter Account creation;
-- server-authoritative Workspace scope, with clients unable to select or override another Workspace;
-- product-table Workspace RLS and adversarial cross-Workspace isolation tests;
-- frontend completion of the onboarding path through the starter Account; and
-- completion of the Isolation Gate.
+- create additional Accounts;
+- list Accounts within the authenticated private Workspace;
+- rename an Account while preserving identity and history;
+- archive an eligible Account;
+- restore an archived Account;
+- evaluate Account deletion eligibility without performing destructive deletion;
+- deliver Account management frontend behavior;
+- extend Workspace-scoped Account persistence and RLS for the approved lifecycle; and
+- provide unit, property-oriented, PostgreSQL integration, API/security, frontend, and isolation-regression tests.
 
-Exit requires all onboarding acceptance criteria to pass; failed onboarding to leave no partial state; duplicate, retried, or concurrent onboarding to create no duplicate User mapping, Workspace, starter Account, or entitlement-consumption result; each User to receive exactly one private Workspace; server-derived scope and forced RLS to deny cross-Workspace access; the Isolation Gate and all required CI checks to pass; and the slice to be reviewed and merged.
+Exit requires INV-ACC-01–03 to be proven through property tests, Workspace isolation to remain green, soft Account lifecycle states to work correctly, and no destructive permanent deletion to be implemented.
 
-The following remain explicitly excluded: Category; Dedicated Fund; Debt Record; Financial Event persistence; Income; Expense; Transfer; Fund Allocation; Fund Release; Debt Repayment; financial formulas, projections, chronological or derived-state recalculation, and balance mutation; Account management beyond creation of the required starter Account; shared Workspaces, Workspace or collaboration invitations, member roles, and Clerk Organizations; production deployment; billing or subscription configuration; `SLICE-ACC-001`; and every later slice. No Milestone 3+ implementation may begin until `SLICE-IAM-002` is reviewed, merged, and the Isolation Gate is green.
+The starter Account created by onboarding becomes an ordinary Account managed by `SLICE-ACC-001`, and additional Accounts may then be created. Account name may be renamed, while Account identity must remain unchanged across rename, archive, and restore. Account Type remains fixed because no approved edit behavior currently exists. Opening Balance and Opening-Balance Effective Date remain fixed until `SLICE-ACC-002`. Archived Accounts remain part of history and, once Financial Event slices exist, must not be available for new financial activity. No Financial Event exists yet. No Account-Type migration behavior is implied.
+
+`SLICE-ACC-001` explicitly does not implement Opening Balance correction; Opening-Balance Effective Date correction; Impact Preview; recalculation; Account Type change; negative balances; credit cards; overdraft; liability Accounts; Category; Dedicated Fund; Debt Record; Financial Event; Income; Expense; Transfer; Fund Allocation; Fund Release; Debt Repayment; dashboard; reporting; permanent Account deletion; `SLICE-ACC-002`; `SLICE-CAT-001`; or any later slice. Delete eligibility means evaluating whether deletion would be allowed by the approved rules; it does not authorize physical or permanent deletion in this slice.
 
 **Frontend-tool navigation:** shadcn/ui is the approved component baseline and was adopted selectively in `SLICE-IAM-001`; Annotasi Finance owns and reviews the resulting component source. UI UX Pro Max remains optional and is not installed by this synchronization. 21st.dev remains an optional manual reference/component source; no 21st.dev subscription, MCP, API key, or automatic installation is approved. None of these tools may change product, domain, Architecture, identity, authorization, session, onboarding, or isolation rules.
 
@@ -575,7 +617,7 @@ The following remain explicitly excluded: Category; Dedicated Fund; Debt Record;
 
 1. Annotasi Finance v1 is multi-user, but each User owns exactly one private Single-Owner Workspace. — *`docs/product/ANNOTASI_FINANCE_MVP_PRD.md` §6; `docs/domain/UBIQUITOUS_LANGUAGE.md` §5.*
 
-2. Shared-Workspace invitations, household invitations, shared editing, household collaboration, and Workspace roles are excluded from v1. Private Beta access invitations are permitted as access-entitlement mechanics, not collaboration invitations; they still establish exactly one private Single-Owner Workspace. Their implementation belongs to `SLICE-IAM-002`, not `SLICE-FOUND-001`. — *`docs/product/ANNOTASI_FINANCE_MVP_PRD.md` §6, §8; `docs/product/PRODUCT_IDENTITY.md` §3; `docs/implementation/MVP_IMPLEMENTATION_PLAN.md` §§11, 34.*
+2. Shared-Workspace invitations, household invitations, shared editing, household collaboration, and Workspace roles are excluded from v1. Private Beta access invitations are permitted as access-entitlement mechanics, not collaboration invitations; they still establish exactly one private Single-Owner Workspace. Their implementation was delivered by `SLICE-IAM-002`, not `SLICE-FOUND-001`. — *`docs/product/ANNOTASI_FINANCE_MVP_PRD.md` §6, §8; `docs/product/PRODUCT_IDENTITY.md` §3; `docs/implementation/MVP_IMPLEMENTATION_PLAN.md` §§11, 34.*
 
 3. There are exactly six closed v1 Financial Event types: Income, Expense, Transfer, Fund Allocation, Fund Release, Debt Repayment. — *`docs/product/ANNOTASI_FINANCE_MVP_PRD.md` §11; `docs/domain/UBIQUITOUS_LANGUAGE.md` §6.*
 
@@ -677,7 +719,7 @@ No additional domain decision is introduced by this summary.
 
 ### Current Implementation Constraints (Session 24)
 
-- exactly six Financial Event Types; the completed foundation and identity/session slices implement no financial behavior, and `SLICE-IAM-002` may create only the required starter Account without implementing financial behavior or broader Account management;
+- exactly six Financial Event Types; the completed foundation, identity/session, and onboarding/isolation slices implement no financial behavior, and `SLICE-ACC-001` is not authorized to introduce financial behavior;
 - `packages/domain` has no framework dependency; `apps/web` cannot import `packages/domain` or API application modules;
 - `packages/contracts` cannot implement domain formulas, and `packages/test-support` cannot become a production dependency;
 - no floating-point money or native JSON number for authoritative money;
@@ -707,7 +749,7 @@ For full reasoning, identity/equality analysis, and stress-test scenarios behind
 
 ## 8. Active Open Questions
 
-No active unresolved product or domain question is currently identified as blocking `SLICE-IAM-002`. The managed-provider compatibility and live-flow verification required by `SLICE-IAM-001` are complete and recorded in `docs/implementation/IDENTITY_SESSION_REGISTER.md`; this does not silently resolve any future provider change or product-domain decision. The Identity and Naming, Funds and Goals, Debt, Event Lifecycle, Reporting and Totals, and Aggregate Boundaries lists below are retained only as a historical pre-Session-21 question index; Session 21 resolved/classified them and Session 22 incorporated those resolutions into the executable specification. They must not be reopened or treated as Still Open without an explicit domain review triggered by a genuine conflict or missing product rule. The UX Terminology items remain product/UX questions outside the completed normative domain baseline. The two Architecture-carried decisions were resolved by Session 23, and Session 24 resolved or bounded every Implementation-Time Selection needed for the approved slices.
+No active unresolved product or domain question is currently identified as blocking `SLICE-ACC-001`. The managed-provider and onboarding/isolation verification required by the completed IAM slices is recorded in `docs/implementation/IDENTITY_SESSION_REGISTER.md`, `docs/implementation/ONBOARDING_ISOLATION_REGISTER.md`, and `docs/implementation/IAM_002_ONBOARDING_TESTING_GUIDE.md`; this does not silently resolve any future provider change or product-domain decision. The Identity and Naming, Funds and Goals, Debt, Event Lifecycle, Reporting and Totals, and Aggregate Boundaries lists below are retained only as a historical pre-Session-21 question index; Session 21 resolved/classified them and Session 22 incorporated those resolutions into the executable specification. They must not be reopened or treated as Still Open without an explicit domain review triggered by a genuine conflict or missing product rule. The UX Terminology items remain product/UX questions outside the completed normative domain baseline. The two Architecture-carried decisions were resolved by Session 23, and Session 24 resolved or bounded every Implementation-Time Selection needed for the approved slices.
 
 **Current-question boundary:** only the **UX Terminology** subsection contains currently unresolved questions. Every other subsection in Section 8 is a historical pre-Session-21 question index, superseded by `docs/domain/DOMAIN_DECISION_REGISTER.md` and `docs/domain/EXECUTABLE_DOMAIN_SPECIFICATION.md`, and must not be treated as an active open-question backlog.
 
@@ -836,7 +878,8 @@ Only read documents directly relevant to the task at hand.
 - **Technical Foundation Implementation (Session 25 / `SLICE-FOUND-001`):** Session 25 is complete. Its required full reads were `CLAUDE.md`, `docs/project/PROJECT_STATE.md`, `docs/implementation/MVP_IMPLEMENTATION_PLAN.md`, and `docs/architecture/ARCHITECTURE_BASELINE.md`, supplemented by targeted product/domain constraints and current official technical sources where required. The delivered evidence is recorded in `docs/implementation/FOUNDATION_DEPENDENCY_REGISTER.md`, the repository manifests, and the Foundation CI workflow. This entry preserves the completed session's source-loading baseline; it does not guarantee that external versions or capabilities remain current.
 - **Technical Foundation Implementation (Session 26 / `SLICE-FOUND-002`):** Session 26 is complete. Its required full reads were `CLAUDE.md`, `docs/project/PROJECT_STATE.md`, `docs/implementation/MVP_IMPLEMENTATION_PLAN.md`, `docs/implementation/FOUNDATION_DEPENDENCY_REGISTER.md`, and `docs/architecture/ARCHITECTURE_BASELINE.md`, supplemented by targeted executable-specification/PRD constraints and current official PostgreSQL, Drizzle, Testcontainers, image, advisory, and CI/runtime sources. The delivered evidence is recorded in `docs/implementation/DATABASE_FOUNDATION_REGISTER.md`, the database/Compose files, repository manifests, and the Foundation CI workflow. This entry preserves the completed session's source-loading baseline; it does not guarantee that external versions or capabilities remain current.
 - **Identity and Access Implementation (Session 27 / `SLICE-IAM-001`):** Session 27 is complete. Its required full reads were `CLAUDE.md`, `docs/project/PROJECT_STATE.md`, `docs/implementation/MVP_IMPLEMENTATION_PLAN.md`, `docs/architecture/ARCHITECTURE_BASELINE.md`, `docs/implementation/FOUNDATION_DEPENDENCY_REGISTER.md`, and `docs/implementation/DATABASE_FOUNDATION_REGISTER.md`, supplemented by targeted product/domain constraints and current official provider sources. The delivered and live-smoke evidence is recorded in `docs/implementation/IDENTITY_SESSION_REGISTER.md`. This entry preserves the completed session's source-loading baseline; it does not guarantee that external provider versions or capabilities remain current.
-- **Identity, Onboarding, and Workspace Isolation (Session 28 / `SLICE-IAM-002`):** Read completely: `CLAUDE.md`, `docs/project/PROJECT_STATE.md`, `docs/implementation/MVP_IMPLEMENTATION_PLAN.md`, `docs/architecture/ARCHITECTURE_BASELINE.md`, `docs/implementation/DATABASE_FOUNDATION_REGISTER.md`, and `docs/implementation/IDENTITY_SESSION_REGISTER.md`. Use targeted authoritative PRD and Executable Domain Specification sections for one User owning exactly one private Single-Owner Workspace, Private Beta entitlement versus collaboration invitation, onboarding behavior WB-01, starter Account requirements, atomic and idempotent entitlement redemption, server-derived Workspace scope, RLS, cross-Workspace isolation, and the prohibition on product or financial behavior beyond the starter Account. Session 28 begins only through explicit instruction and remains not started.
+- **Identity, Onboarding, and Workspace Isolation (Session 28 / `SLICE-IAM-002`):** Session 28 is complete. Its required pre-implementation full reads were `CLAUDE.md`, `docs/project/PROJECT_STATE.md`, `docs/implementation/MVP_IMPLEMENTATION_PLAN.md`, `docs/architecture/ARCHITECTURE_BASELINE.md`, `docs/implementation/FOUNDATION_DEPENDENCY_REGISTER.md`, `docs/implementation/DATABASE_FOUNDATION_REGISTER.md`, and `docs/implementation/IDENTITY_SESSION_REGISTER.md`, supplemented by targeted product/domain constraints and current official provider/database sources. The evidence produced and finalized by Session 28 is recorded in `docs/implementation/ONBOARDING_ISOLATION_REGISTER.md` and `docs/implementation/IAM_002_ONBOARDING_TESTING_GUIDE.md`, together with the onboarding migration/runtime/API/web implementation and the onboarding/isolation CI job. This entry preserves the completed session's source-loading baseline and separately identifies its outputs; it does not replace those sources.
+- **Account Management Baseline (Session 29 / `SLICE-ACC-001`):** Read completely: `CLAUDE.md`, `docs/project/PROJECT_STATE.md`, `docs/implementation/MVP_IMPLEMENTATION_PLAN.md`, `docs/architecture/ARCHITECTURE_BASELINE.md`, `docs/implementation/DATABASE_FOUNDATION_REGISTER.md`, `docs/implementation/IDENTITY_SESSION_REGISTER.md`, and `docs/implementation/ONBOARDING_ISOLATION_REGISTER.md`. Read targeted authoritative product/domain sections for Account definition, Account Types, Account lifecycle, non-negative balance, archive eligibility, restore behavior, deletion eligibility, duplicate Account names, Workspace isolation, Opening Balance as starting state, and exclusions belonging to `SLICE-ACC-002`. Inspect the Account schema delivered by `SLICE-IAM-002` before planning any migration. Session 29 and `SLICE-ACC-001` begin only through explicit instruction and remain not started.
 - **Product-scope or requirement question:** the relevant `docs/product/ANNOTASI_FINANCE_MVP_PRD.md` section, plus `docs/product/PRODUCT_IDENTITY.md` when product direction matters
 - **Other Architecture task:** `docs/domain/EXECUTABLE_DOMAIN_SPECIFICATION.md` plus the sources it identifies for the affected constraint; load no unrelated files
 
@@ -874,10 +917,11 @@ Read the full PRD or another full source document only when:
 | Technical Foundation Implementation — `SLICE-FOUND-001` | `CLAUDE.md`, `PROJECT_STATE.md`, `MVP_IMPLEMENTATION_PLAN.md`, `ARCHITECTURE_BASELINE.md` | Targeted executable-specification and PRD constraints as needed; current official technical sources; delivered manifests, CI workflow, and `FOUNDATION_DEPENDENCY_REGISTER.md` as evidence | No — targeted only | **Completed in Session 25.** Established the reviewed non-database technical foundation only; passed review, all eight local checks, Pull Request CI, and post-merge CI; and was merged into `dev`. This is historical implementation evidence, not authority to expand the slice. |
 | Technical Foundation Implementation — `SLICE-FOUND-002` | `CLAUDE.md`, `PROJECT_STATE.md`, `MVP_IMPLEMENTATION_PLAN.md`, `FOUNDATION_DEPENDENCY_REGISTER.md`, `ARCHITECTURE_BASELINE.md` | Delivered `SLICE-FOUND-001` manifests/workflow as evidence; targeted executable-specification and PRD constraints; current official PostgreSQL, Drizzle, Testcontainers, image, advisory, and CI/runtime sources | No — targeted only | **Completed in Session 26.** Established the reviewed local PostgreSQL, migration, role/RLS-proof, exact-BIGINT, Testcontainers, Compose, boundary, and database-CI half of the Foundation Gate; passed local validation, Pull Request CI, and post-merge CI; and was merged into `dev`. `DATABASE_FOUNDATION_REGISTER.md` is the reviewed evidence source. |
 | Identity and Access Implementation — `SLICE-IAM-001` | `CLAUDE.md`, `PROJECT_STATE.md`, `MVP_IMPLEMENTATION_PLAN.md`, `ARCHITECTURE_BASELINE.md`, `FOUNDATION_DEPENDENCY_REGISTER.md`, `DATABASE_FOUNDATION_REGISTER.md` | Targeted PRD and Executable Domain Specification sections for identity verification, privacy, Single-Owner Workspace boundaries, no Workspace creation before onboarding, and managed identity versus local application-session authority; current official provider sources; `IDENTITY_SESSION_REGISTER.md` as delivered evidence | No — targeted only | **Completed in Session 27.** Established managed Clerk identity flows and live validation plus persisted, opaque, restart-safe Annotasi Finance application sessions, secure browser/API boundaries, frontend identity flows, recovery revocation, lifecycle logging, and dedicated CI. It created no local User, Workspace, Account, entitlement, onboarding result, or financial table. |
-| Identity, Onboarding, and Workspace Isolation — `SLICE-IAM-002` | `CLAUDE.md`, `PROJECT_STATE.md`, `MVP_IMPLEMENTATION_PLAN.md`, `ARCHITECTURE_BASELINE.md`, `DATABASE_FOUNDATION_REGISTER.md`, `IDENTITY_SESSION_REGISTER.md` | Targeted PRD and Executable Domain Specification sections for one User owning exactly one private Single-Owner Workspace, Private Beta entitlement versus collaboration invitation, onboarding behavior WB-01, starter Account requirements, atomic/idempotent entitlement redemption, server-derived Workspace scope, forced RLS, adversarial isolation, and no product/financial behavior beyond the starter Account | No — targeted only | **Next approved slice; not started.** Establishes local User mapping, single-use entitlement redemption, exactly one private Workspace, its starter Account, atomic and concurrency-safe onboarding, server-authoritative Workspace scope, product-table RLS, adversarial isolation evidence, and the Isolation Gate. Excludes every financial feature and Account management beyond starter Account creation. |
+| Identity, Onboarding, and Workspace Isolation — `SLICE-IAM-002` | `CLAUDE.md`, `PROJECT_STATE.md`, `MVP_IMPLEMENTATION_PLAN.md`, `ARCHITECTURE_BASELINE.md`, `DATABASE_FOUNDATION_REGISTER.md`, `IDENTITY_SESSION_REGISTER.md` | Targeted PRD and Executable Domain Specification sections for one User owning exactly one private Single-Owner Workspace, Private Beta entitlement versus collaboration invitation, onboarding behavior WB-01, starter Account requirements, atomic/idempotent entitlement redemption, server-derived Workspace scope, forced RLS, adversarial isolation, and no product/financial behavior beyond the starter Account; `ONBOARDING_ISOLATION_REGISTER.md` and `IAM_002_ONBOARDING_TESTING_GUIDE.md` as delivered evidence | No — targeted only | **Completed in Session 28.** Established local User mapping, operator-issued single-use entitlement redemption, exactly one private Workspace and starter Account, atomic/idempotent/concurrency-safe onboarding, server-authoritative scope, forced RLS, adversarial isolation, live onboarding evidence, and the complete Isolation Gate. It introduced no collaboration or financial behavior. |
+| Account Management Baseline — `SLICE-ACC-001` | `CLAUDE.md`, `PROJECT_STATE.md`, `MVP_IMPLEMENTATION_PLAN.md`, `ARCHITECTURE_BASELINE.md`, `DATABASE_FOUNDATION_REGISTER.md`, `IDENTITY_SESSION_REGISTER.md`, `ONBOARDING_ISOLATION_REGISTER.md` | Targeted authoritative Account sections covering definition, Types, lifecycle, non-negative balance, archive/restore/delete eligibility, duplicate names, Workspace isolation, Opening Balance as state, and ACC-002 exclusions; inspect the IAM-002 Account schema before migration planning | No — targeted only | **Next approved slice; not started.** Creates/lists/renames/archives/restores Accounts and evaluates deletion eligibility with Account management UI, Workspace-scoped persistence/RLS, and required unit/property/PostgreSQL/API-security/frontend/isolation evidence. It excludes opening-state correction, Impact Preview, recalculation, permanent deletion, every financial behavior, `SLICE-ACC-002`, `SLICE-CAT-001`, and later slices. |
 | Implementation specification | `CLAUDE.md`, `PROJECT_STATE.md`, `MVP_IMPLEMENTATION_PLAN.md` | Relevant approved source sections for the selected slice | Sections as needed | Current-stage slice detail may be produced only inside the reviewed slice boundary; it may not reopen source decisions silently. |
-| Coding | `CLAUDE.md`, `PROJECT_STATE.md`, `MVP_IMPLEMENTATION_PLAN.md`, `ARCHITECTURE_BASELINE.md` | Sources required by the selected slice | N/A | **Current workflow stage.** Exactly three slices, `SLICE-FOUND-001`, `SLICE-FOUND-002`, and `SLICE-IAM-001`, are complete. `SLICE-IAM-002` is the only next approved slice and remains not started; no later slice is authorized. |
-| Code review | `CLAUDE.md`, `PROJECT_STATE.md` | Relevant specification, plan, Architecture, and implementation evidence | N/A | Slice-level implementation review is complete for `SLICE-FOUND-001`, `SLICE-FOUND-002`, and `SLICE-IAM-001`; later reviews occur only for explicitly started slices. |
+| Coding | `CLAUDE.md`, `PROJECT_STATE.md`, `MVP_IMPLEMENTATION_PLAN.md`, `ARCHITECTURE_BASELINE.md` | Sources required by the selected slice | N/A | **Current workflow stage.** Exactly four slices, `SLICE-FOUND-001`, `SLICE-FOUND-002`, `SLICE-IAM-001`, and `SLICE-IAM-002`, are complete. `SLICE-ACC-001` is the only next approved slice and remains not started; no later slice is authorized. |
+| Code review | `CLAUDE.md`, `PROJECT_STATE.md` | Relevant specification, plan, Architecture, and implementation evidence | N/A | Slice-level implementation review is complete for `SLICE-FOUND-001`, `SLICE-FOUND-002`, `SLICE-IAM-001`, and `SLICE-IAM-002`; later reviews occur only for explicitly started slices. |
 | Bug investigation | `CLAUDE.md`, `PROJECT_STATE.md` | Relevant implementation evidence plus authoritative sources for the affected behavior | Targeted | Available only for an explicitly reported implementation defect; it is not the current next task. |
 | Release validation | `CLAUDE.md`, `PROJECT_STATE.md` | PRD §24 (Launch Criteria) in full | Yes — §24 | **Future workflow stage — do not begin yet.** No release candidate exists |
 
@@ -979,16 +1023,16 @@ Updates to this document should be small and traceable — reflecting one specif
 
 ## 16. Current Next Step
 
-- Session 27 is the last completed workflow session; `SLICE-FOUND-001`, `SLICE-FOUND-002`, and `SLICE-IAM-001` are reviewed, complete, and merged into `dev`.
-- Implementation is the current workflow stage, and exactly three implementation slices have completed.
-- The full Foundation Gate is complete: all eight non-database checks and the PostgreSQL migration, Testcontainers, RLS, exact-BIGINT, and nine negative Architecture-boundary checks are green.
-- The managed Clerk identity and persisted opaque Annotasi Finance application-session baseline is complete, including live Clerk development-instance smoke validation, recovery/session revocation, restart validity, frontend identity flows, security boundaries, and dedicated CI.
-- `main` remains production-only and has received none of the three implementation slices.
-- The next recommended task is **Session 28 — Identity, Onboarding, and Workspace Isolation**.
-- `SLICE-IAM-002` is the only next approved slice and remains not started. It is bounded to local User mapping, single-use Private Beta entitlement redemption, exactly one private Single-Owner Workspace, starter Account creation, atomic/idempotent onboarding, server-authoritative Workspace scope, product-table RLS, adversarial isolation, and completion of the Isolation Gate.
-- Category, Fund, Debt, all Financial Event types, financial formulas/recalculation, Account management beyond starter Account creation, collaboration, roles, Clerk Organizations, deployment, billing, `SLICE-ACC-001`, and every later slice remain excluded and not started.
-- The Isolation Gate is incomplete; the First Financial Write Gate and every later gate are not started. No Milestone 3+ implementation may begin until `SLICE-IAM-002` is reviewed, merged, and the Isolation Gate is green.
-- Session 28 begins only through explicit instruction. This synchronization does not begin it or any implementation work.
+- Session 28 is the last completed workflow session; `SLICE-FOUND-001`, `SLICE-FOUND-002`, `SLICE-IAM-001`, and `SLICE-IAM-002` are reviewed, complete, and merged into `dev`.
+- Implementation is the current workflow stage, and exactly four implementation slices have completed.
+- The full Foundation Gate and Isolation Gate are complete; the IAM-001 identity/session baseline and acceptance evidence are also complete.
+- The managed identity, persisted opaque application sessions, operator-issued Private Beta access entitlement, atomic onboarding, one private Workspace and starter Account per User, server-derived authority, forced-RLS isolation, live onboarding validation, and dedicated IAM-002 CI baseline are complete.
+- `main` remains production-only and has received none of the four implementation slices.
+- The next recommended task is **Session 29 — Account Management Baseline**.
+- `SLICE-ACC-001` is the only next approved slice and remains not started. It is bounded to Account create/list/rename/archive/restore/delete-eligibility behavior, Account management frontend, Workspace-scoped Account persistence/RLS, and the evidence named in Section 5.
+- `SLICE-CAT-001` is dependency-unblocked but is not selected. `SLICE-ACC-002` and every later slice remain not started.
+- The First Financial Write Gate, Cross-Boundary Consistency Gate, Correction/Recalculation Gate, Reporting Consistency Gate, Pre-Beta Security Gate, Recovery Gate, and Private Beta Acceptance Gate remain not started; financial-write readiness is not complete.
+- Session 29 begins only through explicit instruction. This synchronization does not begin it or any implementation work.
 
 This document summarizes navigation state only. It replaces neither the product/domain/Architecture baselines nor the implementation plan and independently guarantees no version, provider, price, region, quota, or capability.
 
@@ -1075,3 +1119,13 @@ This document summarizes navigation state only. It replaces neither the product/
 - **Authority role:** Reviewed evidence register for the managed Clerk identity flows, provider-to-application exchange, persisted opaque application sessions, recovery/revocation behavior, frontend integration, security boundaries, live development-instance smoke validation, and identity/session CI baseline delivered by Session 27 / `SLICE-IAM-001`.
 - **When to read:** Before local User mapping or onboarding; before changing identity, recovery, session persistence, session cookies, authorization boundaries, CSP/CAPTCHA integration, or identity/session dependencies; and before claims about the behavior delivered by `SLICE-IAM-001`.
 - **Must not be replaced by:** `PROJECT_STATE.md` navigation metadata, remembered provider behavior, test output taken out of context, or an assumption that recorded provider versions and capabilities remain current indefinitely.
+
+### `docs/implementation/ONBOARDING_ISOLATION_REGISTER.md`
+- **Authority role:** Reviewed evidence register for Private Beta invitation lifecycle, local User mapping, atomic onboarding, one private Workspace and starter Account, deterministic idempotency/concurrency/rollback, server-derived scope, forced RLS, the automated Isolation Gate, live onboarding validation, and IAM-002 CI delivered by Session 28 / `SLICE-IAM-002`.
+- **When to read:** Before broader Account persistence or lifecycle work; before changing onboarding, entitlement, User/Workspace ownership, application/operator roles, RLS context, or Workspace isolation; and before claims about the behavior delivered by `SLICE-IAM-002`.
+- **Must not be replaced by:** `PROJECT_STATE.md` navigation metadata, remembered implementation details, test output taken out of context, or an assumption that recorded provider/database behavior remains current indefinitely.
+
+### `docs/implementation/IAM_002_ONBOARDING_TESTING_GUIDE.md`
+- **Authority role:** Reviewed operational evidence guide for IAM-002 live onboarding, safe invitation handling, starter Account field meaning, persistence checks, and later-editability boundaries.
+- **When to read:** Before repeating the live IAM-002 flow, operating the invitation CLI, interpreting the starter Account fields delivered by onboarding, or planning Account changes that depend on those existing fields.
+- **Must not be replaced by:** Product/domain authority, `ONBOARDING_ISOLATION_REGISTER.md` implementation evidence, the implementation plan's slice boundary, or assumptions inferred from the current UI.
