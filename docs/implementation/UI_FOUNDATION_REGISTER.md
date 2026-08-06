@@ -1,0 +1,241 @@
+# UI Foundation Register
+
+## 1. Document Status
+
+- **Decision date:** 2026-08-06.
+- **Timezone:** Asia/Jakarta.
+- **Roadmap amendment:** approved by the product owner on 2026-08-06 (recorded in full in `docs/implementation/MVP_IMPLEMENTATION_PLAN.md`'s Roadmap Execution Amendment appendix and `docs/architecture/ARCHITECTURE_BASELINE.md`'s Frontend Architecture clarification).
+- **Implementation status:** Not started.
+- **Target implementation session:** Session 30.
+- **Target slice:** `SLICE-UI-001` — Product UI Foundation & Existing Screen Retrofit.
+- **Current task:** Documentation only. This register does not implement `SLICE-UI-001`, does not install a dependency or skill, and does not start Session 30.
+
+## 2. Purpose
+
+This register governs `SLICE-UI-001` implementation and exists to prevent, as the product accumulates more screens across later slices:
+
+- fragmented, per-page one-off styling instead of one shared visual system;
+- repeated, uncoordinated component work across screens that should share primitives;
+- inconsistent accessibility (keyboard, focus, contrast, reduced motion) between screens built at different times;
+- unreviewed external components entering the product without a provenance, license, dependency, or accessibility check;
+- UI debt that compounds across `SLICE-ACC-002` and every later feature slice because no shared foundation existed before they started.
+
+It carries implementation-level authority only. It does not carry product, domain, or Architecture authority (`docs/project/PROJECT_STATE.md` §17), and a later session must not silently rewrite it.
+
+## 3. Product Experience Direction
+
+`SLICE-UI-001` must anchor every design and interaction decision in the approved product identity, not generic UI conventions:
+
+- **Trust first** — no visual treatment may make an unconfirmed or uncertain state look confirmed (`docs/product/PRODUCT_IDENTITY.md` §1, §13; `docs/product/ANNOTASI_FINANCE_MVP_PRD.md` §5).
+- **Clarity without shame** — the product shows reality honestly without delivering a verdict; error and validation copy explains, it does not blame (`PRODUCT_IDENTITY.md` §8, §13).
+- **Simple by default, flexible when needed** — a new user should be able to act without configuring anything first; customization is progressive, not front-loaded (`PRODUCT_IDENTITY.md` §7, §13).
+- **Explain important effects** — important numbers and outcomes must remain traceable and understandable, never just displayed (`PRODUCT_IDENTITY.md` §13).
+- **Calm rather than judgmental** — copy and color must not imply a verdict about the user's financial behavior (`PRODUCT_IDENTITY.md` §8).
+- **Progress without pressure** — where progress or status is shown, framing stays descriptive, never competitive or binary (`PRODUCT_IDENTITY.md` §9, §13).
+- **Indonesian-first communication** — all end-user UI text is Bahasa Indonesia, clear and natural for beginners (`docs/product/ANNOTASI_FINANCE_MVP_PRD.md` §21–§22).
+
+These are constraints on `SLICE-UI-001`'s design decisions, not new product commitments; they do not add, remove, or reinterpret any confirmed product or domain rule.
+
+## 4. Existing Technical Baseline
+
+Recorded only from direct repository inspection performed for this amendment (`apps/web/package.json`, `apps/web/components.json`, `apps/web/app/styles.css`, `apps/web/components/`, `apps/web/app/`, `apps/web/lib/`) — no version or capability below is asserted from memory.
+
+**Framework and language:** Next.js `16.2.12`; React and React DOM `19.2.8`; Zod `4.4.3`.
+
+**Styling:** Tailwind CSS `4.3.3` (CSS-first configuration) with `@tailwindcss/postcss` `4.3.3`. `apps/web/app/styles.css` begins `@import "tailwindcss"; @import "tw-animate-css"; @import "shadcn/tailwind.css";`, followed by the shadcn Nova preset's neutral OKLCH color tokens for both light mode (`:root`) and (per `IDENTITY_SESSION_REGISTER.md`) a `.dark` variant, a `@theme inline` block, and pre-existing custom styles. CSS variables already defined: `--background`, `--foreground`, `--card`, `--card-foreground`, `--popover`, `--popover-foreground`, `--primary`, `--primary-foreground`, `--secondary`, `--secondary-foreground`, `--muted`, `--muted-foreground`, `--accent`, `--accent-foreground`, `--destructive`, `--border`, `--input`, `--ring`, `--chart-1` through `--chart-5`, `--radius`, and `--sidebar*`. **No `--success`, `--warning`, or `--info` token currently exists** — establishing these is `SLICE-UI-001` scope (Section 7), not a fact recorded here.
+
+**Component foundation:** `components.json` — `style: "base-nova"`, `tailwind.css: "app/styles.css"`, `baseColor: "neutral"`, `cssVariables: true`, `iconLibrary: "lucide"`, aliases `components`/`utils`/`ui`/`lib`/`hooks` all under `@/`, `registries: {}` (none configured). `shadcn` CLI `4.16.1` is a devDependency, invoked with the Base UI primitive baseline (`-b base`) and the `nova` preset per `IDENTITY_SESSION_REGISTER.md`. Runtime packages generated by that CLI run and now in `apps/web/package.json`: `@base-ui/react` `1.6.0`, `class-variance-authority` `0.7.1`, `clsx` `2.1.1`, `lucide-react` `1.28.0`, `tailwind-merge` `3.6.0`, `tw-animate-css` `1.4.0`.
+
+**Existing `components/ui` primitives (exactly these, no others):** `button.tsx`, `input.tsx`, `label.tsx`, `card.tsx`, `alert.tsx`. No `components/auth`, `components/navigation`, `components/accounts`, or `components/feedback` presentation folder exists yet — establishing that structure is `SLICE-UI-001` scope (Section 6).
+
+**Forms and identity:** `react-hook-form` `7.84.0` with `@hookform/resolvers` `5.6.0` (wired directly; no shadcn `form` wrapper component was added). `@clerk/nextjs` `7.6.4` for managed identity.
+
+**Existing routes and their current content, confirmed by direct inspection performed for this correction:** `apps/web/app/page.tsx` (a static status page, no financial UI); `apps/web/app/layout.tsx` (the global root layout — `ClerkProvider`, `<html>`/`<body>`, Geist font setup, and the global `./styles.css` import; it wraps every route, authenticated and unauthenticated alike, and contains no authenticated-only navigation); `apps/web/app/login/page.tsx`, `apps/web/app/signup/page.tsx`, and `apps/web/app/forgot-password/page.tsx` (each an application-rendered React form using `components/ui` primitives, `react-hook-form` + Zod, and a Clerk hook — `useSignIn`/`useSignUp`/`useAuth` — for the identity operation only; see Section 9); `apps/web/app/onboarding/page.tsx` and `apps/web/app/accounts/page.tsx` (application-rendered forms using the same `components/ui` primitives, calling `apps/web/lib/api-client.ts`, no Clerk hooks); `apps/web/app/session/page.tsx` (a post-authentication session-status screen using `useClerk` only for sign-out).
+
+**Existing shared frontend modules:** `apps/web/lib/api-client.ts`, `apps/web/lib/validation.ts`, `apps/web/lib/utils.ts`, `apps/web/lib/format.ts`, `apps/web/lib/clerk-errors.ts`.
+
+**Not present:** no `@tanstack/react-query` (or equivalent) dependency exists in `apps/web/package.json` as of this inspection, although `docs/implementation/MVP_IMPLEMENTATION_PLAN.md` §26 names TanStack Query as the intended remote-state owner. This gap is recorded as a fact, not resolved here — `SLICE-UI-001` must confirm the current remote-state pattern by inspecting `apps/web/lib/api-client.ts` directly rather than assuming TanStack Query is already wired in.
+
+## 5. Tooling Governance
+
+Canonical hierarchy (not peers; do not mix indiscriminately):
+
+```text
+1. Annotasi Finance product principles and domain constraints
+2. Annotasi Finance design tokens and interaction standards
+3. shadcn/ui with the existing Base UI primitive baseline
+4. UI/UX Pro Max for design reasoning, exploration, and review
+5. 21st.dev for selective pattern discovery and implementation acceleration
+6. Motion for purposeful animation when CSS transitions are insufficient
+```
+
+- **shadcn/ui** is the canonical source-controlled component foundation (Section 6). Do not reinitialize it and do not introduce a competing primitive library (Radix UI, React Aria, Material UI, Chakra UI, Ant Design, or similar).
+- **Base UI** (`@base-ui/react`) is the selected, already-installed primitive baseline underneath shadcn/ui (Section 4). `SLICE-UI-001` does not migrate to another primitive library.
+- **UI/UX Pro Max** is design advisory and review only — visual-direction exploration, information-hierarchy review, responsive-layout review, typography/spacing review, accessibility-oriented design critique, alternative screen composition, post-implementation UI review. It is never a production runtime dependency, and its recommendations never override product identity, domain behavior, accessibility, Indonesian end-user language, repository architecture, technical feasibility, or the canonical component system.
+- **21st.dev** is an external component/pattern registry and source-discovery channel, not a package or repository skill that gets "installed" in the ordinary sense, and not the Annotasi Finance design system. A component may be adapted from it through a registry URL or copied source; doing so does not automatically require adding a production runtime dependency, a `skills-lock.json` entry, or any persistent registry configuration. Any component sourced from it must pass the External Component Intake Policy (Section 12) before it is treated as part of the product.
+- **Motion** is optional and purposeful (Section 10); it is never installed by this documentation task.
+
+**Verified status, separated by category (direct repository inspection performed for this correction; installation-status claims are limited to this repository — global or user-level Claude/tool availability was not assessed and is not claimed here):**
+
+- **UI/UX Pro Max:** no repository-locked UI/UX Pro Max skill was found in `skills-lock.json`, `.agents/skills/`, or `.claude/skills/` (all three contain only `domain-modeling`, `setup-matt-pocock-skills`, and `ubiquitous-language`). Repository installation or locking, if later required, needs explicit approval; this is a `SLICE-UI-001` preflight activity, not performed by this documentation task.
+- **Motion:** no `motion` or `framer-motion` runtime dependency is currently present in `apps/web/package.json`. Adding Motion later requires explicit approval and a demonstrated interaction need (Section 10); CSS transitions remain the default until then.
+- **21st.dev:** no persistent 21st.dev registry configuration and no documented 21st-derived component provenance were found during this repository inspection. Its absence from `apps/web/package.json` and `skills-lock.json` does not, by itself, prove that no existing source file has ever originated from a 21st.dev pattern — provenance is established per component via the Section 12 intake process, not by an absence-of-dependency check alone. Any future CLI command, registry integration, MCP integration, or imported dependency associated with 21st.dev still requires review and explicit approval before execution, regardless of whether it results in an installed package.
+
+None of the three must be described as an installed, locked, or approved-for-use tool beyond what is stated above in any later document.
+
+## 6. Component Architecture
+
+- `apps/web/components/ui` holds reusable, generic primitives only (buttons, inputs, dialogs, alerts, and similar) — no feature-specific behavior.
+- Product/feature components live in domain-oriented presentation folders, created as needed by `SLICE-UI-001`: `components/auth`, `components/navigation`, `components/accounts`, `components/feedback`. None of these folders exist yet (Section 4).
+- Variants use `class-variance-authority` where appropriate, matching the pattern already established by the existing `components/ui` primitives.
+- Colors, typography, spacing, borders, radius, shadows, and state styling use the project's design tokens (Section 7) — not inline one-off values.
+- Pages must not accumulate unrelated one-off component styles; a repeated pattern belongs in a shared component, not copy-pasted per page.
+- Only components required by the touching slice are added — no catalog-wide shadcn install, matching the precedent already set (`button`, `input`, `label`, `card`, `alert` only, per `IDENTITY_SESSION_REGISTER.md`).
+- Generated components (from shadcn's CLI or any external source) must still be reviewed and normalized before merge — generation is not automatic acceptance.
+- No duplicate primitive is created where an existing `components/ui` primitive already covers the need.
+- No feature-specific financial behavior, validation rule, or domain calculation is hidden inside a generic UI component — generic components stay generic.
+
+## 7. Design Token Scope
+
+`SLICE-UI-001` must establish, or confirm already established, the following token categories. Existing tokens (Section 4) are noted; the rest do not yet exist in the repository and their exact aesthetic values are **not invented by this documentation task** — they are `SLICE-UI-001` implementation decisions, recorded later in this register's implementation evidence, not here.
+
+- semantic color roles (existing: `--primary`, `--secondary`, `--muted`, `--accent`, `--destructive`; not yet existing: dedicated warning/success/information roles — see below);
+- typography (not yet established as a documented hierarchy beyond the existing `font-family` stack);
+- spacing (not yet established as a documented scale);
+- radius (existing: `--radius`);
+- borders (existing: `--border`, `--input`);
+- shadows (not yet established);
+- elevation (not yet established);
+- motion duration/easing (not yet established; `tw-animate-css` is installed but no documented duration/easing scale exists);
+- breakpoints/layout constraints (not yet documented as a token; Tailwind's default breakpoints are available but not yet confirmed as the product's chosen constraint set);
+- focus (existing: `--ring`; visible-focus behavior itself is not yet confirmed as consistently applied across screens);
+- disabled (not yet established as a token category);
+- destructive (existing: `--destructive`);
+- warning (does not yet exist — required addition);
+- success (does not yet exist — required addition);
+- information (does not yet exist — required addition);
+- neutral surfaces (existing: `--background`, `--card`, `--popover`, `--muted`).
+
+## 8. Application Shell
+
+**Corrected placement boundary (this correction).** `apps/web/app/layout.tsx`, confirmed by direct inspection, is the **global root layout** — it currently provides only global document structure (`<html>`/`<body>`), `ClerkProvider` integration, font setup (Geist), and the global `./styles.css` import. As a Next.js root layout it wraps **every** route, authenticated and unauthenticated alike, including `/login`, `/signup`, and `/forgot-password`. It contains no authenticated-only navigation today.
+
+`SLICE-UI-001` may update `apps/web/app/layout.tsx` for global design tokens, provider composition, metadata, font, theme, and other document-level concerns. **`SLICE-UI-001` must not place authenticated navigation directly into the root layout**, because that would wrap the public login/signup/forgot-password screens in authenticated navigation they must never carry. The authenticated shell's exact placement is a `SLICE-UI-001` implementation decision, made after inspecting the actual route structure, not fixed by this register. Acceptable implementation shapes include (not an exhaustive or pre-selected list): a nested authenticated layout scoped to authenticated routes; a Next.js route group separating public and authenticated segments; a dedicated shared `AppShell` composition rendered explicitly by each authenticated page or route; or another reviewed structure that keeps public/authentication screens outside authenticated navigation. This register does not select one of these shapes.
+
+Target capabilities `SLICE-UI-001` must establish, regardless of which shape is chosen:
+
+- an authenticated shell wrapping every post-login, non-auth screen — never the login/signup/forgot-password screens themselves;
+- desktop navigation;
+- mobile navigation;
+- a page title and contextual action area;
+- safe-area behavior (notch/home-indicator-safe spacing on mobile);
+- responsive content width (no unconstrained full-bleed text measure on wide desktop viewports, no cramped content on narrow mobile viewports);
+- consistent loading and session states across the shell, not re-implemented per page.
+
+**Future navigation destinations that do not yet have an implemented slice (Category, Financial Events, Dashboard, Reporting, and similar) must be represented as planned, disabled, or omitted — never as active, clickable product functionality** — until their owning slice exists and is merged.
+
+## 9. Existing Screen Retrofit Scope
+
+Existing routes confirmed present by direct repository inspection (Section 4); `SLICE-UI-001` must inspect each one's current content directly before retrofitting — this table does not assume undiscovered content.
+
+| Existing route (file confirmed present) | Existing component(s)                                                     | Retrofit status                                                                                                            | Notes                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| --------------------------------------- | ------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `apps/web/app/page.tsx`                 | Root page                                                                 | Planned retrofit                                                                                                           | Content not read during this documentation task                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| `apps/web/app/layout.tsx`               | Global root layout (`ClerkProvider`, `<html>`/`<body>`, font, global CSS) | Planned retrofit (global tokens/providers/metadata only — **not** the predetermined authenticated-shell target, Section 8) | Confirmed by direct inspection: wraps every route including `/login`, `/signup`, `/forgot-password`; contains no authenticated-only navigation today                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| `apps/web/app/login/page.tsx`           | Login screen                                                              | Planned retrofit                                                                                                           | Confirmed by direct inspection: an application-rendered React form (local `Card`/`Button`/`Input`/`Label`/`Alert` from `components/ui`, `react-hook-form` + Zod validation) that calls Clerk hooks (`useSignIn`, `useAuth`) only for the identity operation itself. Annotasi Finance owns presentation; Clerk is the identity-operation provider. `SLICE-UI-001` may freely redesign layout, components, and copy, but must not silently change the Clerk verification flow, provider error mapping, or the existing application-session exchange (`exchangeProviderToken`) |
+| `apps/web/app/signup/page.tsx`          | Signup/register screen                                                    | Planned retrofit                                                                                                           | Confirmed by direct inspection: same pattern as login — application-rendered form using `components/ui` primitives and `react-hook-form` + Zod, calling `useSignUp`/`useAuth` only for the identity operation. Same retrofit authority and prohibition as login above                                                                                                                                                                                                                                                                                                       |
+| `apps/web/app/forgot-password/page.tsx` | Password-recovery screen                                                  | Planned retrofit                                                                                                           | Confirmed by direct inspection: same pattern as login — application-rendered form using `components/ui` primitives and `react-hook-form` + Zod, calling `useSignIn`/`useAuth` only for the identity operation. Same retrofit authority and prohibition as login above                                                                                                                                                                                                                                                                                                       |
+| `apps/web/app/onboarding/page.tsx`      | Onboarding screen                                                         | Planned retrofit                                                                                                           | Indonesian-first per `ONBOARDING_ISOLATION_REGISTER.md`/`IAM_002_ONBOARDING_TESTING_GUIDE.md`                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| `apps/web/app/session/page.tsx`         | Session/already-onboarded-adjacent screen                                 | Planned retrofit                                                                                                           | Exact current purpose must be confirmed by direct inspection, not assumed from the filename alone                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| `apps/web/app/accounts/page.tsx`        | Accounts list, create, rename, archive/restore, delete-eligibility screen | Planned retrofit                                                                                                           | Existing behavior documented in `ACCOUNT_MANAGEMENT_REGISTER.md`'s Frontend section; retrofit must not change any of that approved backend/domain behavior                                                                                                                                                                                                                                                                                                                                                                                                                  |
+
+No route beyond this table is assumed to exist; no route in this table is assumed to be complete or correct until `SLICE-UI-001` inspects it directly.
+
+## 10. Required Interaction States
+
+For every relevant screen/component `SLICE-UI-001` touches:
+
+default; hover; focus; active; pending; loading; skeleton; empty; validation error; API error; success; disabled with reason; destructive confirmation; reduced motion.
+
+Motion (Section 5's tooling hierarchy, tier 6) may be used only where animation improves understanding — dialog/sheet transitions, progressive onboarding transitions, Account archive/restore list transitions, disclosure/expansion, meaningful layout transitions, submit-result feedback — never for decorative looping effects, parallax, delayed access to important financial information, excessive stagger, or marketing-style animation inside core workflows. CSS transitions remain the default for simple hover/focus/press/state changes. Every animation must respect `prefers-reduced-motion`.
+
+## 11. Responsive and Accessibility Baseline
+
+At minimum:
+
+- 360px mobile validation;
+- a representative tablet width;
+- a representative desktop width;
+- no horizontal overflow at any of the above;
+- keyboard navigation for every interactive element;
+- semantic HTML elements (not `div`-as-button or equivalent);
+- labels associated with their form controls;
+- visible focus indication;
+- usable touch targets on mobile;
+- meaningful error association (an error is programmatically and visually tied to the field it describes);
+- reduced-motion support (Section 10);
+- adequate color contrast;
+- screen-reader-oriented labels where visual text alone is insufficient (e.g., an icon-only action).
+
+**This register does not claim WCAG certification from automated checks alone** — automated accessibility tooling narrows the review surface; it does not replace manual keyboard/screen-reader verification.
+
+## 12. External Component Intake Policy
+
+Any component imported or adapted from an external source (21st.dev or otherwise) must go through, in order:
+
+1. traceability to its source;
+2. license and provenance review;
+3. dependency audit;
+4. a check for duplicated primitives already present in `components/ui`;
+5. normalization to Annotasi Finance design tokens (Section 7);
+6. refactor to reuse local `components/ui` primitives instead of a parallel implementation;
+7. keyboard and screen-reader accessibility review;
+8. testing at responsive widths (Section 11);
+9. a check for hidden telemetry or unrelated external integrations;
+10. stripping of unused dependencies and styling.
+
+An entire external visual identity is never copied into the product. Unrelated components from multiple external authors are never combined without visual normalization to one coherent system first.
+
+## 13. Validation Strategy
+
+`SLICE-UI-001` is primarily **Tier B/Tier C** work under the risk-based validation model (`docs/implementation/MVP_IMPLEMENTATION_PLAN.md`'s Roadmap Execution Amendment §D): visual hierarchy, spacing, typography, responsive composition, and non-authoritative presentation behavior. **Targeted Tier A regression is required wherever it touches IAM, onboarding, RLS-visible behavior, or Account behavior** — i.e., wherever it retrofits a screen backed by that behavior (Section 9). Full configured GitHub Actions remain mandatory for every Pull Request regardless of tier; the validation tier changes local iteration and evidence depth only, never the mandatory CI gate, and never regression coverage for behavior a retrofit touches.
+
+## 14. Acceptance Criteria
+
+`SLICE-UI-001` is acceptable when, at minimum:
+
+1. one coherent design-token baseline exists and is documented (Section 7 categories resolved to concrete values);
+2. every screen listed in Section 9 uses the shared application shell and component foundation instead of one-off styling;
+3. no horizontal overflow is observed at 360px, the representative tablet width, or the representative desktop width (Section 11);
+4. keyboard navigation and visible focus are demonstrated across every retrofitted screen;
+5. loading, empty, error, success, and disabled(-with-reason) states are demonstrated for every screen where that state is reachable (Section 10);
+6. the existing validated IAM, onboarding, isolation, and Account behavior (per `IDENTITY_SESSION_REGISTER.md`, `ONBOARDING_ISOLATION_REGISTER.md`, `ACCOUNT_MANAGEMENT_REGISTER.md`) is unchanged — regression evidence is recorded, not merely asserted;
+7. no authoritative financial calculation, balance, or acceptance/blocking outcome is computed in the browser;
+8. any external pattern used has completed the Section 12 intake process, with evidence recorded;
+9. component/unit tests exist for new reusable UI behavior;
+10. production web build and full configured GitHub Actions pass on the Pull Request;
+11. a manual visual review is completed and recorded;
+12. no `SLICE-ACC-002`, `SLICE-CAT-001`, or later feature slice is silently started as part of this work.
+
+## 15. Explicit Non-Goals
+
+No new financial behavior; no `SLICE-ACC-002` correction behavior; no Category behavior; no Income, Expense, Transfer, Fund, Debt, Correction, Reporting, or Security feature implementation; no API contract changes unless required only to repair an existing UI defect and separately justified; no database migration; no domain-rule change; no rewrite of IAM, onboarding, or Account behavior; no permanent deletion; no broad dashboard implementation; no speculative design for post-MVP features; no dependency installation without explicit approval during `SLICE-UI-001`; no forced use of every frontend tool in every screen.
+
+## 16. Execution Order
+
+1. inventory existing screens and components (Sections 4, 9 are the starting point, not a substitute for direct re-inspection);
+2. verify available UI/design skills and tooling (Section 5's installation status, re-confirmed at slice start);
+3. define visual direction;
+4. define tokens (Section 7);
+5. stabilize primitives (Section 6);
+6. implement application shell (Section 8);
+7. retrofit auth/onboarding;
+8. retrofit accounts;
+9. responsive/accessibility review (Section 11);
+10. regression validation (Section 13, Tier A subset);
+11. manual visual review;
+12. evidence synchronization (this register updated with the delivered evidence, mirroring the pattern of `ACCOUNT_MANAGEMENT_REGISTER.md`).
+
+## 17. Reconsideration Triggers
+
+Re-review this baseline if: Base UI proves incompatible with a required interaction pattern; an accessibility defect is found that requires reconsidering a chosen primitive; a major Next.js/shadcn compatibility issue appears; components repeatedly diverge from the shared foundation despite this register; a measurable performance regression is attributed to the UI foundation; an external component's license or provenance proves unacceptable after intake (Section 12); or Motion is found to create a usability or reduced-motion problem.
