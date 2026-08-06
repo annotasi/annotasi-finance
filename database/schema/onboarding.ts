@@ -83,6 +83,13 @@ export const accounts = pgTable(
     createdAt: timestamp("created_at", { withTimezone: true })
       .defaultNow()
       .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    archivedAt: timestamp("archived_at", { withTimezone: true }),
+    version: bigint("version", { mode: "bigint" })
+      .notNull()
+      .default(sql`1`),
   },
   (table) => [
     index("accounts_workspace_id_idx").on(table.workspaceId),
@@ -98,15 +105,24 @@ export const accounts = pgTable(
       sql`${table.type} IN ('cash', 'bank_account', 'e_wallet', 'other')`,
     ),
     check("accounts_nonnegative_opening", sql`${table.openingBalance} >= 0`),
+    check("accounts_nonnegative_total", sql`${table.totalBalance} >= 0`),
     check(
-      "accounts_opening_initializes_total",
-      sql`${table.totalBalance} = ${table.openingBalance}`,
+      "accounts_nonnegative_unallocated",
+      sql`${table.unallocatedBalance} >= 0`,
     ),
     check(
-      "accounts_opening_initializes_unallocated",
-      sql`${table.unallocatedBalance} = ${table.openingBalance}`,
+      "accounts_lifecycle",
+      sql`${table.lifecycleStatus} IN ('active', 'archived')`,
     ),
-    check("accounts_lifecycle", sql`${table.lifecycleStatus} = 'active'`),
+    check(
+      "accounts_archived_at_consistency",
+      sql`(${table.lifecycleStatus} = 'active' AND ${table.archivedAt} IS NULL) OR (${table.lifecycleStatus} = 'archived' AND ${table.archivedAt} IS NOT NULL AND ${table.totalBalance} = 0)`,
+    ),
+    check("accounts_version_positive", sql`${table.version} >= 1`),
+    check(
+      "accounts_unallocated_le_total",
+      sql`${table.unallocatedBalance} <= ${table.totalBalance}`,
+    ),
   ],
 );
 

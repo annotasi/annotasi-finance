@@ -16,9 +16,10 @@
     "lint": "eslint .",
     "typecheck": "tsc -p tsconfig.json",
     "db:check": "vitest run test/migration.integration.test.ts --testTimeout=120000 --hookTimeout=120000",
-    "db:test": "vitest run test/rls-and-bigint.integration.test.ts test/session-store.integration.test.ts test/onboarding.integration.test.ts test/private-beta-invitation-cli.test.ts --testTimeout=120000 --hookTimeout=120000",
+    "db:test": "vitest run test/rls-and-bigint.integration.test.ts test/session-store.integration.test.ts test/onboarding.integration.test.ts test/private-beta-invitation-cli.test.ts test/account.integration.test.ts --testTimeout=120000 --hookTimeout=120000",
     "db:test:sessions": "vitest run test/session-store.integration.test.ts --testTimeout=120000 --hookTimeout=120000",
     "db:test:onboarding": "vitest run test/onboarding.integration.test.ts test/private-beta-invitation-cli.test.ts --testTimeout=120000 --hookTimeout=120000",
+    "db:test:accounts": "vitest run test/account.integration.test.ts --testTimeout=120000 --hookTimeout=120000",
     "invite:issue": "node scripts/private-beta-invitation.mjs issue",
     "invite:revoke": "node scripts/private-beta-invitation.mjs revoke"
   },

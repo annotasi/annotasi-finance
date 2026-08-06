@@ -152,7 +152,7 @@ export default function OnboardingPage() {
                   Workspace pribadi dan akun awal Anda sudah siap.
                 </AlertDescription>
               </Alert>
-              <Button type="button" onClick={() => router.push("/session")}>
+              <Button type="button" onClick={() => router.push("/accounts")}>
                 Lanjutkan
               </Button>
             </div>

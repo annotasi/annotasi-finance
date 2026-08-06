@@ -2,6 +2,8 @@ import { createHash, randomUUID } from "node:crypto";
 
 import type pg from "pg";
 
+import { resolveWorkspaceContext, setLocal } from "./workspace-context.js";
+
 export type StarterAccountType = "cash" | "bank_account" | "e_wallet" | "other";
 
 export interface StarterAccountInput {
@@ -38,11 +40,6 @@ export interface RedeemOnboardingInput {
   readonly idempotencyKey: string;
   readonly requestFingerprint: string;
   readonly account: StarterAccountInput;
-}
-
-interface ContextRow {
-  user_id: string;
-  workspace_id: string;
 }
 
 interface InvitationRow {
@@ -83,25 +80,6 @@ function triggerTestFailpoint(
   }
 }
 
-async function setLocal(
-  client: pg.PoolClient,
-  name: string,
-  value: string,
-): Promise<void> {
-  await client.query("SELECT set_config($1, $2, true)", [name, value]);
-}
-
-async function resolveContext(
-  client: pg.PoolClient,
-  externalSubject: string,
-): Promise<ContextRow | null> {
-  const result = await client.query<ContextRow>(
-    "SELECT user_id, workspace_id FROM resolve_private_workspace_context($1)",
-    [externalSubject],
-  );
-  return result.rows[0] ?? null;
-}
-
 /** Runtime-only onboarding persistence. Every trust context is transaction-local. */
 export class OnboardingStore {
   public constructor(private readonly pool: pg.Pool) {}
@@ -113,7 +91,7 @@ export class OnboardingStore {
     try {
       await client.query("BEGIN");
       await setLocal(client, "app.external_subject", externalSubject);
-      const context = await resolveContext(client, externalSubject);
+      const context = await resolveWorkspaceContext(client, externalSubject);
       if (context === null) {
         await client.query("COMMIT");
         return null;
@@ -232,7 +210,7 @@ export class OnboardingStore {
       await setLocal(client, "app.user_id", user.id);
       triggerTestFailpoint(this, "after_user_mapping");
 
-      const existingContext = await resolveContext(
+      const existingContext = await resolveWorkspaceContext(
         client,
         input.externalSubject,
       );

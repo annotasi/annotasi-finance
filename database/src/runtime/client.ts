@@ -2,6 +2,7 @@ import { drizzle } from "drizzle-orm/node-postgres";
 import pg from "pg";
 
 import { applicationSessions } from "../../schema/application-sessions.js";
+import { AccountStore } from "./account-store.js";
 import { OnboardingStore } from "./onboarding-store.js";
 
 const { Pool } = pg;
@@ -15,6 +16,7 @@ export type SessionStoreClient = ReturnType<
 export interface SessionStoreConnection {
   readonly db: SessionStoreClient;
   readonly onboarding: OnboardingStore;
+  readonly account: AccountStore;
   close(): Promise<void>;
 }
 
@@ -34,6 +36,7 @@ export function createSessionStoreConnection(
   return {
     db,
     onboarding: new OnboardingStore(pool),
+    account: new AccountStore(pool),
     close: () => pool.end(),
   };
 }
