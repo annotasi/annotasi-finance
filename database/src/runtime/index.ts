@@ -4,6 +4,17 @@ export {
   type SessionStoreConnection,
 } from "./client.js";
 export {
+  AccountStore,
+  AccountStoreError,
+  type AccountFailureCode,
+  type AccountLifecycleStatus,
+  type AccountRecord,
+  type AccountType,
+  type CreateAccountInput,
+  type DeleteEligibilityReasonCode,
+  type DeleteEligibilityResult,
+} from "./account-store.js";
+export {
   SessionStore,
   type ApplicationSessionRecord,
   type CreateApplicationSessionInput,

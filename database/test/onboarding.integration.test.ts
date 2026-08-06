@@ -668,11 +668,14 @@ describe("IAM-002 onboarding persistence and isolation", () => {
         "SELECT set_config('app.user_id', $1, true), set_config('app.workspace_id', $2, true)",
         [successUser.rows[0]?.id, own?.workspaceId],
       );
+      // ACC-001 grants UPDATE(name, ...) to annotasi_application, so this now
+      // passes the column-privilege check but must still be blocked by RLS
+      // at the row level (0 rows affected), never a cross-Workspace write.
       await expect(
         application.query("UPDATE accounts SET name = 'cross' WHERE id = $1", [
           other?.accountId,
         ]),
-      ).rejects.toMatchObject({ code: "42501" });
+      ).resolves.toHaveProperty("rowCount", 0);
       await application.query("ROLLBACK");
       await expect(
         application.query("DELETE FROM accounts WHERE id = $1", [

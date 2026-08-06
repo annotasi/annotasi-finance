@@ -138,3 +138,30 @@ jobs:
 
       - name: IAM-002 unit, PostgreSQL concurrency/RLS, real HTTP security, and browser evidence
         run: pnpm ci:iam2
+
+  account-management:
+    name: Account management checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs:
+      [foundation, database-foundation, identity-session, onboarding-isolation]
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Install pinned pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Set up Node.js 24
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24.18.0
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Deterministic install
+        run: pnpm install --frozen-lockfile
+
+      - name: ACC-001 unit/property, PostgreSQL RLS/concurrency, real HTTP security, and browser evidence
+        run: pnpm ci:acc1

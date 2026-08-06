@@ -22,6 +22,13 @@
       "when": 1785640000000,
       "tag": "0002_onboarding_isolation",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1785770370820,
+      "tag": "0003_account_management",
+      "breakpoints": true
     }
   ]
 }

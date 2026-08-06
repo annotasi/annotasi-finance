@@ -43,7 +43,12 @@
     "iam2:test:http": "pnpm --filter @annotasi/api exec vitest run test/onboarding.integration.test.ts --testTimeout=120000 --hookTimeout=120000",
     "iam2:test:web": "pnpm --filter @annotasi/web exec vitest run test/onboarding-interaction.test.tsx test/api-client.test.ts",
     "ci:iam2": "pnpm iam:prepare && pnpm iam2:test && pnpm iam2:test:integration && pnpm iam2:test:http && pnpm iam2:test:web",
-    "ci": "pnpm ci:foundation && pnpm ci:database && pnpm ci:iam && pnpm ci:iam2"
+    "account:test": "pnpm --filter @annotasi/contracts exec vitest run test/account.test.ts && pnpm --filter @annotasi/api exec vitest run test/account.service.test.ts",
+    "account:test:integration": "pnpm --filter @annotasi/database db:test:accounts",
+    "account:test:security": "pnpm --filter @annotasi/api exec vitest run test/account.integration.test.ts --testTimeout=120000 --hookTimeout=120000",
+    "account:test:web": "pnpm --filter @annotasi/web exec vitest run test/accounts-interaction.test.tsx",
+    "ci:acc1": "pnpm iam:prepare && pnpm account:test && pnpm account:test:integration && pnpm account:test:security && pnpm account:test:web",
+    "ci": "pnpm ci:foundation && pnpm ci:database && pnpm ci:iam && pnpm ci:iam2 && pnpm ci:acc1"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

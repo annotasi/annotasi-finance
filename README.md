@@ -2,18 +2,25 @@
 
 This repository contains the SLICE-FOUND-001 non-database technical foundation,
 the SLICE-FOUND-002 local database foundation, the SLICE-IAM-001 managed
-identity/application-session slice, and the SLICE-IAM-002 private-beta
-onboarding/isolation slice: a pnpm/Turborepo workspace,
-strict TypeScript, framework shells, automated Architecture-boundary checks,
-PostgreSQL migration/RLS evidence, Clerk-based managed identity with an
-Annotasi Finance-owned opaque application session, operator-issued invitation
-entitlements, one private Workspace and starter Account per verified identity,
-forced RLS, smoke tests, and Foundation Gate CI.
+identity/application-session slice, the SLICE-IAM-002 private-beta
+onboarding/isolation slice, and the SLICE-ACC-001 Account management baseline:
+a pnpm/Turborepo workspace, strict TypeScript, framework shells, automated
+Architecture-boundary checks, PostgreSQL migration/RLS evidence, Clerk-based
+managed identity with an Annotasi Finance-owned opaque application session,
+operator-issued invitation entitlements, one private Workspace and starter
+Account per verified identity, forced RLS, Account create/list/rename/archive/
+restore/delete-eligibility evaluation with optimistic-version concurrency,
+smoke tests, and Foundation Gate CI.
 
 IAM-002 intentionally stops after the starter Account: it creates no category,
 financial event, reporting workflow, collaboration feature, import, or
-deployment. See `docs/implementation/ONBOARDING_ISOLATION_REGISTER.md` for its
-evidence and `docs/implementation/IDENTITY_SESSION_REGISTER.md` for IAM-001.
+deployment. ACC-001 turns that starter Account into an ordinary managed
+Account and adds creation, rename, archive/restore, and read-only delete-
+eligibility evaluation, but performs no permanent deletion, no Opening Balance
+or effective-date correction, and no financial behavior. See
+`docs/implementation/ONBOARDING_ISOLATION_REGISTER.md` for IAM-002 evidence,
+`docs/implementation/IDENTITY_SESSION_REGISTER.md` for IAM-001, and
+`docs/implementation/ACCOUNT_MANAGEMENT_REGISTER.md` for ACC-001.
 
 ## Prerequisites
 
@@ -66,6 +73,11 @@ pnpm iam2:test:integration
 pnpm iam2:test:http
 pnpm iam2:test:web
 pnpm ci:iam2
+pnpm account:test
+pnpm account:test:integration
+pnpm account:test:security
+pnpm account:test:web
+pnpm ci:acc1
 pnpm run ci
 ```
 
@@ -84,7 +96,14 @@ provider-error-mapping, and auth-screen tests. `pnpm ci:iam` runs all four in
 sequence and is what the `identity-session` CI job runs. `pnpm ci:iam2` runs
 the IAM-002 service/property, PostgreSQL atomicity/concurrency/RLS, real
 NestJS/Fastify HTTP security, and browser evidence used by the onboarding CI
-job. `pnpm run ci` runs the complete local Foundation Gate plus both IAM gates.
+job. `pnpm account:test` runs the ACC-001 contract/service unit and property
+tests (INV-ACC-01–03). `pnpm account:test:integration` runs the
+Testcontainers-backed Account PostgreSQL/RLS/concurrency evidence.
+`pnpm account:test:security` runs the real NestJS/Fastify HTTP evidence for
+Account routes. `pnpm account:test:web` runs the `/accounts` frontend
+interaction tests. `pnpm ci:acc1` runs all four in sequence and is what the
+`account-management` CI job runs. `pnpm run ci` runs the complete local
+Foundation Gate plus both IAM gates and the ACC-001 gate.
 `pnpm format` is the explicit write-mode formatter; CI uses only
 `format:check`. Use `pnpm run ci` for the aggregate package script because
 pnpm reserves the shorter `pnpm ci` form as an install alias. Before TypeScript
@@ -138,6 +157,11 @@ IAM-002 adds:
 - `private_beta_invitations` — the hashed single-use beta entitlement.
 - `workspaces` — one private IDR/Asia-Jakarta Workspace per User.
 - `accounts` — the starter Account and exact whole-Rupiah opening balances.
+  ACC-001 extends this table with `lifecycle_status` (`active`/`archived`),
+  `archived_at`, `updated_at`, and an optimistic `version` counter; it removes
+  the IAM-002-era hard pin forcing `total_balance`/`unallocated_balance` to
+  always equal `opening_balance`, since a future Financial Event slice must be
+  able to change them while `opening_balance` itself stays fixed.
 - `onboarding_idempotency` and `onboarding_audit_events` — replay and safe
   operational evidence.
 
@@ -191,6 +215,83 @@ effective date. Already-onboarded identities receive a minimal ready state.
 A step-by-step live testing guide, field explanations, realistic examples, and
 future-editability boundaries are documented in
 `docs/implementation/IAM_002_ONBOARDING_TESTING_GUIDE.md`.
+
+## Account management
+
+SLICE-ACC-001 turns the IAM-002 starter Account into an ordinary managed
+Account and adds the smallest REST surface for list/create/rename/archive/
+restore/delete-eligibility evaluation. The browser path is
+`/onboarding` → **Lanjutkan** → `/accounts`.
+
+```bash
+pnpm --filter @annotasi/api dev
+pnpm --filter @annotasi/web dev
+```
+
+Open `/accounts`. It lists Active and Archived Accounts separately, and
+supports:
+
+- **Create** — Nama akun, Jenis akun (Tunai/Rekening Bank/Dompet Digital/
+  Lainnya), Saldo awal (whole Rupiah), Tanggal saldo awal. Duplicate names are
+  accepted by design.
+- **Rename** — updates only the name; Account ID, Type, Opening Balance,
+  Opening-Balance Effective Date, and all balances stay unchanged.
+- **Archive** — only accepted when Total Account Balance is exactly Rp0;
+  otherwise the API returns `ACCOUNT_ARCHIVE_BALANCE_NON_ZERO` with an
+  Indonesian explanation that never claims confirmation can override the
+  rule.
+- **Restore** — reactivates an archived Account as the same row; no
+  recalculation.
+- **Delete-eligibility evaluation** — a read-only check (`eligible`, safe
+  reason codes, and the underlying facts) against Opening Balance and real
+  persisted dependencies (an onboarding-created starter Account is currently
+  ineligible while its `onboarding_idempotency` row exists). It never deletes
+  anything: there is no DELETE route, and the application database role has
+  no DELETE privilege on `accounts`.
+
+Every mutation requires the caller's last-known `expectedVersion` (an
+optimistic version counter). A stale version returns `ACCOUNT_CONFLICT`
+instead of silently overwriting a concurrent change; the browser reloads
+Account state after a conflict rather than guessing.
+
+Explicitly excluded from ACC-001: permanent deletion, Opening Balance
+correction, Opening-Balance Effective Date correction, Account Type editing,
+negative balances, credit-card/liability Accounts, Category, Dedicated Fund,
+Debt Record, Financial Event, dashboard, and reporting. See
+`docs/implementation/ACCOUNT_MANAGEMENT_REGISTER.md` for full evidence.
+
+Database-boundary hardening (correction pass): the single `accounts`
+Row-Level Security policy is split into explicit SELECT/INSERT/UPDATE
+policies. The INSERT policy additionally requires Total = Unallocated =
+Opening Balance, active lifecycle, no `archived_at`, and `version = 1`, so
+the application role cannot insert an Account that violates ACC-001's
+creation invariants even with direct SQL. A permanent
+`unallocated_balance <= total_balance` check is preserved for future Fund
+Allocation without pinning `total_balance = unallocated_balance` forever.
+Account IDs are validated as strict UUIDs and `expectedVersion` as a bounded
+positive BIGINT string before either ever reaches PostgreSQL, so malformed
+input returns a safe `ACCOUNT_REQUEST_INVALID` 400 instead of a database
+error. A real IAM-002→ACC-001 migration-upgrade test applies only migrations
+0000-0002, seeds a representative starter Account, then applies 0003 and
+confirms every starter Account fact is preserved. ACC-001 itself emits no
+structured Account lifecycle log lines; the only logging surface exercised
+in tests is Fastify's generic HTTP request log, and the test suite proves
+dynamic Account IDs are redacted from it rather than merely excluding
+request logs from the safety check.
+
+Final correction pass: delete-eligibility evaluation now checks a real
+persisted dependency — `onboarding_idempotency.account_id` (`ON DELETE
+RESTRICT`) — instead of a hard-coded `false`, so the IAM-002 starter Account
+is currently ineligible (`DEPENDENCY_EXISTS`) even at Opening Balance Rp0,
+while a dependency-free additional zero-balance Account remains eligible.
+Every Archived Account's `total_balance = 0` is now enforced twice,
+independently: by `AccountStore` and by a PostgreSQL CHECK constraint, so a
+direct SQL `UPDATE` bypassing the application layer cannot archive a
+non-zero-balance Account either. Renaming an Account now returns
+`ACCOUNT_NAME_INVALID` only for an invalid name; a malformed
+`expectedVersion` or an extra immutable/authority field returns
+`ACCOUNT_REQUEST_INVALID` instead, and the database is never reached in
+either failure case.
 
 ## Identity and sessions
 

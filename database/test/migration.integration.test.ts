@@ -29,8 +29,8 @@ describe("database foundation migration history", () => {
   it("applies the complete reviewed history to an empty PostgreSQL 17.10 database", async () => {
     expect(environment.firstMigration).toEqual({
       before: 0,
-      after: 3,
-      applied: 3,
+      after: 4,
+      applied: 4,
     });
 
     const client = new Client({ connectionString: environment.migrationUrl });
@@ -52,8 +52,8 @@ describe("database foundation migration history", () => {
 
   it("makes a repeated migration command a tracked no-op", async () => {
     await expect(runMigrations(environment.migrationUrl)).resolves.toEqual({
-      before: 3,
-      after: 3,
+      before: 4,
+      after: 4,
       applied: 0,
     });
   });
@@ -77,8 +77,8 @@ describe("database foundation migration history", () => {
 
     await expect(runMigrations(secondMigrationUrl)).resolves.toEqual({
       before: 0,
-      after: 3,
-      applied: 3,
+      after: 4,
+      applied: 4,
     });
   });
 });

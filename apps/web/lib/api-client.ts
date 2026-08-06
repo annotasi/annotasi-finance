@@ -17,7 +17,7 @@ export class ApiRequestError extends Error {
 }
 
 interface RequestOptions {
-  readonly method: "GET" | "POST";
+  readonly method: "GET" | "POST" | "PATCH";
   readonly headers?: Record<string, string>;
   /** Only present for requests that actually send a JSON body. */
   readonly body?: unknown;
@@ -141,4 +141,93 @@ export function redeemOnboarding(
     },
     body,
   });
+}
+
+export type AccountType = "cash" | "bank_account" | "e_wallet" | "other";
+export type AccountLifecycleStatus = "active" | "archived";
+
+export interface AccountView {
+  id: string;
+  name: string;
+  type: AccountType;
+  openingBalance: string;
+  openingBalanceEffectiveDate: string;
+  totalBalance: string;
+  unallocatedBalance: string;
+  lifecycleStatus: AccountLifecycleStatus;
+  isStarter: boolean;
+  version: string;
+}
+
+export interface DeleteEligibility {
+  accountId: string;
+  eligible: boolean;
+  reasonCodes: string[];
+  facts: {
+    openingBalanceZero: boolean;
+    hasFinancialEventHistory: boolean;
+    hasOtherDependency: boolean;
+  };
+}
+
+export function fetchAccounts(): Promise<{ accounts: AccountView[] }> {
+  return request("/accounts", { method: "GET" });
+}
+
+export interface CreateAccountBody {
+  name: string;
+  type: AccountType;
+  openingBalance: string;
+  openingBalanceEffectiveDate: string;
+}
+
+export function createAccount(
+  body: CreateAccountBody,
+  csrfToken: string,
+): Promise<{ account: AccountView }> {
+  return request("/accounts", {
+    method: "POST",
+    headers: { "x-csrf-token": csrfToken },
+    body,
+  });
+}
+
+export function renameAccount(
+  id: string,
+  body: { name: string; expectedVersion: string },
+  csrfToken: string,
+): Promise<{ account: AccountView }> {
+  return request(`/accounts/${id}`, {
+    method: "PATCH",
+    headers: { "x-csrf-token": csrfToken },
+    body,
+  });
+}
+
+export function archiveAccount(
+  id: string,
+  body: { expectedVersion: string },
+  csrfToken: string,
+): Promise<{ account: AccountView }> {
+  return request(`/accounts/${id}/archive`, {
+    method: "POST",
+    headers: { "x-csrf-token": csrfToken },
+    body,
+  });
+}
+
+export function restoreAccount(
+  id: string,
+  body: { expectedVersion: string },
+  csrfToken: string,
+): Promise<{ account: AccountView }> {
+  return request(`/accounts/${id}/restore`, {
+    method: "POST",
+    headers: { "x-csrf-token": csrfToken },
+    body,
+  });
+}
+
+export function fetchDeleteEligibility(id: string): Promise<DeleteEligibility> {
+  return request(`/accounts/${id}/delete-eligibility`, { method: "GET" });
 }
