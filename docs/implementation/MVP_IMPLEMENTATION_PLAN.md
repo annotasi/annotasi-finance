@@ -4,16 +4,18 @@
 
 | Field | Value |
 |---|---|
-| Session | Session 24 — MVP Implementation Plan |
-| Workflow stage | Implementation Planning |
-| Status | Candidate implementation plan pending review |
+| Session | Session 24 — MVP Implementation Plan (original authoring session) |
+| Workflow stage | Implementation Planning at authoring time; Implementation is the current workflow stage as of this amendment |
+| Status | Accepted, committed, pushed, and in implementation. Amended 2026-08-06 by the Roadmap Execution Amendment (end of this document) |
 | Product Definition | Complete |
 | Domain Modeling | Complete |
 | Architecture Baseline | Complete |
-| Implementation | Not started |
-| Repository | Documentation-only and greenfield, confirmed by direct inspection (Section 5) |
+| Implementation | In progress — five implementation slices complete (`SLICE-FOUND-001`, `SLICE-FOUND-002`, `SLICE-IAM-001`, `SLICE-IAM-002`, `SLICE-ACC-001`); `SLICE-UI-001` is the next approved slice (Roadmap Execution Amendment) |
+| Repository | Was documentation-only and greenfield at Session 24 authoring time (historical fact, Section 5); now an implemented pnpm/Turborepo monorepo with `apps/web`, `apps/api`, and PostgreSQL/Drizzle persistence — see Section 5's current-state note |
 
-This is the final planning session before implementation begins. Implementation MAY begin only after this document is reviewed, accepted, committed, and pushed by the user. Until then it is a candidate plan. Nothing in this document authorizes code, framework initialization, or any commit.
+This was the final planning session before implementation began. This document was reviewed, accepted, committed, and pushed by the user, and implementation began at Session 25. It remains the reviewed Private Beta v1 implementation plan; nothing below this notice retroactively authorizes work that was not separately reviewed at the time it was performed.
+
+**2026-08-06 Roadmap Execution Amendment.** The product owner approved a roadmap-execution amendment on 2026-08-06: it introduces `SLICE-UI-001` (Product UI Foundation & Existing Screen Retrofit) as the next approved implementation slice, a coordinated execution-wave model, a risk-based validation strategy, and a canonical frontend tooling-governance policy. The amendment is additive — it retains every existing slice identifier and its original acceptance criteria unchanged (Section 34), does not weaken any mandatory CI, financial-integrity, security, isolation, or database guarantee, and does not change product or domain authority (Section 3). The amendment itself is documentation only; it does not implement `SLICE-UI-001` or start Session 30.
 
 ## 2. Purpose
 
@@ -63,13 +65,17 @@ No product, domain, or Architecture rule is weakened, narrowed, or silently rein
 
 ## 5. Repository Starting State
 
+**Historical fact, Session 24 (2026-08-01) authoring time only.** This section describes the repository as it existed before implementation began. It is **not** the current repository state — see the current-state note at the end of this section.
+
 Directly inspected this session (`find . -maxdepth 3`):
 
 - Files: `CLAUDE.md`, `README.md`, `docs/architecture/ARCHITECTURE_BASELINE.md`, seven `docs/domain/*.md` artifacts, `docs/product/ANNOTASI_FINANCE_MVP_PRD.md`, `docs/product/PRODUCT_IDENTITY.md`, `docs/project/PROJECT_STATE.md`, `skills-lock.json`.
 - Directories: `.agents/skills/*`, `.claude/skills`, `docs/architecture`, `docs/domain`, `docs/product`, `docs/project`.
 - Absent: `package.json`, `pnpm-workspace.yaml`, any lockfile, any `tsconfig*.json`, `apps/`, `packages/`, `database/`, `infra/`, `scripts/`, Docker/Compose files, CI workflow files, environment example files, `docs/implementation/` (created by this session solely to hold this file).
 
-**Conclusion:** the repository is documentation-only and greenfield, exactly as the Architecture Baseline states (§5). No legacy runtime, framework, schema, or integration constrains any selection below.
+**Conclusion (Session 24, historical):** the repository was documentation-only and greenfield at that time, exactly as the Architecture Baseline stated (§5) at Session 23. No legacy runtime, framework, schema, or integration constrained any selection below at that time.
+
+**Current-state note (2026-08-06 amendment — supersedes the historical conclusion above for any question about the present repository):** the repository is no longer documentation-only. Five implementation slices (`SLICE-FOUND-001`, `SLICE-FOUND-002`, `SLICE-IAM-001`, `SLICE-IAM-002`, `SLICE-ACC-001`) are implemented, reviewed, and merged into `dev`, establishing the pnpm/Turborepo monorepo, `apps/web` (Next.js 16 / React 19, with the shadcn/ui + Base UI component baseline already initialized per `apps/web/components.json`), `apps/api` (NestJS/Fastify), `packages/domain`/`packages/contracts`/`packages/config`/`packages/test-support`, PostgreSQL/Drizzle persistence with forced RLS, managed Clerk identity, Private Beta onboarding/isolation, and the Account Management Baseline. `SLICE-UI-001` (the next approved slice, Roadmap Execution Amendment at the end of this document) must inspect this existing implementation directly — `docs/project/PROJECT_STATE.md`, `docs/implementation/UI_FOUNDATION_REGISTER.md`, and the repository itself — before adding any component or dependency; it must not reinitialize shadcn or assume a documentation-only starting point.
 
 ## 6. Current-Source Research Register
 
@@ -578,6 +584,7 @@ Every vertical slice in Section 34 lists its own required evidence subset from t
 | M1 Technical Foundation | Prove the monorepo, quality gates, and real-PostgreSQL harness work before any product behavior is built | Repo init (Section 14), CI, architecture-boundary checks, local PostgreSQL, migration baseline, exact-money type foundation | Any financial behavior | ARCH-SHAPE-01, ARCH-STACK-01/02, ARCH-REPO-01, ARCH-DATA-01/02, ARCH-TEST-01, ARCH-DEV-01, ARCH-CI-01, ARCH-REP-01 | None (infrastructure only) | lint, format, typecheck, unit, PostgreSQL integration, migration, architecture boundary | Reviewed, committed, pushed Session 24 plan | All Foundation Gate evidence passes (Section 37) | RISK-06, RISK-09, RISK-11, RISK-19 | One reviewable PR per slice |
 | M2 Identity, Beta Access, and Workspace Isolation | Prove no financial data is reachable without a verified, entitled, isolated Workspace | Managed identity + persisted opaque application session (SLICE-IAM-001), atomic onboarding, RLS, isolation adversarial tests (SLICE-IAM-002) | Any Financial Event | ARCH-AUTH-01/02, ARCH-ACCESS-01, ARCH-ISO-01 | WB-01, WB-02 | unit, property, PostgreSQL integration, RLS isolation, security, concurrency, idempotency | Both SLICE-IAM-001 and SLICE-IAM-002 require the full Foundation Gate (Steps 18+19, i.e., FOUND-001 and FOUND-002) — SLICE-IAM-001 persists its own application-session state and is not persistence-free | Isolation Gate passed (Section 37) | RISK-01, RISK-05 | One PR per slice |
 | M3 Account and Opening State | Prove Account lifecycle and the no-dependent-history case of opening-state correction/recalculation | Account CRUD, early (no-history) opening balance/date correction | Category/Fund/Debt/Event; history-aware correction (deferred to M6/SLICE-ACC-003) | ARCH-PERSIST-01, ARCH-RECALC-01, ARCH-TXN-01 | AC-01–07 (no-history case only at this milestone's exit) | unit, property, PostgreSQL integration, recalculation | Isolation Gate passed | Account invariants (INV-ACC-01–03) proven under property tests for the no-dependent-history case (SLICE-ACC-002). **Full AC-06/AC-07 conformance is not claimed at M3 exit** — history-aware conformance is proven later by SLICE-ACC-003 (see M6) | RISK-03, RISK-04 | One PR per slice |
+| M-UI UI Foundation and Execution Enablement *(additive, 2026-08-06 amendment — inserted after M3, does not renumber M4 onward)* | Establish a coherent, reusable, mobile-first, Indonesian-first, accessible UI foundation and retrofit already-delivered user-facing screens without changing their approved backend/domain behavior | Design tokens, application shell, navigation, shared interaction/state patterns (loading/empty/error/success/disabled), retrofit of existing auth/onboarding/Account screens (Section 34, `SLICE-UI-001`) | Any new financial behavior; Category; Income/Expense/Transfer/Fund/Debt/Correction/Reporting/Security feature implementation | ARCH-FRONT-01 (`ARCHITECTURE_BASELINE.md` §8), Architecture §28 Frontend Architecture | None (no new Behavior IDs; retrofits screens delivering WB-01 and AC-01–05) | component/unit, existing auth/onboarding/Account regression, responsive, keyboard/focus/accessibility review, production build, full configured PR CI | Full Foundation Gate, Isolation Gate, and the `SLICE-ACC-001` Account-management baseline and acceptance evidence all passed | One coherent design-token baseline exists; existing user-facing screens use the shared foundation; no known horizontal overflow at the minimum supported mobile width; existing validated IAM/onboarding/isolation/Account behavior remains unchanged; UI evidence recorded in `docs/implementation/UI_FOUNDATION_REGISTER.md` | None new — this is an implementation-enablement milestone; it introduces no new Architecture risk | One PR (or a reviewable, separately-traceable bundle per the Bundle Governance rules, Roadmap Execution Amendment) |
 | M4 Category and Reference Foundations | Prove independent Category identity/lifecycle | Category CRUD | Any monetary behavior | ARCH-MODULE-01 | CT-01–05 | unit, integration | M3 exit | Category behaviors pass with duplicate-name acceptance verified | — | One PR |
 | M5 Financial Event Core and Income | Prove the one-transaction, ordered, idempotent Financial Event path end to end with the simplest event type | Chronology/position counter, transaction pattern, idempotency skeleton, Income | Other five event types | ARCH-ORDER-01, ARCH-TXN-01, ARCH-IDEMP-01, ARCH-CONC-01 | IN-01, CR-01 (Income), LC-01/02 (Income), TC-05 | unit, property, PostgreSQL integration, concurrency, idempotency | M3+M4 exit | First Financial Write Gate passed (Section 37) | RISK-02, RISK-13, RISK-16 | One PR per slice |
 | M6 Expense | Extend the proven Event path to Ordinary Expense; complete history-aware Account correction now that Income and Expense history exist | Expense (ordinary form only); history-aware Account correction (SLICE-ACC-003, full AC-06/AC-07 conformance) | Fund-linked Expense form (M9) | Same as M5, plus ARCH-RECALC-01, DEC-LIFE-05 | EX-01, CR-01 (Expense), LC-01/02, AC-06/07 (history-aware case) | unit, property, PostgreSQL integration, recalculation | M5 exit | Expense invariants proven; **SLICE-ACC-003 proves** correction against later Income/Expense history, identification of the earliest affected point, full later-point revalidation, no silent exclusion of existing events, invalid-correction blocking, and prior-confirmed-state preservation on block | RISK-02, RISK-03 | One PR per slice |
@@ -601,6 +608,7 @@ Each slice is independently reviewable and revertible. Evidence categories refer
 | SLICE-IAM-001 | Managed identity signup/verify/recovery, plus persisted opaque application-session issuance/validation/revocation and provider-session-to-application-session transition | None | ARCH-AUTH-01/02 | BE: Clerk identity-provider integration, persisted opaque Annotasi Finance application-session store and issuance/validation/revocation middleware (Section 18). FE: signup/login/verify screens. Persist.: application-session record (opaque lookup, expiry, single- and all-session revocation, password-recovery-triggered revocation, audit metadata); no local User/Workspace mapping yet | unit, property, PostgreSQL integration, security | SLICE-FOUND-002 and the full Foundation Gate (Section 37) — this slice persists authoritative session state and is not persistence-free | No Workspace creation yet; no Clerk token ever treated as the ordinary API authorization credential | Entry: full Foundation Gate passed (FOUND-001 + FOUND-002). Exit: verified/unverified identity states, persisted application-session establishment/lookup/expiry/revocation (incl. all-device and password-recovery-triggered), audit metadata, safe rejection after an API process restart, and expired/forged-session rejection are all provable in tests | Provider sandbox tenant; no real user data; application session is separate from any Clerk-side state and survives a process restart | One PR |
 | SLICE-IAM-002 | Atomic beta-entitlement redemption, Workspace + starter Account, isolation | WB-01 | ARCH-ACCESS-01, ARCH-ISO-01 | BE: onboarding transaction, entitlement redemption, RLS enforcement. FE: onboarding flow through starter Account. Persist.: User mapping, Workspace, starter Account, entitlement-consumption record | unit, property, PostgreSQL integration, RLS isolation, concurrency, idempotency | SLICE-IAM-001, SLICE-FOUND-002 (this slice is Workspace-scoped/persistence-touching and therefore requires the **full** Foundation Gate — both FOUND-001's and FOUND-002's CI — not FOUND-001 alone) | No Category/Fund/Debt/Event yet | Entry: IAM-001 merged and full Foundation Gate passed (FOUND-001 + FOUND-002). Exit: all Section 11 acceptance criteria pass; Isolation Gate passes | Onboarding transaction is atomic; failed attempt leaves no partial state | One PR |
 | SLICE-ACC-001 | Account create/rename/archive/restore/delete-eligibility | AC-01–05 | ARCH-PERSIST-01 | BE: Account module. FE: Account management screens. Persist.: Account table + projections | unit, property, PostgreSQL integration | SLICE-IAM-002 | Opening-date correction (ACC-002) | Entry: IAM-002 merged. Exit: INV-ACC-01–03 proven under property tests | Soft states only (archive), no destructive step | One PR |
+| SLICE-UI-001 *(added by the 2026-08-06 Roadmap Execution Amendment; full expanded scope in that amendment)* | Product UI Foundation & Existing Screen Retrofit | None (no new Behavior IDs; retrofits screens delivering WB-01, AC-01–05) | ARCH-FRONT-01, Architecture §28 (Frontend Architecture) | BE: none (no new API contract beyond a separately justified existing-UI-defect repair). FE: design tokens, application shell, desktop/mobile navigation, shared form/feedback/dialog/loading/skeleton/empty/error/success/disabled-state patterns, retrofit of existing login/signup/forgot-password (application-rendered forms backed by Clerk identity operations)/onboarding/already-onboarded/accounts-list/account-create/rename/archive-restore/delete-eligibility screens, plus authenticated-navigation placement (shape selected at implementation time per `UI_FOUNDATION_REGISTER.md` §8 — not predetermined as the root layout). Persist.: none | component/unit, existing auth/onboarding/Account regression, responsive (mobile+desktop), keyboard/focus review, accessibility checks using existing approved tooling, production build, full configured PR CI, manual visual review | SLICE-IAM-002, SLICE-ACC-001 | No new financial behavior; no SLICE-ACC-002 correction behavior; no Category behavior; no Income/Expense/Transfer/Fund/Debt/Correction/Reporting/Security feature implementation; no API contract change except a separately justified existing-UI-defect repair; no database migration; no domain-rule change; no rewrite of IAM/onboarding/Account behavior; no permanent deletion; no broad dashboard; no post-MVP speculative design; no dependency installation without explicit approval; no forced use of every frontend tool on every screen | Entry: SLICE-IAM-002 and SLICE-ACC-001 merged. Exit: one coherent design-token baseline exists; existing screens use the shared foundation; no known horizontal overflow at the minimum supported mobile width; existing validated IAM/onboarding/isolation/Account behavior remains unchanged; no authoritative financial calculation moves to the browser; source/provenance and dependency review complete for any external pattern used; evidence recorded in `UI_FOUNDATION_REGISTER.md`; no later feature slice silently started | Presentation-only change; existing screens remain functionally reachable throughout retrofit; revert = redeploy the prior component tree, no data migration involved | One PR (or a reviewable, separately-traceable bundle per the Bundle Governance rules, Roadmap Execution Amendment) |
 | SLICE-ACC-002 | Early Account correction: opening balance / effective-date correction **when no dependent Financial Event history exists yet** | AC-06/07 (no-history case only) | ARCH-RECALC-01, DEC-LIFE-05 | BE: Account correction + recalculation harness scoped to the no-dependent-history case. FE: correction flow with Impact Preview. Persist.: none beyond ACC-001 | unit, property, recalculation | SLICE-ACC-001 | Correction against existing Income/Expense/other Event history (that is SLICE-ACC-003); cross-concept recalculation generalized across all six event types (that is SLICE-CORR-002) | Entry: ACC-001 merged. Exit: EXAMPLE-28-equivalent blocked-correction test passes for the no-history case; validation, Impact Preview trigger, and atomic accepted update are proven | Recalculation is transactional; blocked proposal leaves prior state | One PR |
 | SLICE-ACC-003 | History-aware Account correction: opening balance / effective-date correction **against existing later Income/Expense history** | AC-06/07 (history-aware case) | ARCH-RECALC-01, DEC-LIFE-05 | BE: recalculation harness extended to validate an Account correction against later Income/Expense history (Section 23). FE: correction flow surfaces a stronger warning/Impact Preview when later history exists. Persist.: none beyond ACC-001/ACC-002 | unit, property, PostgreSQL integration, recalculation | SLICE-ACC-002, SLICE-EXP-001 (requires both the early-correction foundation and real Income+Expense history to correct against) | Full six-event-type generalization (that remains SLICE-CORR-002's scope) | Entry: ACC-002 and EXP-001 both merged. Exit: proves correction against real later Income/Expense history; identifies the earliest affected point; revalidates every later point; never silently excludes an existing event; blocks an invalid correction; preserves prior confirmed state on block; and — when accepted — recalculates the complete affected history, not only the final balance | Recalculation is transactional; blocked proposal leaves prior state; accepted correction is atomic | One PR |
 | SLICE-CAT-001 | Category create/rename/archive/restore/delete | CT-01–05 | DEC-AGG-03, DEC-NAME-02 | BE: Category module. FE: Category management. Persist.: Category table | unit, integration | SLICE-IAM-002 | Kind change (never permitted) | Entry: IAM-002 merged. Exit: duplicate-name acceptance + kind-immutability both proven | N/A (no financial effect) | One PR |
@@ -627,9 +635,11 @@ Each slice is independently reviewable and revertible. Evidence categories refer
 | SLICE-SEC-004 | Owner-account deletion delivery (Section 12) | — | ARCH-PRIV-01 | BE: auditable manual deletion request/processing path. FE: deletion-request entry point. Persist.: deletion-request audit record | integration, security, redaction | SLICE-SEC-003 | Fully automated instant deletion | Entry: SEC-003 merged. Exit: Section 12 deletion acceptance criteria pass | Staged, reversible until retention window elapses | One PR |
 | SLICE-BETA-001 | Full PRD §24 acceptance suite + accessibility/responsive sign-off | All 12 PRD §24.B scenarios | All | Full-stack regression across every prior slice | browser E2E, accessibility, responsive, full regression | All prior slices | New feature work of any kind | Entry: SEC-004 merged. Exit: Private Beta Acceptance Gate passes | Go/no-go decision point, not a rollback point | Go/no-go review, no new commit required |
 
-30 vertical slices in total, each independently reviewable and revertible. (29 slices from the initial catalog plus SLICE-ACC-003, added specifically to prove AC-06/AC-07 conformance against real later Financial Event history rather than only the no-history case.)
+31 vertical slices in total, each independently reviewable and revertible. (29 slices from the initial catalog, plus SLICE-ACC-003, added specifically to prove AC-06/AC-07 conformance against real later Financial Event history rather than only the no-history case, plus SLICE-UI-001, added by the 2026-08-06 Roadmap Execution Amendment as an implementation-enablement UI Foundation slice preceding the ACC-002/CAT-001 coordinated wave.)
 
 ## 35. Dependency Graph
+
+**Edge legend (2026-08-06 amendment):** a solid arrow (`-->`) is a **hard technical dependency** — the target genuinely cannot start until the source is merged. A dotted `-.parallelizable.->` edge means the target has **no** technical dependency on the source and may run any time its own real dependencies are satisfied. A dotted `-.coordinated wave.->` edge is new: it means the target is **recommended, by the roadmap-execution amendment, to follow the source for execution-sequencing reasons**, but is **not** technically blocked by it — the target's real technical dependency remains whatever a solid edge into it shows. No solid edge below is invented merely to make the graph visually linear.
 
 ```mermaid
 graph TD
@@ -637,8 +647,12 @@ graph TD
   F2 --> I1[SLICE-IAM-001]
   I1 --> I2[SLICE-IAM-002]
   I2 --> A1[SLICE-ACC-001]
+  I2 --> U1[SLICE-UI-001]
+  A1 --> U1
   A1 --> A2[SLICE-ACC-002]
   I2 --> C1[SLICE-CAT-001]
+  U1 -.coordinated wave.-> A2
+  U1 -.coordinated wave.-> C1
   A1 --> E1[SLICE-EVT-001]
   C1 --> E1
   E1 --> E2[SLICE-EVT-002 Income]
@@ -670,7 +684,7 @@ graph TD
   S2 --> BETA
 ```
 
-**Textual summary:** the critical path runs FOUND-001 → FOUND-002 → IAM-001 → IAM-002 → ACC-001 → EVT-001 → EVT-002 → EXP-001 → ACC-003 → TR-001 → FUND-001 → FUND-002 → FUND-003 → FUND-004 → DEBT-001 → DEBT-002 → CORR-001 → CORR-002 → RPT-001 → RPT-002 → RPT-003 → SEC-001 → SEC-003 → SEC-004 → BETA-001 (25 slices deep). **SLICE-ACC-003 is a mandatory prerequisite of SLICE-TR-001** (Section 33 M7 entry criteria; Section 34) — it sits on the critical path and is not merely parallel work. **Parallelizable work:** CAT-001 alongside ACC-001/ACC-002; ACC-002 alongside EVT-001 onward (no other slice depends on ACC-002 directly except ACC-003); ACC-003 alongside EXP-002 once EXP-001 is merged — both depend only on EXP-001 and neither depends on the other, but ACC-003 (not EXP-002) blocks TR-001; TR-002 alongside FUND work; SEC-002 (backup/PITR drill) is parallelizable from as early as FOUND-002 since it depends only on the database existing, not on product behavior. **Sequencing restriction:** SLICE-IAM-001 now persists its own application-session state (Section 18) and therefore requires the full Foundation Gate (Steps 18+19, i.e., both FOUND-001 and FOUND-002) before it may start — the same requirement applies to SLICE-IAM-002 and every slice from Milestone 3 onward. No Milestone 5+ slice may begin before its Milestone 2 (Isolation Gate) and Milestone 5 EVT-001 (First Financial Write Gate) prerequisites pass — this is a hard gate, not a suggestion (Section 37). **Risk gates:** ACC-003 is the mandatory checkpoint for RISK-03's history-aware-correction proof (in addition to ACC-002's no-history proof and CORR-002's full generalization); CORR-002 is the mandatory checkpoint for RISK-16/RISK-20; SEC-002 is the mandatory checkpoint for RISK-18; RPT-003 is the mandatory checkpoint for RISK-04/RISK-21. This graph assumes one implementer/agent working sequentially unless the user states otherwise; "parallelizable" above only means the dependency graph permits it, not that multiple developers are assumed.
+**Textual summary:** the critical path runs FOUND-001 → FOUND-002 → IAM-001 → IAM-002 → ACC-001 → EVT-001 → EVT-002 → EXP-001 → ACC-003 → TR-001 → FUND-001 → FUND-002 → FUND-003 → FUND-004 → DEBT-001 → DEBT-002 → CORR-001 → CORR-002 → RPT-001 → RPT-002 → RPT-003 → SEC-001 → SEC-003 → SEC-004 → BETA-001 (25 slices deep). **`SLICE-UI-001` is not on this technical critical path** — `SLICE-EVT-001` depends only on `SLICE-ACC-001` and `SLICE-CAT-001` (unchanged), not on `SLICE-UI-001`. `SLICE-UI-001`'s own hard dependencies are `SLICE-IAM-002` and `SLICE-ACC-001` (both already merged), and it is placed as the **UI Foundation Wave** immediately after them; `SLICE-ACC-002` and `SLICE-CAT-001` remain the **next coordinated wave**, recommended to follow `SLICE-UI-001` for execution-sequencing reasons (see the Roadmap Execution Amendment) but not technically gated by it — their real technical dependencies (`SLICE-ACC-001` and `SLICE-IAM-002` respectively) are unchanged from the original catalog. **SLICE-ACC-003 is a mandatory prerequisite of SLICE-TR-001** (Section 33 M7 entry criteria; Section 34) — it sits on the critical path and is not merely parallel work. **Parallelizable work:** CAT-001 alongside ACC-001/ACC-002; ACC-002 alongside EVT-001 onward (no other slice depends on ACC-002 directly except ACC-003); ACC-003 alongside EXP-002 once EXP-001 is merged — both depend only on EXP-001 and neither depends on the other, but ACC-003 (not EXP-002) blocks TR-001; TR-002 alongside FUND work; SEC-002 (backup/PITR drill) is parallelizable from as early as FOUND-002 since it depends only on the database existing, not on product behavior. **Sequencing restriction:** SLICE-IAM-001 now persists its own application-session state (Section 18) and therefore requires the full Foundation Gate (Steps 18+19, i.e., both FOUND-001 and FOUND-002) before it may start — the same requirement applies to SLICE-IAM-002 and every slice from Milestone 3 onward. No Milestone 5+ slice may begin before its Milestone 2 (Isolation Gate) and Milestone 5 EVT-001 (First Financial Write Gate) prerequisites pass — this is a hard gate, not a suggestion (Section 37). **Risk gates:** ACC-003 is the mandatory checkpoint for RISK-03's history-aware-correction proof (in addition to ACC-002's no-history proof and CORR-002's full generalization); CORR-002 is the mandatory checkpoint for RISK-16/RISK-20; SEC-002 is the mandatory checkpoint for RISK-18; RPT-003 is the mandatory checkpoint for RISK-04/RISK-21. This graph assumes one implementer/agent working sequentially unless the user states otherwise; "parallelizable" and "coordinated wave" above only mean the dependency graph and roadmap amendment permit that ordering, not that multiple developers are assumed.
 
 ## 36. Risk-Driven Sequencing
 
@@ -878,3 +892,165 @@ At authoring time, this document was checked for:
 - non-weakening — no product, domain, or Architecture rule identified during authoring was narrowed, reinterpreted, or silently resolved; every Architecture risk (21) and every Architecture decision category is represented in Sections 8–10, 33, 36, or 44.
 
 This is the document's own internal self-check. The external validation — `git diff --check`, `git status --short`, `git diff --stat`, confirmation that no existing artifact was modified, and confirmation that no code was created — is performed separately, outside this document, and reported directly to the user after this file is written.
+
+---
+
+## Roadmap Execution Amendment (2026-08-06)
+
+This appendix is additive. It does not renumber Sections 1–45 above, does not delete any historical record, does not weaken any product, domain, Architecture, CI, financial-integrity, security, isolation, or database guarantee, and does not itself implement `SLICE-UI-001` or begin Session 30. Where this appendix and a numbered section above disagree on a fact about the *current* repository state, this appendix (being newer) governs; where it disagrees with product/domain/Architecture *meaning*, Section 3's authority order still governs and this appendix has no standing to override it.
+
+### A. `SLICE-UI-001` — full expanded scope
+
+**Identifier:** `SLICE-UI-001`
+
+**Title:** Product UI Foundation & Existing Screen Retrofit
+
+**Dependencies:** `SLICE-IAM-002`, `SLICE-ACC-001` (both merged; entry condition satisfied)
+
+**Goal:** Establish a coherent, reusable, mobile-first, Indonesian-first, accessible UI foundation and retrofit already-delivered user-facing screens without changing their approved backend/domain behavior.
+
+**Included scope:**
+
+- design tokens; typography hierarchy; spacing system; semantic colors; border, radius, and shadow policy;
+- reusable application shell; desktop navigation; mobile navigation; page header;
+- form field structure; buttons and action hierarchy; alerts and inline feedback; dialogs and confirmation patterns;
+- loading states; skeleton states; empty states; error states; success states; disabled states with reasons;
+- responsive behavior; keyboard accessibility; visible focus states; reduced-motion behavior;
+- retrofit of existing: login; signup/register; forgot-password — each confirmed by direct inspection to be an application-rendered React form (local `components/ui` primitives, `react-hook-form` + Zod) that calls a Clerk hook (`useSignIn`/`useSignUp`/`useAuth`) only for the identity operation, not a Clerk-hosted UI surface; onboarding; already-onboarded state; accounts list; account create; account rename; archive/restore; delete-eligibility presentation; authenticated navigation, placed at a location selected during implementation (`UI_FOUNDATION_REGISTER.md` §8) — the existing global root layout (`apps/web/app/layout.tsx`) is not predetermined as that location, since it also wraps the public login/signup/forgot-password routes.
+
+Repository inspection performed for this amendment confirms the existing routes this retrofit scope maps onto: `apps/web/app/page.tsx`, `apps/web/app/login/page.tsx`, `apps/web/app/signup/page.tsx`, `apps/web/app/forgot-password/page.tsx`, `apps/web/app/onboarding/page.tsx`, `apps/web/app/session/page.tsx`, `apps/web/app/accounts/page.tsx`, and the global root layout `apps/web/app/layout.tsx` (not a predetermined authenticated-shell target — see `UI_FOUNDATION_REGISTER.md` §8). `SLICE-UI-001` must re-inspect these directly before retrofitting — this list is a starting inventory, not a frozen route contract.
+
+**Explicit exclusions:**
+
+- no new financial behavior;
+- no `SLICE-ACC-002` correction behavior;
+- no Category behavior;
+- no Income, Expense, Transfer, Fund, Debt, Correction, Reporting, or Security feature implementation;
+- no API contract changes unless required only to repair an existing UI defect and separately justified;
+- no database migration;
+- no domain-rule change;
+- no rewrite of IAM, onboarding, or Account behavior;
+- no permanent deletion;
+- no broad dashboard implementation;
+- no speculative design for post-MVP features;
+- no dependency installation without explicit approval during `SLICE-UI-001`;
+- no forced use of every frontend tool in every screen.
+
+**Required evidence** (at minimum):
+
+- component/unit tests for reusable UI behavior;
+- existing auth/onboarding/account regressions;
+- responsive browser validation at representative mobile and desktop widths;
+- keyboard navigation review;
+- visible focus review;
+- loading/error/empty/success/disabled-state review;
+- Indonesian-copy review;
+- accessibility checks using existing approved tooling;
+- production build;
+- full configured GitHub Actions on the Pull Request;
+- manual visual review.
+
+**Exit criteria:**
+
+- one coherent design-token baseline exists;
+- existing user-facing screens use the shared foundation;
+- no known horizontal overflow at the minimum supported mobile width;
+- the existing validated IAM, onboarding, isolation, and Account behavior remains unchanged;
+- no authoritative financial calculation moves to the browser;
+- source/provenance and dependency review are complete for any external pattern used;
+- UI evidence is recorded in `docs/implementation/UI_FOUNDATION_REGISTER.md`;
+- no later feature slice is silently started.
+
+### B. Execution-Wave Model
+
+The dependency graph (Section 35) is not a mandatory one-slice-per-session calendar. Every original slice identifier and its original acceptance criteria (Section 34) are retained unchanged. A "wave" below is a **coordination grouping**, not a technical dependency — see the edge legend in Section 35. Waves may be planned or implemented in parallel within a wave, and across waves, only where each wave's own real technical dependencies (Section 34's Dependencies column) and branch/integration safety permit.
+
+**UI Foundation Wave**
+- `SLICE-UI-001`
+
+**Wave 1 — Parallel foundations**
+- `SLICE-ACC-002`
+- `SLICE-CAT-001`
+
+They may be planned or implemented in parallel where branch and integration safety permit.
+
+**Wave 2 — First complete Income delivery**
+- `SLICE-EVT-001`
+- `SLICE-EVT-002`
+
+The event-core and Income slices may be delivered as one coordinated execution bundle only when their evidence and acceptance criteria remain separately traceable.
+
+**Wave 3 — Expense**
+- `SLICE-EXP-001`
+- `SLICE-EXP-002`
+
+**Wave 4 — History-aware Account correction**
+- `SLICE-ACC-003`
+
+**Wave 5 — Transfer**
+- `SLICE-TR-001`
+- `SLICE-TR-002`
+
+**Wave 6 — Fund foundation**
+- `SLICE-FUND-001`
+- `SLICE-FUND-002`
+
+**Wave 7 — Fund completion**
+- `SLICE-FUND-003`
+- `SLICE-FUND-004`
+
+**Wave 8 — Debt**
+- `SLICE-DEBT-001`
+- `SLICE-DEBT-002`
+
+**Wave 9 — Generalized correction**
+- `SLICE-CORR-001`
+- `SLICE-CORR-002`
+
+**Wave 10 — Reporting**
+- `SLICE-RPT-001`
+- `SLICE-RPT-002`
+- `SLICE-RPT-003`
+
+**Parallel operational work**
+- `SLICE-SEC-002` remains parallelizable because its dependency on `SLICE-FOUND-002` is already satisfied.
+
+**Final pre-beta path**
+- `SLICE-SEC-001`
+- `SLICE-SEC-003`
+- `SLICE-SEC-004`
+- `SLICE-BETA-001`
+
+### C. Bundle Governance
+
+- slice IDs are never removed;
+- each slice retains separate requirements and acceptance evidence;
+- a bundle may contain multiple adjacent slices only where dependency ordering (Section 34's Dependencies column) remains valid;
+- high-risk boundaries may still require a dedicated PR;
+- one bundle must remain reviewable and revertible;
+- one bundle must not hide unrelated work;
+- bundle completion does not permit starting later slices silently;
+- existing full GitHub Actions remain mandatory for every Pull Request;
+- bundling accelerates execution through reuse and coordinated validation, not through reduced integrity.
+
+### D. Risk-Based Validation
+
+Three validation tiers apply per touched behavior, not per slice as a whole — a single slice may touch more than one tier.
+
+**Tier A — high risk.** Examples: authentication; authorization; session handling; Workspace isolation; RLS; migration; Account authoritative state; balance integrity; Financial Events; concurrency; idempotency; recalculation; Transfer; Fund allocation; Debt; correction; security; backup and restore. Expected evidence may include: unit tests; property tests; real PostgreSQL integration; concurrency tests; isolation/adversarial tests; browser negative paths; full CI; live validation when the boundary warrants it; evidence register.
+
+**Tier B — medium risk.** Examples: Category lifecycle; non-authoritative reporting presentation; account presentation behavior; workflow composition that does not change financial acceptance. Use targeted tests during iteration and full configured PR CI at integration/bundle exit.
+
+**Tier C — low risk.** Examples: visual hierarchy; spacing; typography; icon choice; responsive composition; non-behavioral copy; decorative presentation. Use targeted component/browser checks, accessibility review, format/lint/typecheck/build as applicable, and full configured PR CI.
+
+`SLICE-UI-001` is primarily Tier B/Tier C work, with targeted Tier A regression required wherever it touches IAM, onboarding, RLS-visible behavior, or Account behavior (i.e., wherever it retrofits an existing screen backed by that behavior).
+
+Explicitly: the validation tier changes **local iteration and evidence depth only**. It does not disable existing GitHub Actions. It does not weaken domain acceptance criteria. It does not permit skipping regression coverage for touched behavior. UI-only changes must not trigger unnecessary repeated manual database evidence unless they touch a database-sensitive boundary.
+
+### E. Next Approved Slice
+
+The next approved implementation slice is:
+
+**Session 30 — `SLICE-UI-001`: Product UI Foundation & Existing Screen Retrofit.**
+
+`SLICE-ACC-002` and `SLICE-CAT-001` remain not started and form the next coordinated wave (Wave 1) after `SLICE-UI-001`. No slice beyond `SLICE-UI-001` is authorized by this amendment. Section 40's historical record of `SLICE-FOUND-001` as the first coding slice is preserved unchanged below and is not reinterpreted by this amendment — `SLICE-UI-001` is the next slice to start, not a claim that it was ever the first.
