@@ -489,14 +489,124 @@ Indonesian without the word "token", "invitation", "undangan", "email", or
 behind the existing `iam:prepare` build step. `pnpm ci` now includes
 `ci:acc1`.
 
-## Live smoke status
+## Manual operator live validation (2026-08-06)
 
-Not yet executed against the local Clerk development instance in this
-session (no live credentials available here); the deterministic Testcontainers
-and NestJS/Fastify HTTP suites above are the certifying evidence for
-concurrency, RLS, and security behavior. A follow-up session with real Clerk
-credentials should run the live validation steps from the original Session 29
-prompt (§21) before this slice is considered fully complete for review.
+A dated manual operator live validation was performed on 2026-08-06, distinct
+from the automated test suites recorded above and from the GitHub Actions CI
+evidence recorded below. It used the repository-supported Node.js 24.18.1
+runtime, the local PostgreSQL environment, the existing Clerk development
+instance, the already-onboarded private Workspace, the local Next.js web
+application, and the local NestJS/Fastify API. This section records manual
+operator live validation outcomes only; it is not an automated test run, and
+it does not replace or get counted within the automated total recorded below.
+
+### Runtime and identity
+
+- the web, API, PostgreSQL, and Clerk development runtime were all available
+  and reachable;
+- the authenticated User could open `/accounts`;
+- the existing IAM-002 starter Account was listed;
+- earlier missing local `.env` files and a ClerkJS loading issue observed
+  while restoring the local environment were confirmed to be local
+  environment restoration matters, not an ACC-001 source-code defect — no
+  ACC-001 source file was changed to resolve them;
+- the API and web processes ran on Node.js 24, matching the repository's
+  supported runtime.
+
+### Account management
+
+- the starter Account could be renamed, and the renamed value persisted
+  after a browser refresh;
+- Account data persisted across an API process restart;
+- creating an additional Account succeeded;
+- a zero-opening-balance Account could be created;
+- a positive-opening-balance Account could be created;
+- duplicate Account names were accepted, matching DEC-NAME-01/04;
+- a zero-total-balance Account could be archived;
+- the archived Account could be restored as the same Account (same identity,
+  not a new row);
+- attempting to archive a non-zero-balance Account was blocked;
+- the rejection did not offer any way to override the zero-balance archive
+  rule.
+
+### Delete eligibility
+
+- the starter Account's deletion eligibility was blocked by its real
+  onboarding dependency, matching the automated evidence above;
+- a dependency-free additional Account with Opening Balance Rp0 was
+  evaluated as eligible;
+- a non-zero-opening-balance Account was evaluated as ineligible;
+- eligibility evaluation remained read-only in every observed case — no
+  Account state changed as a result of evaluating eligibility;
+- no permanent-delete action was exposed anywhere in the manually exercised
+  UI. Whether an Account DELETE HTTP route, RLS DELETE policy, or
+  application-role DELETE grant exists is not something manual browser
+  observation can prove; that is repository/schema/automated evidence — see
+  "No-delete guarantee" above and the automated evidence below.
+
+### Immutable fields and scope boundary
+
+- Account Type was not editable in the manually exercised UI;
+- Opening Balance was not editable in the manually exercised UI;
+- Opening-Balance Effective Date was not editable in the manually exercised
+  UI;
+- no Category, Dedicated Fund, Debt Record, Financial Event, dashboard, or
+  reporting behavior appeared anywhere in the manually exercised
+  application;
+- no `SLICE-ACC-002` or later-slice behavior was introduced or observed.
+
+### Database aggregate validation
+
+Database aggregate validation passed a safe, non-sensitive aggregate query
+against the manual-validation database state, finding:
+
+- exactly one starter Account existed;
+- no archived Account had a non-zero Total Account Balance;
+- no Account had a negative Total Account Balance or Unallocated Amount;
+- no Account had Unallocated Amount greater than Total Account Balance;
+- after the manually tested Account was restored, no Account remained in the
+  archived lifecycle state.
+
+The total Account count observed depends on locally created manual-test data
+and is not recorded here as a permanent invariant.
+
+No Account name, balance, personal financial amount, Account ID, User ID,
+Workspace ID, Clerk subject, email, invitation token, session cookie, CSRF
+token, database password, or environment-secret value is recorded by this
+register.
+
+## Automated and GitHub Actions evidence after local runtime restoration
+
+The local container runtime used by the Testcontainers-based automated
+suites was unavailable earlier in this session (`Could not find a working
+container runtime strategy`). This was a transient local container-runtime
+availability issue, not a source-code defect, and was resolved before final
+acceptance by restoring the local container runtime. Once restored, four
+distinct execution contexts each passed, and are recorded separately here
+rather than as one merged claim:
+
+- **Local command — `pnpm ci:acc1`:** run locally by the operator (not a
+  GitHub Actions job itself), this command chains `account:test`,
+  `account:test:integration`, `account:test:security`, and
+  `account:test:web` and passed as an automated test run on the operator's
+  machine, exercising the targeted Testcontainers suites
+  (`account:test:integration`, `account:test:security`);
+- **Local command — `pnpm run ci`:** run locally by the operator (also not a
+  GitHub Actions job itself), this broader aggregate command includes
+  `ci:acc1` alongside the Foundation, database, identity/session, and
+  onboarding/isolation suites, and passed on the operator's machine, together
+  with production web/API builds and a dependency audit reporting no high- or
+  critical-severity vulnerability;
+- **GitHub Actions — Pull Request:** the `.github/workflows/foundation-ci.yml`
+  `account-management` job passed on the Pull Request run;
+- **GitHub Actions — post-merge `dev`:** the same `account-management` job
+  passed again on the post-merge `dev` run.
+
+The reviewed automated total remains unchanged at **124 Account-specific
+tests**: 23 contract, 56 API unit/property, 23 PostgreSQL/RLS/concurrency,
+11 API/security integration, and 11 frontend interaction tests. The manual
+operator live validation above is additional, distinct evidence layered on
+top of — never merged into — this automated total.
 
 ## Explicit exclusions
 
@@ -516,5 +626,6 @@ concurrency mechanism than the current conditional-UPDATE/version-conflict
 pattern; the current zero-allocation INV-ACC-03 proof needs extension once
 Account-Backed Fund Allocation exists; the `ACCOUNT_DELETE_NOT_ELIGIBLE` code
 needs to be surfaced once a permanent-deletion endpoint is ever implemented;
-or live Clerk validation surfaces a behavior this register does not yet
-record.
+or a future live validation run surfaces a behavior this register does not
+yet record. The 2026-08-06 manual operator live validation recorded above
+found no such new behavior.
